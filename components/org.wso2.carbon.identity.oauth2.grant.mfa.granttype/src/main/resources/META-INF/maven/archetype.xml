@@ -1,0 +1,9 @@
+<archetype>
+  <id>org.wso2.carbon.identity.oauth2.grant.mfa.granttype</id>
+  <sources>
+    <source>src/main/java/App.java</source>
+  </sources>
+  <testSources>
+    <source>src/test/java/AppTest.java</source>
+  </testSources>
+</archetype>
