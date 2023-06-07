@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2021, WSO2 Inc. (http://www.wso2.com).
+  ~ Copyright (c) 2023, WSO2 LLC (http://www.wso2.org) All Rights Reserved.
   ~
-  ~ WSO2 Inc. licenses this file to you under the Apache License,
-  ~ Version 2.0 (the "License"); you may not use this file except
-  ~ in compliance with the License.
-  ~ You may obtain a copy of the License at
+  ~ WSO2 LLC licenses this file to you under the Apache license,
+  ~ Version 2.0 (the "license"); you may not use this file except
+  ~ in compliance with the license.
+  ~ You may obtain a copy of the license at
   ~
-  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~     http://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ Unless required by applicable law or agreed to in writing,
   ~ software distributed under the License is distributed on an
@@ -39,28 +39,17 @@
     <bean id="postprocess" class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
     <context:component-scan base-package="org.wso2.carbon.identity.oauth2.grant.mfa.endpoints"/>
 
-
-    <bean id="userApi" class="org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.UserApi"/>
-    <bean id="userApiService"
-          class="org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.impl.UserApiServiceImpl"/>
-
-
-    <bean id="mfaApi" class="org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.MFAApi"/>
-    <bean id="mfaApiService"
-         class="org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.impl.MFAApiServiceImpl"/>
-
+    <bean id="authenticationApi" class="org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.AuthenticationApi"/>
+    <bean id="authenticationApiServiceImpl"
+         class="org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.impl.AuthenticationApiServiceImpl"/>
 
    <jaxrs:server id="MFAAuthServices" address="/">
        <jaxrs:serviceBeans>
-           <ref bean="userApi"/>
-           <ref bean="userApiService"/>
-           <ref bean="mfaApi"/>
-           <ref bean="mfaApiService"/>
+           <ref bean="authenticationApi"/>
+           <ref bean="authenticationApiServiceImpl"/>
        </jaxrs:serviceBeans>
        <jaxrs:providers>
            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
        </jaxrs:providers>
     </jaxrs:server>
-
 </beans>
-

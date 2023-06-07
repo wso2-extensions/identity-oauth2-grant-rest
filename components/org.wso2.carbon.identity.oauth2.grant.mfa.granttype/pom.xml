@@ -1,3 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023, WSO2 LLC (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 LLC licenses this file to you under the Apache license,
+  ~ Version 2.0 (the "license"); you may not use this file except
+  ~ in compliance with the license.
+  ~ You may obtain a copy of the license at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
@@ -7,45 +26,36 @@
         <version>1.0.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.identity.oauth2.grant.mfa.granttype</artifactId>
     <name>Identity OAuth2 Grant MFA Grant Type</name>
     <packaging>jar</packaging>
-
     <dependencies>
         <dependency>
             <groupId>org.apache.oltu.oauth2</groupId>
             <artifactId>org.apache.oltu.oauth2.client</artifactId>
-            <version>${oauth2.client.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
             <artifactId>org.wso2.carbon.identity.oauth</artifactId>
-            <version>${identity.inbound.auth.oauth.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.user.core</artifactId>
-            <version>${carbon.kernel.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.utils</artifactId>
-            <version>${carbon.kernel.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.oauth2.grant.mfa</groupId>
             <artifactId>org.wso2.carbon.identity.oauth2.grant.mfa.framework</artifactId>
-            <version>${org.wso2.carbon.identity.oauth2.grant.mfa.framework.version}</version>
         </dependency>
     </dependencies>
-
     <repositories>
         <repository>
             <id>wso2-nexus</id>
@@ -58,7 +68,6 @@
             </releases>
         </repository>
     </repositories>
-
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
@@ -73,13 +82,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <properties>
-        <oauth2.client.version>1.0.0</oauth2.client.version>
-        <identity.inbound.auth.oauth.version>6.4.111</identity.inbound.auth.oauth.version>
-        <carbon.kernel.version>4.6.1</carbon.kernel.version>
-        <org.wso2.carbon.identity.oauth2.grant.mfa.framework.version>
-            1.0.0
-        </org.wso2.carbon.identity.oauth2.grant.mfa.framework.version>
-    </properties>
 </project>

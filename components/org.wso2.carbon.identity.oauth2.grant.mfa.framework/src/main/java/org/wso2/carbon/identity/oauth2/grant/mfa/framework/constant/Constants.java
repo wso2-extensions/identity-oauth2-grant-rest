@@ -1,7 +1,25 @@
+/*
+ *  Copyright (c) 2023, WSO2 LLC (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 LLC licenses this file to you under the Apache license,
+ *  Version 2.0 (the "license"); you may not use this file except
+ *  in compliance with the license.
+ *  You may obtain a copy of the license at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+
 package org.wso2.carbon.identity.oauth2.grant.mfa.framework.constant;
 
 import org.wso2.carbon.utils.CarbonUtils;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,13 +36,13 @@ public class Constants {
     public static final String CONFIG_FILE_NAME = "mfa-auth.properties";
 
     //Config related Constants
-    public static final int DEFAULT_MFA_TOKEN_VALIDITY_PERIOD = 600000; //in milliseconds
-    public static final int DEFAULT_MFA_TOKEN_TIMESTAMP_SKEW = 0; //in milliseconds
+    public static final int DEFAULT_FLOW_ID_VALIDITY_PERIOD = 600000; //in milliseconds
+    public static final int DEFAULT_FLOW_ID_TIMESTAMP_SKEW = 0; //in milliseconds
 
     public static final String MFA_AUTH_ENABLED = "mfaAuth.enabled";
-    public static final String MFA_TOKEN_VALIDITY_PERIOD = "mfaAuth.mfaTokenValidityPeriod";
+    public static final String FLOW_ID_VALIDITY_PERIOD = "mfaAuth.mfaFlowIdValidityPeriod";
     public static final String MFA_AUTH_SHOW_FAILURE_REASON = "mfaAuth.showValidationFailureReason";
-    public static final String MFA_TOKEN_TIMESTAMP_SKEW = "mfaAuth.timestampSkew";
+    public static final String FLOW_ID_TIMESTAMP_SKEW = "mfaAuth.timestampSkew";
     public static final String MFA_CUSTOM_LOCAL_AUTHENTICATOR = "mfaAuth.localCustomAuthenticator";
 
     //Authenticator related Constants
@@ -33,17 +51,17 @@ public class Constants {
     public static final String AUTHENTICATOR_NAME_SMSOTP = "SMSOTP";
     public static final String AUTHENTICATOR_NAME_EMAILOTP = "EmailOTP";
 
-    //MFA Token Status related Constants
-    public static final String MFA_TOKEN_STATE_ACTIVE = "ACTIVE";
-    public static final String MFA_TOKEN_STATE_INACTIVE = "INACTIVE";
-    public static final String MFA_TOKEN_STATE_EXPIRED = "EXPIRED";
+    //Flow Id Status related Constants
+    public static final String FLOW_ID_STATE_ACTIVE = "ACTIVE";
+    public static final String FLOW_ID_STATE_INACTIVE = "INACTIVE";
+    public static final String FLOW_ID_STATE_EXPIRED = "EXPIRED";
 
     //DB Field Names
     public static final String DB_FIELD_USER_ID = "USER_ID";
     public static final String DB_FIELD_USERNAME = "USERNAME";
-    public static final String DB_FIELD_MFA_TOKEN_ID = "MFA_TOKEN_ID";
-    public static final String DB_FIELD_MFA_TOKEN = "MFA_TOKEN";
-    public static final String DB_FIELD_TOKEN_STATE = "TOKEN_STATE";
+    public static final String DB_FIELD_FLOW_ID_IDENTIFIER = "FLOW_ID_IDENTIFIER";
+    public static final String DB_FIELD_FLOW_ID = "FLOW_ID";
+    public static final String DB_FIELD_FLOW_ID_STATE = "FLOW_ID_STATE";
     public static final String DB_FIELD_TIME_GENERATED = "TIME_GENERATED";
     public static final String DB_FIELD_EXPIRY_TIME = "EXPIRY_TIME";
     public static final String DB_FIELD_IS_AUTH_FLOW_COMPLETED = "IS_AUTH_FLOW_COMPLETED";
@@ -66,21 +84,20 @@ public class Constants {
 
     //Authentication Parameters
     public static final String BASIC_AUTH_PARAM_USERNAME = "username";
+    public static final String LOGGED_USER_CLAIM = "loggedUserClaim";
     public static final String BASIC_AUTH_PARAM_PASSWORD = "password";
     public static final String BASIC_AUTH_PARAM_CLIENT_ID = "clientId";
 
-    public static final String MFA_INITIALIZE_PARAM_USER_ID = "userId";
-    public static final String MFA_INITIALIZE_PARAM_AUTHENTICATOR = "authenticator";
-    public static final String MFA_INITIALIZE_PARAM_MFA_TOKEN = "mfaToken";
+    public static final String INITIALIZE_PARAM_AUTHENTICATOR = "authenticator";
+    public static final String INITIALIZE_PARAM_FLOW_ID = "flowId";
 
-    public static final String MFA_VALIDATE_PARAM_USER_ID = "userId";
-    public static final String MFA_VALIDATE_PARAM_AUTHENTICATOR = "authenticator";
-    public static final String MFA_VALIDATE_PARAM_MFA_TOKEN = "mfaToken";
-    public static final String MFA_VALIDATE_PARAM_OTP = "otp";
+    public static final String VALIDATE_PARAM_AUTHENTICATOR = "authenticator";
+    public static final String VALIDATE_PARAM_FLOW_ID = "flowId";
+    public static final String VALIDATE_PARAM_PASSWORD = "password";
 
     //Event Listener Constants
-    public static final String EVENT_PRE_AUTHENTICATION = "EVENT_PRE_AUTHENTICATION";
-    public static final String EVENT_POST_AUTHENTICATION = "EVENT_POST_AUTHENTICATION";
+    public static final String PRE_AUTHENTICATION = "PRE_AUTHENTICATION";
+    public static final String POST_AUTHENTICATION = "POST_AUTHENTICATION";
 
 
     /**
@@ -97,22 +114,22 @@ public class Constants {
                 "Provided client id does not exist : %s"),
         CLIENT_INCORRECT_USER_CREDENTIALS("MFA-60004", "Incorrect user credentials.",
                 "Basic Authentication failed for the user."),
-        CLIENT_INACTIVE_MFA_TOKEN("MFA-60005", "Inactive MFA Token", "Provided MFA Token is in inactive state : %s"),
-        CLIENT_INVALID_MFA_TOKEN("MFA-60006", "Invalid MFA Token", "Provided MFA Token does not exist : %s"),
+        CLIENT_INACTIVE_FLOW_ID("MFA-60005", "Inactive Flow Id", "Provided Flow Id is in inactive state : %s"),
+        CLIENT_INVALID_FLOW_ID("MFA-60006", "Invalid Flow Id", "Provided Flow Id does not exist : %s"),
         CLIENT_AUTHSTEP_OUT_OF_BOUNDS("MFA-60007", "Auth Step Out Of Bounds", "Required Authentication steps have" +
                 " already been completed."),
         CLIENT_AUTHENTICATOR_NOT_SUPPORTED("MFA-60008", "Unsupported Authenticator", "Provided Authenticator is not " +
                 "supported by MFA Authentication Service: %s"),
-        CLIENT_EXPIRED_MFA_TOKEN("MFA-60009", "Expired MFA Token.", "Provided MFA Token is expired : %s"),
+        CLIENT_EXPIRED_FLOW_ID("MFA-60009", "Expired Flow Id.", "Provided Flow Id is expired : %s"),
         CLIENT_LOCKED_ACCOUNT("MFA-60010", "Locked Account.", "User Account is Locked for the user : %s"),
         CLIENT_DISABLED_ACCOUNT("MFA-60011", "Disabled Account.", "User Account is Disabled for the user : %s"),
         CLIENT_EXPIRED_USER_PASSWORD("MFA-60012", "Expired User Password.", "User Password has Expired for the user :" +
                 " %s"),
-        CLIENT_USERID_TOKEN_MISMATCH("MFA-60013", "Incorrect User Id.", "User Id is incorrect for the provided MFA " +
-                "Token : %s"),
+        CLIENT_USERID_FLOWID_MISMATCH("MFA-60013", "Incorrect User Id.",
+                "User Id is incorrect for the provided Flow Id : %s"),
         CLIENT_INVALID_USER("MFA-60014", "Incorrect User Credentials.", "User does not exist : %s"),
         CLIENT_USER_SP_TENANT_MISMATCH("MFA-60015", "IsSaasApp is disabled.", "Cross tenant access is restricted."),
-        CLIENT_CUSTOM_AUTHENTICATE_USER_ERROR("MFA-60016", "user authentication error.","%s"),
+        CLIENT_CUSTOM_AUTHENTICATE_USER_ERROR("MFA-60016", "user authentication error.", "%s"),
 
         // Server error codes.
         SERVER_RETRIEVING_SP_ERROR("MFA-65001", "Service provider error.",

@@ -1,26 +1,48 @@
+/*
+ *  Copyright (c) 2023, WSO2 LLC (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 LLC licenses this file to you under the Apache license,
+ *  Version 2.0 (the "license"); you may not use this file except
+ *  in compliance with the license.
+ *  You may obtain a copy of the license at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+
 package org.wso2.carbon.identity.oauth2.grant.mfa.framework.dao;
 
 /**
- * MFA token related sql queries.
+ * Flow Id related sql queries.
  */
 public class SQLQueries {
 
-    public static final String ADD_MFA_TOKEN_MYSQL = "INSERT INTO IDN_ETISALAT_AUTH_MFA_TOKEN (MFA_TOKEN_ID, " +
-            "MFA_TOKEN, TOKEN_STATE, TIME_GENERATED, EXPIRY_TIME, IS_AUTH_FLOW_COMPLETED, SP_APP_ID, SP_TENANT_ID) " +
+    public static final String ADD_FLOW_ID = "INSERT INTO IDN_AUTH_MFA_FLOW (FLOW_ID_IDENTIFIER, " +
+            "FLOW_ID, FLOW_ID_STATE, TIME_GENERATED, EXPIRY_TIME, IS_AUTH_FLOW_COMPLETED, SP_APP_ID, SP_TENANT_ID) " +
             "VALUES (?,?,?,?,?,?,?,?);";
-    public static final String ADD_MFA_TOKEN_USER_DATA_MYSQL = "INSERT INTO IDN_ETISALAT_AUTH_USER " +
-            "(USER_TENANT_ID, USER_ID, USERNAME, MFA_TOKEN_ID) VALUES (?,?,?,?);";
-    public static final String UPDATE_MFA_TOKEN_STATE_MYSQL = "UPDATE IDN_ETISALAT_AUTH_MFA_TOKEN SET TOKEN_STATE=? " +
-            "WHERE MFA_TOKEN=? ;";
-    public static final String RETRIEVE_MFA_TOKEN_DATA_MYSQL = "SELECT MT.MFA_TOKEN_ID, MFA_TOKEN, TOKEN_STATE, " +
-            "TIME_GENERATED, EXPIRY_TIME, IS_AUTH_FLOW_COMPLETED, SP_APP_ID, SP_TENANT_ID, USER_TENANT_ID, USER_ID, USERNAME FROM IDN_ETISALAT_AUTH_MFA_TOKEN AS MT INNER JOIN IDN_ETISALAT_AUTH_USER WHERE MFA_TOKEN =? ;";
-    public static final String ADD_AUTHENTICATED_STEP_MYSQL = "INSERT INTO IDN_ETISALAT_AUTH_AUTHENTICATED_STEPS " +
-            "(DATA_KEY, DATA_VALUE, MFA_TOKEN_ID) VALUES (?,?,?);";
-    public static final String GET_AUTHENTICATED_STEPS_MYSQL = "SELECT DATA_KEY, DATA_VALUE FROM " +
-            "IDN_ETISALAT_AUTH_AUTHENTICATED_STEPS WHERE MFA_TOKEN_ID = ?";
-    public static final String UPDATE_AUTH_STEP_MFA_TOKEN_ID_MYSQL = "UPDATE IDN_ETISALAT_AUTH_AUTHENTICATED_STEPS " +
-            "SET MFA_TOKEN_ID = ? WHERE MFA_TOKEN_ID = ?;";
-    public static final String REFRESH_MFA_TOKEN_ID_MYSQL = "UPDATE IDN_ETISALAT_AUTH_USER AS MTU, " +
-            "IDN_ETISALAT_AUTH_AUTHENTICATED_STEPS AS MTAS SET MTU.MFA_TOKEN_ID = ?, MTAS.MFA_TOKEN_ID = ? WHERE MTU" +
-            ".MFA_TOKEN_ID = ? AND MTAS.MFA_TOKEN_ID = MTU.MFA_TOKEN_ID;";
+    public static final String ADD_FLOW_ID_USER_DATA = "INSERT INTO IDN_MFA_AUTH_USER " +
+            "(USER_TENANT_ID, USER_ID, USERNAME, FLOW_ID_IDENTIFIER) VALUES (?,?,?,?);";
+    public static final String UPDATE_FLOW_ID_STATE = "UPDATE IDN_AUTH_MFA_FLOW SET FLOW_ID_STATE=? " +
+            "WHERE FLOW_ID=? ;";
+    public static final String RETRIEVE_FLOW_ID_DATA =
+            "SELECT MT.FLOW_ID_IDENTIFIER, MT.FLOW_ID, MT.FLOW_ID_STATE,MT.TIME_GENERATED, MT.EXPIRY_TIME, \n" +
+            "MT.IS_AUTH_FLOW_COMPLETED, MT.SP_APP_ID, MT.SP_TENANT_ID, MU.USER_TENANT_ID, MU.USER_ID, \n" +
+            "MU.USERNAME FROM IDN_AUTH_MFA_FLOW MT,IDN_MFA_AUTH_USER MU\n" +
+            "WHERE MU.FLOW_ID_IDENTIFIER = MT.FLOW_ID_IDENTIFIER AND FLOW_ID = ?;";
+    public static final String ADD_AUTHENTICATED_STEP = "INSERT INTO IDN_MFA_AUTH_AUTHENTICATED_STEPS " +
+            "(DATA_KEY, DATA_VALUE, FLOW_ID_IDENTIFIER) VALUES (?,?,?);";
+    public static final String GET_AUTHENTICATED_STEPS = "SELECT DATA_KEY, DATA_VALUE FROM " +
+            "IDN_MFA_AUTH_AUTHENTICATED_STEPS WHERE FLOW_ID_IDENTIFIER = ?";
+    public static final String REFRESH_FLOW_ID_IDENTIFIER = "UPDATE IDN_MFA_AUTH_USER AS MTU, " +
+            "IDN_MFA_AUTH_AUTHENTICATED_STEPS AS MTAS SET MTU.FLOW_ID_IDENTIFIER = ?, MTAS.FLOW_ID_IDENTIFIER = ?" +
+            " WHERE MTU" +
+            ".FLOW_ID_IDENTIFIER = ? AND MTAS.FLOW_ID_IDENTIFIER = MTU.FLOW_ID_IDENTIFIER;";
 }
+//identity-oauth2-grant-auth-rest

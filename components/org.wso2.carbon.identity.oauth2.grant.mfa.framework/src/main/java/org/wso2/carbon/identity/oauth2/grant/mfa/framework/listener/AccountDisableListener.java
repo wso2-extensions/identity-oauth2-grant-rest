@@ -1,14 +1,36 @@
+/*
+ *  Copyright (c) 2023, WSO2 LLC (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 LLC licenses this file to you under the Apache license,
+ *  Version 2.0 (the "license"); you may not use this file except
+ *  in compliance with the license.
+ *  You may obtain a copy of the license at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+
 package org.wso2.carbon.identity.oauth2.grant.mfa.framework.listener;
 
-import org.wso2.carbon.identity.application.common.model.User;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.oauth2.grant.mfa.framework.constant.Constants;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.context.AuthenticationContext;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.MFAAuthException;
+import org.wso2.carbon.identity.oauth2.grant.mfa.framework.context.AuthRestAuthenticationContext;
+import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationException;
 import org.wso2.carbon.identity.oauth2.grant.mfa.framework.util.Util;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
 import org.wso2.carbon.identity.recovery.util.Utils;
 
 public class AccountDisableListener extends AbstractAuthenticationListener {
+
+	private static final Log LOG = LogFactory.getLog(AccountDisableListener.class);
 
 	@Override
 	public int getExecutionOrderId() {
@@ -16,12 +38,13 @@ public class AccountDisableListener extends AbstractAuthenticationListener {
 	}
 
 	@Override
-	public boolean doPreAuthenticate(AuthenticationContext authContext) throws MFAAuthException {
+	public boolean doPreAuthenticate(AuthRestAuthenticationContext authContext) throws AuthenticationException {
+
 		return true;
 	}
 
 	@Override
-	public boolean doPostAuthenticate(AuthenticationContext authContext) throws MFAAuthException {
+	public boolean doPostAuthenticate(AuthRestAuthenticationContext authContext) throws AuthenticationException {
 
 		// check whether user account is disabled
 		try {

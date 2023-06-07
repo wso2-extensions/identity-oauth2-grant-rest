@@ -1,28 +1,44 @@
+/*
+ *  Copyright (c) 2023, WSO2 LLC (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 LLC licenses this file to you under the Apache license,
+ *  Version 2.0 (the "license"); you may not use this file except
+ *  in compliance with the license.
+ *  You may obtain a copy of the license at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+
 package org.wso2.carbon.identity.oauth2.grant.mfa.framework.util;
 
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.constant.Constants;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.dto.ConfigsDTO;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.MFAAuthException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.MFAAuthClientException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.MFAAuthServerException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+import org.wso2.carbon.identity.oauth2.grant.mfa.framework.constant.Constants;
+import org.wso2.carbon.identity.oauth2.grant.mfa.framework.dto.ConfigsDTO;
+import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationClientException;
+import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationServerException;
+import org.wso2.carbon.identity.oauth2.grant.mfa.framework.internal.AuthenticationServiceDataHolder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.io.IOException;
-
+import java.io.InputStream;
 import java.util.Properties;
 import java.util.UUID;
 
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.internal.MFAAuthServiceDataHolder;
-
 public class Util {
-    private static final Log log = LogFactory.getLog(Util.class);
+    private static final Log LOG = LogFactory.getLog(Util.class);
 
     /**
      * This method returns the SHA-256 hash of a given string.
@@ -36,8 +52,8 @@ public class Util {
 
     public static String generateUUID() {
         String uuid = UUID.randomUUID().toString();
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("MFA Token hash: %s.", Util.getHash(uuid)));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("Flow Id hash: %s.", Util.getHash(uuid)));
         }
         return uuid;
     }
@@ -45,9 +61,9 @@ public class Util {
     /**
      * Read configurations and populate ConfigDTO object.
      *
-     * @throws MFAAuthException Throws upon an issue on while reading configs.
+     * @throws AuthenticationException Throws upon an issue on while reading configs.
      */
-    public static void readConfigurations() throws MFAAuthException {
+    public static void readConfigurations() throws AuthenticationException {
 
         InputStream inputStream = null;
         Properties properties;
@@ -58,18 +74,18 @@ public class Util {
 
             File configFile = new File(configFilePath);
             if (configFile.exists()) {
-                if (log.isDebugEnabled()) {
-                    log.debug(String.format(" %s file loaded from %s.", Constants.CONFIG_FILE_NAME,
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(String.format(" %s file loaded from %s.", Constants.CONFIG_FILE_NAME,
                             Constants.MFA_CONFIG_PATH + Constants.CONFIG_FILE_NAME));
                 }
                 inputStream = new FileInputStream(configFile);
                 properties.load(inputStream);
             } else {
-                log.error(String.format(" %s file has NOT been loaded from %s.", Constants.CONFIG_FILE_NAME,
+                LOG.error(String.format(" %s file has NOT been loaded from %s.", Constants.CONFIG_FILE_NAME,
                         Constants.MFA_CONFIG_PATH + Constants.CONFIG_FILE_NAME));
             }
         } catch (FileNotFoundException e) {
-            log.error("Failed to load service configurations.", e);
+            LOG.error("Failed to load service configurations.", e);
             throw handleServerException(
                     Constants.ErrorMessage.SERVER_CONFIG_FILE_NOT_FOUND_ERROR, configFilePath);
         } catch (IOException e) {
@@ -89,7 +105,7 @@ public class Util {
 
     private static void sanitizeAndPopulateConfigs(Properties properties) {
 
-        ConfigsDTO configs = MFAAuthServiceDataHolder.getConfigs();
+        ConfigsDTO configs = AuthenticationServiceDataHolder.getConfigs();
 
         boolean isEnabled = Boolean.parseBoolean(StringUtils.trim(
                 properties.getProperty(Constants.MFA_AUTH_ENABLED)));
@@ -100,36 +116,26 @@ public class Util {
         configs.setShowFailureReason(showFailureReason);
 
         String otpValidityPeriodValue =
-                StringUtils.trim(properties.getProperty(Constants.MFA_TOKEN_VALIDITY_PERIOD));
+                StringUtils.trim(properties.getProperty(Constants.FLOW_ID_VALIDITY_PERIOD));
         int otpValidityPeriod = StringUtils.isNumeric(otpValidityPeriodValue) ?
-                Integer.parseInt(otpValidityPeriodValue) * 1000 : Constants.DEFAULT_MFA_TOKEN_VALIDITY_PERIOD;
-        configs.setMfaTokenValidityPeriod(otpValidityPeriod);
+                Integer.parseInt(otpValidityPeriodValue) * 1000 : Constants.DEFAULT_FLOW_ID_VALIDITY_PERIOD;
+        configs.setFlowIdValidityPeriod(otpValidityPeriod);
 
-        String timestampSkewValue = StringUtils.trim(properties.getProperty(Constants.MFA_TOKEN_TIMESTAMP_SKEW));
+        String timestampSkewValue = StringUtils.trim(properties.getProperty(Constants.FLOW_ID_TIMESTAMP_SKEW));
         int timestampSkew = StringUtils.isNumeric(timestampSkewValue) ?
-                Integer.parseInt(timestampSkewValue) * 1000 : Constants.DEFAULT_MFA_TOKEN_TIMESTAMP_SKEW;
+                Integer.parseInt(timestampSkewValue) * 1000 : Constants.DEFAULT_FLOW_ID_TIMESTAMP_SKEW;
         configs.setTimestampSkew(timestampSkew);
 
-        if (isLocalCustomAuthenticatorAvailable(properties)) {
-            String customLocalAuthenticatorName = StringUtils.trim(properties.getProperty
-                    (Constants.MFA_CUSTOM_LOCAL_AUTHENTICATOR));
-            configs.setCustomLocalAuthenticatorName(customLocalAuthenticatorName);
-        }
-
     }
 
-    public static boolean isLocalCustomAuthenticatorAvailable(Properties properties){
-        return StringUtils.isNotBlank(properties.getProperty(Constants.MFA_CUSTOM_LOCAL_AUTHENTICATOR));
-    }
-
-    public static MFAAuthClientException handleClientException(Constants.ErrorMessage error) {
+    public static AuthenticationClientException handleClientException(Constants.ErrorMessage error) {
 
         String description = error.getDescription();
 
-        return new MFAAuthClientException(error.getCode(), error.getMessage(), description);
+        return new AuthenticationClientException(error.getCode(), error.getMessage(), description);
     }
 
-    public static MFAAuthClientException handleClientException(Constants.ErrorMessage error, String data) {
+    public static AuthenticationClientException handleClientException(Constants.ErrorMessage error, String data) {
 
         String description;
         if (StringUtils.isNotBlank(data)) {
@@ -137,32 +143,32 @@ public class Util {
         } else {
             description = error.getDescription();
         }
-        return new MFAAuthClientException(error.getCode(), error.getMessage(), description);
+        return new AuthenticationClientException(error.getCode(), error.getMessage(), description);
     }
 
-    public static MFAAuthClientException handleClientException(Constants.ErrorMessage error, String data,
-                                                                    Throwable e) {
+    public static AuthenticationClientException handleClientException(Constants.ErrorMessage error, String data,
+                                                                      Throwable e) {
         String description;
         if (StringUtils.isNotBlank(data)) {
             description = String.format(error.getDescription(), data);
         } else {
             description = error.getDescription();
         }
-        return new MFAAuthClientException(error.getCode(), error.getMessage(), description, e);
+        return new AuthenticationClientException(error.getCode(), error.getMessage(), description, e);
     }
 
-    public static MFAAuthServerException handleServerException(Constants.ErrorMessage error, String data,
-                                                                    Throwable e) {
+    public static AuthenticationServerException handleServerException(Constants.ErrorMessage error, String data,
+                                                                      Throwable e) {
         String description;
         if (StringUtils.isNotBlank(data)) {
             description = String.format(error.getDescription(), data);
         } else {
             description = error.getDescription();
         }
-        return new MFAAuthServerException(error.getCode(), error.getMessage(), description, e);
+        return new AuthenticationServerException(error.getCode(), error.getMessage(), description, e);
     }
 
-    public static MFAAuthServerException handleServerException(Constants.ErrorMessage error, String data) {
+    public static AuthenticationServerException handleServerException(Constants.ErrorMessage error, String data) {
 
         String description;
         if (StringUtils.isNotBlank(data)) {
@@ -170,11 +176,11 @@ public class Util {
         } else {
             description = error.getDescription();
         }
-        return new MFAAuthServerException(error.getCode(), error.getMessage(), description);
+        return new AuthenticationServerException(error.getCode(), error.getMessage(), description);
     }
 
-    public static MFAAuthServerException handleServerException(Constants.ErrorMessage error, Throwable e) {
+    public static AuthenticationServerException handleServerException(Constants.ErrorMessage error, Throwable e) {
         String description = error.getDescription();
-        return new MFAAuthServerException(error.getCode(), error.getMessage(), description, e);
+        return new AuthenticationServerException(error.getCode(), error.getMessage(), description, e);
     }
 }
