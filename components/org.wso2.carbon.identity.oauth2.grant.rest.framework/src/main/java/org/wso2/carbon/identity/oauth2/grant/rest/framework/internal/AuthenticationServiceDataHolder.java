@@ -17,17 +17,17 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework.internal;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework.internal;
 
 import org.wso2.carbon.extension.identity.emailotp.common.EmailOtpService;
 import org.wso2.carbon.identity.multi.attribute.login.mgt.MultiAttributeLoginService;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.AuthenticationListenerService;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.dto.ConfigsDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.AuthenticationListenerService;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.ConfigsDTO;
 import org.wso2.carbon.identity.smsotp.common.SMSOTPService;
 import org.wso2.carbon.user.core.service.RealmService;
 
 /**
- * Data holder for MFA Authentication Service.
+ * Data holder for Rest Authentication Service.
  */
 public class AuthenticationServiceDataHolder {
 
@@ -35,7 +35,7 @@ public class AuthenticationServiceDataHolder {
 	private RealmService realmService;
 	private SMSOTPService smsOtpService;
 	private EmailOtpService emailOtpService;
-	private AuthenticationListenerService mfaAuthListenerService;
+	private AuthenticationListenerService authListenerService;
 	private MultiAttributeLoginService multiAttributeLoginService;
 	private static final ConfigsDTO configs = new ConfigsDTO();
 	public static String loggedUserClaim;
@@ -77,14 +77,14 @@ public class AuthenticationServiceDataHolder {
 		this.emailOtpService = emailOtpService;
 	}
 
-	public AuthenticationListenerService getMFAAuthListenerService() {
+	public AuthenticationListenerService getAuthListenerService() {
 
-		return mfaAuthListenerService;
+		return authListenerService;
 	}
 
-	public void setMFAAuthListenerService(AuthenticationListenerService mfaAuthListenerService) {
+	public void setAuthListenerService(AuthenticationListenerService authListenerService) {
 
-		this.mfaAuthListenerService = mfaAuthListenerService;
+		this.authListenerService = authListenerService;
 	}
 
 	public MultiAttributeLoginService getMultiAttributeLogin() {

@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework.listener;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework.listener;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -29,11 +29,11 @@ import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.event.IdentityEventConfigBuilder;
 import org.wso2.carbon.identity.event.IdentityEventException;
 import org.wso2.carbon.identity.event.bean.ModuleConfiguration;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.constant.Constants;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.context.RestAuthenticationContext;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.internal.AuthenticationServiceDataHolder;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.util.Util;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.context.RestAuthenticationContext;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.internal.AuthenticationServiceDataHolder;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.Util;
 import org.wso2.carbon.idp.mgt.IdentityProviderManagementException;
 import org.wso2.carbon.idp.mgt.IdentityProviderManager;
 import org.wso2.carbon.user.api.UserStoreException;

@@ -17,10 +17,10 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework.cache;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework.cache;
 
 import org.wso2.carbon.identity.core.cache.CacheEntry;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.dao.FlowIdDO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.FlowIdDO;
 
 public class AuthCacheEntry extends CacheEntry {
 

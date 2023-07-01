@@ -17,33 +17,34 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.util;
+package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util;
 
 import org.apache.commons.logging.Log;
 import org.slf4j.MDC;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.dto.AuthenticationError;
-import org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.exception.BadRequestException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.exception.ConflictRequestException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.exception.ForbiddenException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.exception.InternalServerErrorException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.exception.NotFoundException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.AuthenticationAuthService;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.constant.Constants;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationClientException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationException;
-import java.util.UUID;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.AuthenticationService;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationError;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception.BadRequestException;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception.ConflictRequestException;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception.ForbiddenException;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception.InternalServerErrorException;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception.NotFoundException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
+
+import java.util.*;
 import javax.ws.rs.core.Response;
-import static org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.constant.Constants.CORRELATION_ID_MDC;
+import static org.wso2.carbon.identity.oauth2.grant.rest.endpoint.constant.Constants.CORRELATION_ID_MDC;
 
 /**
- * This class provides util functions for MFA Auth REST APIs.
+ * This class provides util functions for Auth REST APIs.
  */
 public class EndpointUtils {
-    public static AuthenticationAuthService getMFAAuthService() {
+    public static AuthenticationService getAuthService() {
 
-        return (AuthenticationAuthService) PrivilegedCarbonContext.getThreadLocalCarbonContext().
-                getOSGiService(AuthenticationAuthService.class, null);
+        return (AuthenticationService) PrivilegedCarbonContext.getThreadLocalCarbonContext().
+                getOSGiService(AuthenticationService.class, null);
     }
 
     private static void logDebug(Log log, Throwable throwable) {

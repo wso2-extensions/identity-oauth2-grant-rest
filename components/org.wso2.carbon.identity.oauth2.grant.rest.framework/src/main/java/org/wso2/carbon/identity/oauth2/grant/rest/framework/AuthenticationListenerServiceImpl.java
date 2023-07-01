@@ -17,12 +17,12 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.listener.AuthenticationListener;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.listener.AuthenticationListener;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;

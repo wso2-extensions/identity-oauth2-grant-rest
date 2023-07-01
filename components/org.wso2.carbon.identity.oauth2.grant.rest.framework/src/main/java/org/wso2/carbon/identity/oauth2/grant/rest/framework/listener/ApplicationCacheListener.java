@@ -17,23 +17,23 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework.listener;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework.listener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.application.common.IdentityApplicationManagementException;
 import org.wso2.carbon.identity.application.common.model.ServiceProvider;
 import org.wso2.carbon.identity.application.mgt.listener.AbstractApplicationMgtListener;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.cache.AuthCache;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.cache.AuthCache;
 
 public class ApplicationCacheListener extends AbstractApplicationMgtListener {
 
 	private static final Log LOG = LogFactory.getLog(ApplicationCacheListener.class);
-	private static AuthCache mfaAuthCache = null;
+	private static AuthCache authCache = null;
 
 	public ApplicationCacheListener() {
 
-		mfaAuthCache = AuthCache.getInstance();
+		authCache = AuthCache.getInstance();
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class ApplicationCacheListener extends AbstractApplicationMgtListener {
 	public boolean doPostUpdateApplication(ServiceProvider serviceProvider, String tenantDomain, String userName)
 			throws IdentityApplicationManagementException {
 
-		mfaAuthCache.clear(tenantDomain);
+		authCache.clear(tenantDomain);
 		return true;
 	}
 
@@ -54,7 +54,7 @@ public class ApplicationCacheListener extends AbstractApplicationMgtListener {
 	public boolean doPostDeleteApplication(ServiceProvider serviceProvider, String tenantDomain, String userName)
 			throws IdentityApplicationManagementException {
 
-		mfaAuthCache.clear(tenantDomain);
+		authCache.clear(tenantDomain);
 		return true;
 	}
 

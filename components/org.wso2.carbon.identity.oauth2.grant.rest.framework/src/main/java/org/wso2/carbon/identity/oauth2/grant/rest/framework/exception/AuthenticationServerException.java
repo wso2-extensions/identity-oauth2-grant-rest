@@ -17,10 +17,10 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework.exception;
 
 /**
- * This class is to handle MFA Auth server exception.
+ * This class is to handle Auth server exception.
  */
 public class AuthenticationServerException extends AuthenticationException {
 

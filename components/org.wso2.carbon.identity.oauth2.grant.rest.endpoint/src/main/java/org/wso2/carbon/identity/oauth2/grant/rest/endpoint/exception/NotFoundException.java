@@ -17,10 +17,10 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.exception;
+package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception;
 
 import org.apache.http.HttpHeaders;
-import org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.dto.AuthenticationError;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationError;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;

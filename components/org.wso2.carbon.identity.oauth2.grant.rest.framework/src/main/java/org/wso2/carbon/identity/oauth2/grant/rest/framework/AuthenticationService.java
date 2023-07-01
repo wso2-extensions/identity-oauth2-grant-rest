@@ -21,13 +21,16 @@ package org.wso2.carbon.identity.oauth2.grant.rest.framework;
 
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationInitializationResponseDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthStepsDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationStepDetailsDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.UserAuthenticationResponseDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
+
+import java.util.ArrayList;
 
 /**
  * This interface holds back-channel authentication services to process step based authentication.
  */
-public interface AuthenticationAuthService {
+public interface AuthenticationService {
 
     /**
      * This method returns the Steps for the Authentication flow.
@@ -35,7 +38,7 @@ public interface AuthenticationAuthService {
      * @param clientId      UUID to track the flow
      * @throws AuthenticationException if any server or client error occurred.
      */
-    AuthStepsDTO getAuthenticationStepsFromSP(String clientId) throws AuthenticationException;
+    ArrayList<AuthenticationStepDetailsDTO> getAuthenticationStepsFromSP(String clientId) throws AuthenticationException;
 
     /**
      * This method initialize the authentication flow with BasicAuth or Identifier First.

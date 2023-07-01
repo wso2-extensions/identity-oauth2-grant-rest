@@ -17,14 +17,14 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework.cache;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework.cache;
 import org.wso2.carbon.identity.core.cache.BaseCache;
 public class AuthCache extends BaseCache<AuthCacheKey, AuthCacheEntry> {
-    public static final String MFA_AUTH_CACHE_NAME = "AuthCache";
+    public static final String AUTH_CACHE_NAME = "AuthCache";
     private static volatile AuthCache instance;
     private AuthCache() {
 
-        super(MFA_AUTH_CACHE_NAME);
+        super(AUTH_CACHE_NAME);
     }
 
     public static AuthCache getInstance() {

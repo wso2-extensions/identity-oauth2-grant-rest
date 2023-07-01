@@ -52,8 +52,8 @@
             <artifactId>org.wso2.carbon.utils</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.identity.oauth2.grant.mfa</groupId>
-            <artifactId>framework</artifactId>
+            <groupId>org.wso2.carbon.identity.oauth2.grant.rest</groupId>
+            <artifactId>identity-oauth2-grant-auth-rest-framework</artifactId>
         </dependency>
     </dependencies>
     <repositories>

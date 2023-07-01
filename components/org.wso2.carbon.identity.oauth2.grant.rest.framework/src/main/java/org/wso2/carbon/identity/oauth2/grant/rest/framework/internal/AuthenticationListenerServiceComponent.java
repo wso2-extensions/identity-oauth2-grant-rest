@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework.internal;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,11 +26,11 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.AuthenticationListenerService;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.AuthenticationListenerServiceImpl;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.AuthenticationListenerService;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.AuthenticationListenerServiceImpl;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 
-@Component(name = "com.mfa.auth.listener.service", immediate = true)
+@Component(name = "org.wso2.carbon.identity.oauth2.grant.rest.auth.listener.service", immediate = true)
 public class AuthenticationListenerServiceComponent {
 
 	private static final Log log = LogFactory.getLog(AuthenticationServiceComponent.class);
@@ -42,14 +42,14 @@ public class AuthenticationListenerServiceComponent {
 		bundleContext.registerService(AuthenticationListenerService.class.getName(),
 				new AuthenticationListenerServiceImpl(), null);
 
-		log.info("MFA Authentication Listener Service component activated successfully.");
+		log.info("Authentication Listener Service component activated successfully.");
 
 	}
 
 	@Deactivate
 	protected void deactivate(ComponentContext componentContext) {
 		if (log.isDebugEnabled()) {
-			log.debug("MFA Authentication Listener Service component is deactivated");
+			log.debug("Authentication Listener Service component is deactivated");
 		}
 	}
 

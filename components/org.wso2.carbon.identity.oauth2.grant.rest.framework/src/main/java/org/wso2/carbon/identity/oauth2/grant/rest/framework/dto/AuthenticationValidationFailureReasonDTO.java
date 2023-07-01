@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework.dto;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework.dto;
 
 import org.apache.commons.lang3.StringUtils;
 import org.wso2.carbon.identity.smsotp.common.constant.Constants;

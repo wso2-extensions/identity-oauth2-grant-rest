@@ -17,15 +17,15 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework.dao;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.cache.AuthCache;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.cache.AuthCacheEntry;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.cache.AuthCacheKey;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.cache.AuthCache;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.cache.AuthCacheEntry;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.cache.AuthCacheKey;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 
 public class CacheBackedFlowIdDAO extends FlowIdDAOImpl {
 

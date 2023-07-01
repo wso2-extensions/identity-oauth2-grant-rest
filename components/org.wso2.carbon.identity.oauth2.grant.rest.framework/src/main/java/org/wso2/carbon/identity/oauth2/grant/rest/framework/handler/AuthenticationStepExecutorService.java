@@ -17,9 +17,9 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework.handler;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework.handler;
 
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 
 public interface AuthenticationStepExecutorService {
     /**

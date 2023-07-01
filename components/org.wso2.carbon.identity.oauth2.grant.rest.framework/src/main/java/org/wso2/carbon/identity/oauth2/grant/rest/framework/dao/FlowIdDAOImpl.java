@@ -17,15 +17,16 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework.dao;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.constant.Constants;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationServerException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.util.Util;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationServerException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.Util;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -17,10 +17,10 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework.listener;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework.listener;
 
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.context.RestAuthenticationContext;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.context.RestAuthenticationContext;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 
 /**
  * This allows an extension point to implement various additional operations before and after

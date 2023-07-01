@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -29,21 +29,18 @@ import org.wso2.carbon.identity.application.common.model.User;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.multi.attribute.login.mgt.MultiAttributeLoginService;
 import org.wso2.carbon.identity.multi.attribute.login.mgt.ResolvedUserResult;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.constant.Constants;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.context.RestAuthenticationContext;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.dao.CacheBackedFlowIdDAO;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.dao.FlowIdDAOImpl;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.dao.FlowIdDO;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.dto.AuthenticationInitializationResponseDTO;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.dto.AuthenticationValidationFailureReasonDTO;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.dto.AuthStepsDTO;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.dto.UserAuthenticationResponseDTO;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.handler.AuthenticationStepExecutorService;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.handler.AuthenticationStepExecutorServiceImpl;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.internal.AuthenticationServiceDataHolder;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.listener.AuthenticationListener;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.util.Util;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.context.RestAuthenticationContext;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.CacheBackedFlowIdDAO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.FlowIdDAOImpl;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.FlowIdDO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.*;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.handler.AuthenticationStepExecutorService;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.handler.AuthenticationStepExecutorServiceImpl;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.internal.AuthenticationServiceDataHolder;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.listener.AuthenticationListener;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.Util;
 import org.wso2.carbon.identity.smsotp.common.SMSOTPService;
 import org.wso2.carbon.identity.smsotp.common.dto.FailureReasonDTO;
 import org.wso2.carbon.identity.smsotp.common.dto.GenerationResponseDTO;
@@ -57,9 +54,9 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import java.util.*;
 
 /**
- * This class implements the AuthenticationAuthService interface.
+ * This class implements the AuthenticationService interface.
  */
-public class AuthenticationServiceImpl implements AuthenticationAuthService {
+public class AuthenticationServiceImpl implements AuthenticationService {
     private static SMSOTPService smsOtpService;
     private static EmailOtpService emailOTPService;
     private static final Log log = LogFactory.getLog(AuthenticationServiceImpl.class);
@@ -72,7 +69,7 @@ public class AuthenticationServiceImpl implements AuthenticationAuthService {
      * @throws AuthenticationException if any server or client error occurred.
      */
     @Override
-    public AuthStepsDTO getAuthenticationStepsFromSP(String clientId) throws AuthenticationException {
+    public ArrayList<AuthenticationStepDetailsDTO> getAuthenticationStepsFromSP(String clientId) throws AuthenticationException {
 
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.BASIC_AUTH_PARAM_CLIENT_ID, clientId);
@@ -83,7 +80,7 @@ public class AuthenticationServiceImpl implements AuthenticationAuthService {
                         .serviceProvider(clientId)
                         .buildServiceProviderAuthenticationSteps();
 
-        return buildAuthenticationStepDetailsResponse(authContext);
+        return buildAuthStepsResponseDTO(authContext.getAuthenticationSteps());
 
     }
 
@@ -720,14 +717,32 @@ public class AuthenticationServiceImpl implements AuthenticationAuthService {
         return userAuthenticationResponse;
     }
 
+    public static ArrayList<AuthenticationStepDetailsDTO> buildAuthStepsResponseDTO(
+            LinkedHashMap<Integer, List<String>> authenticationSteps) {
 
-    private AuthStepsDTO buildAuthenticationStepDetailsResponse
-            (RestAuthenticationContext authContext) {
+        AuthenticatorDetailsDTO authenticatorDetailsDTO;
+        AuthenticationStepDetailsDTO authenticationStepDetailsDTO;
+        ArrayList<AuthenticationStepDetailsDTO> authenticationStepDetails = new ArrayList<>();
 
-        AuthStepsDTO responseDTO = new AuthStepsDTO();
-        responseDTO.setAuthenticationStepList(authContext.getAuthenticationSteps());
+        for (Map.Entry<Integer, List<String>> entry : authenticationSteps.entrySet()) {
 
-        return responseDTO;
+            int authenticatorStep = entry.getKey();
+            List<String> authenticatorName = entry.getValue();
+
+            ArrayList<AuthenticatorDetailsDTO> authenticatorDetailsDTOList = new ArrayList<>();
+
+            for (String name : authenticatorName) {
+                authenticatorDetailsDTO = new AuthenticatorDetailsDTO();
+                authenticatorDetailsDTO.setAuthenticatorName(name);
+                authenticatorDetailsDTOList.add(authenticatorDetailsDTO);
+            }
+
+            authenticationStepDetailsDTO = new AuthenticationStepDetailsDTO();
+            authenticationStepDetailsDTO.setStepNo(authenticatorStep);
+            authenticationStepDetailsDTO.setAuthenticatorDetailsDTO(authenticatorDetailsDTOList);
+            authenticationStepDetails.add(authenticationStepDetailsDTO);
+        }
+        return authenticationStepDetails;
     }
 
 

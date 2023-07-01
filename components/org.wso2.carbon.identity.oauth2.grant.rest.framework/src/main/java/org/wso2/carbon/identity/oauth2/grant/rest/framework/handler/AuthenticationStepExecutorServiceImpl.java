@@ -17,17 +17,17 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework.handler;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework.handler;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.extension.identity.emailotp.common.EmailOtpService;
 import org.wso2.carbon.extension.identity.emailotp.common.exception.EmailOtpException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.constant.Constants;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationClientException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.util.Util;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.Util;
 import org.wso2.carbon.identity.smsotp.common.SMSOTPService;
 import org.wso2.carbon.identity.smsotp.common.exception.SMSOTPException;
 
@@ -40,7 +40,7 @@ public class AuthenticationStepExecutorServiceImpl implements
     public Object getAuthenticatorServiceGenerationResponse
             (Object authenticatorService, String userId, String userTenantDomain) throws AuthenticationException {
 
-        Object mfaResponseDTO = null;
+        Object authResponseDTO = null;
         String channelName = null;
 
         try {
@@ -49,14 +49,14 @@ public class AuthenticationStepExecutorServiceImpl implements
 
             if (authenticatorService instanceof SMSOTPService) {
                 channelName = Constants.AUTHENTICATOR_NAME_SMSOTP;
-                mfaResponseDTO = ((SMSOTPService) authenticatorService).generateSMSOTP(userId);
+                authResponseDTO = ((SMSOTPService) authenticatorService).generateSMSOTP(userId);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("SMS OTP generated");
                 }
 
             } else if (authenticatorService instanceof EmailOtpService) {
                 channelName = Constants.AUTHENTICATOR_NAME_EMAILOTP;
-                mfaResponseDTO = ((EmailOtpService) authenticatorService).generateEmailOTP(userId);
+                authResponseDTO = ((EmailOtpService) authenticatorService).generateEmailOTP(userId);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Email OTP generated");
                 }
@@ -71,7 +71,7 @@ public class AuthenticationStepExecutorServiceImpl implements
             PrivilegedCarbonContext.endTenantFlow();
         }
 
-        return mfaResponseDTO;
+        return authResponseDTO;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class AuthenticationStepExecutorServiceImpl implements
             (Object authenticatorService, String flowId, String userId, String userTenantDomain, String otp)
             throws AuthenticationException {
 
-        Object mfaResponseDTO = null;
+        Object authResponseDTO = null;
         String channelName = null;
 
         try {
@@ -87,13 +87,13 @@ public class AuthenticationStepExecutorServiceImpl implements
             PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(userTenantDomain, true);
             if (authenticatorService instanceof SMSOTPService) {
                 channelName = Constants.AUTHENTICATOR_NAME_SMSOTP;
-                mfaResponseDTO = ((SMSOTPService) authenticatorService).validateSMSOTP(flowId, userId, otp);
+                authResponseDTO = ((SMSOTPService) authenticatorService).validateSMSOTP(flowId, userId, otp);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("SMS OTP validated");
                 }
             } else if (authenticatorService instanceof EmailOtpService) {
                 channelName = Constants.AUTHENTICATOR_NAME_EMAILOTP;
-                mfaResponseDTO = ((EmailOtpService) authenticatorService).validateEmailOTP(flowId, userId, otp);
+                authResponseDTO = ((EmailOtpService) authenticatorService).validateEmailOTP(flowId, userId, otp);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Email OTP validated");
                 }
@@ -108,6 +108,6 @@ public class AuthenticationStepExecutorServiceImpl implements
             PrivilegedCarbonContext.endTenantFlow();
         }
 
-        return mfaResponseDTO;
+        return authResponseDTO;
     }
 }

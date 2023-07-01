@@ -1,4 +1,4 @@
-package org.wso2.carbon.identity.oauth2.grant.mfa.granttype;
+package org.wso2.carbon.identity.oauth2.grant.rest.handler;
 
 /**
  * Constants used in REST OAuth2 Grant Type.

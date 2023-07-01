@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework.dao;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework.dao;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;

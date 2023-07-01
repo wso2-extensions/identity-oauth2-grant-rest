@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.constant;
+package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.constant;
 
 public class Constants {
     public static final String CORRELATION_ID_MDC = "Correlation-ID";

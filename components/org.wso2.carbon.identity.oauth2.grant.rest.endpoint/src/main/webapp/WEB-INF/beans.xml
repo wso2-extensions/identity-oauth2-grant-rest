@@ -37,13 +37,13 @@
     <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer"/>
     <bean class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer"/>
     <bean id="postprocess" class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
-    <context:component-scan base-package="org.wso2.carbon.identity.oauth2.grant.mfa.endpoints"/>
+    <context:component-scan base-package="org.wso2.carbon.identity.oauth2.grant.rest.endpoints"/>
 
-    <bean id="authenticationApi" class="org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.AuthenticationApi"/>
+    <bean id="authenticationApi" class="org.wso2.carbon.identity.oauth2.grant.rest.endpoints.AuthenticationApi"/>
     <bean id="authenticationApiServiceImpl"
-         class="org.wso2.carbon.identity.oauth2.grant.mfa.endpoints.impl.AuthenticationApiServiceImpl"/>
+         class="org.wso2.carbon.identity.oauth2.grant.rest.endpoint.impl.AuthenticationApiServiceImpl"/>
 
-   <jaxrs:server id="MFAAuthServices" address="/">
+   <jaxrs:server id="RestAuthServices" address="/">
        <jaxrs:serviceBeans>
            <ref bean="authenticationApi"/>
            <ref bean="authenticationApiServiceImpl"/>

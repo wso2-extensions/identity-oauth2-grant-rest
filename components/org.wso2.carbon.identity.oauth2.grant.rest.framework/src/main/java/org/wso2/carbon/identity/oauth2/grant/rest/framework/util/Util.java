@@ -17,18 +17,18 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework.util;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework.util;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.constant.Constants;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.dto.ConfigsDTO;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationClientException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationServerException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.internal.AuthenticationServiceDataHolder;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.ConfigsDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationServerException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.internal.AuthenticationServiceDataHolder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -67,7 +67,7 @@ public class Util {
 
         InputStream inputStream = null;
         Properties properties;
-        String configFilePath = Constants.MFA_CONFIG_PATH + Constants.CONFIG_FILE_NAME;
+        String configFilePath = Constants.CONFIG_FILE_PATH + Constants.CONFIG_FILE_NAME;
 
         try {
             properties = new Properties();
@@ -76,13 +76,13 @@ public class Util {
             if (configFile.exists()) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(String.format(" %s file loaded from %s.", Constants.CONFIG_FILE_NAME,
-                            Constants.MFA_CONFIG_PATH + Constants.CONFIG_FILE_NAME));
+                            Constants.CONFIG_FILE_PATH + Constants.CONFIG_FILE_NAME));
                 }
                 inputStream = new FileInputStream(configFile);
                 properties.load(inputStream);
             } else {
                 LOG.error(String.format(" %s file has NOT been loaded from %s.", Constants.CONFIG_FILE_NAME,
-                        Constants.MFA_CONFIG_PATH + Constants.CONFIG_FILE_NAME));
+                        Constants.CONFIG_FILE_PATH + Constants.CONFIG_FILE_NAME));
             }
         } catch (FileNotFoundException e) {
             LOG.error("Failed to load service configurations.", e);
@@ -108,11 +108,11 @@ public class Util {
         ConfigsDTO configs = AuthenticationServiceDataHolder.getConfigs();
 
         boolean isEnabled = Boolean.parseBoolean(StringUtils.trim(
-                properties.getProperty(Constants.MFA_AUTH_ENABLED)));
+                properties.getProperty(Constants.REST_AUTH_ENABLED)));
         configs.setEnabled(isEnabled);
 
         boolean showFailureReason = Boolean.parseBoolean(StringUtils.trim(
-                properties.getProperty(Constants.MFA_AUTH_SHOW_FAILURE_REASON)));
+                properties.getProperty(Constants.AUTH_SHOW_FAILURE_REASON)));
         configs.setShowFailureReason(showFailureReason);
 
         String otpValidityPeriodValue =

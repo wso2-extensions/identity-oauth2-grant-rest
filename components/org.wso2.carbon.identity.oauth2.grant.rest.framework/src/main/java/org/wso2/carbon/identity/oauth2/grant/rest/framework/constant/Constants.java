@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework.constant;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework.constant;
 
 import org.wso2.carbon.utils.CarbonUtils;
 import java.io.File;
@@ -30,20 +30,20 @@ public class Constants {
     public static final String CLIENT_TYPE = "oauth2";
 
     //Config File related Constants
-    public static final String MFA_CONFIG_PATH = CarbonUtils.getCarbonHome() + File.separator + "repository"
+    public static final String CONFIG_FILE_PATH = CarbonUtils.getCarbonHome() + File.separator + "repository"
             + File.separator + "conf" + File.separator;
 
-    public static final String CONFIG_FILE_NAME = "mfa-auth.properties";
+    public static final String CONFIG_FILE_NAME = "rest-auth.properties";
 
     //Config related Constants
     public static final int DEFAULT_FLOW_ID_VALIDITY_PERIOD = 600000; //in milliseconds
     public static final int DEFAULT_FLOW_ID_TIMESTAMP_SKEW = 0; //in milliseconds
 
-    public static final String MFA_AUTH_ENABLED = "mfaAuth.enabled";
-    public static final String FLOW_ID_VALIDITY_PERIOD = "mfaAuth.mfaFlowIdValidityPeriod";
-    public static final String MFA_AUTH_SHOW_FAILURE_REASON = "mfaAuth.showValidationFailureReason";
-    public static final String FLOW_ID_TIMESTAMP_SKEW = "mfaAuth.timestampSkew";
-    public static final String MFA_CUSTOM_LOCAL_AUTHENTICATOR = "mfaAuth.localCustomAuthenticator";
+    public static final String REST_AUTH_ENABLED = "RestAuth.enabled";
+    public static final String FLOW_ID_VALIDITY_PERIOD = "RestAuth.FlowIdValidityPeriod";
+    public static final String AUTH_SHOW_FAILURE_REASON = "RestAuth.showValidationFailureReason";
+    public static final String FLOW_ID_TIMESTAMP_SKEW = "RestAuth.timestampSkew";
+    public static final String CUSTOM_LOCAL_AUTHENTICATOR = "RestAuth.localCustomAuthenticator";
 
     //Authenticator related Constants
     public static final String AUTHENTICATOR_NAME_BASIC_AUTH = "BasicAuthenticator";
@@ -101,64 +101,64 @@ public class Constants {
 
 
     /**
-     * MFA Auth Service error codes.
+     * Rest Auth Service error codes.
      */
     public enum ErrorMessage {
 
         // Client error codes.
-        CLIENT_MANDATORY_VALIDATION_PARAMETERS_EMPTY("MFA-60001", "Mandatory parameters not found.",
+        CLIENT_MANDATORY_VALIDATION_PARAMETERS_EMPTY("E-60001", "Mandatory parameters not found.",
                 "Mandatory parameters not found : %s."),
-        CLIENT_INVALID_AUTHENTICATOR("MFA-60002", "Invalid authenticator",
+        CLIENT_INVALID_AUTHENTICATOR("E-60002", "Invalid authenticator",
                 "%s is not present in the current authentication step."),
-        CLIENT_INVALID_CLIENT_ID("MFA-60003", "Invalid client Id.",
+        CLIENT_INVALID_CLIENT_ID("E-60003", "Invalid client Id.",
                 "Provided client id does not exist : %s"),
-        CLIENT_INCORRECT_USER_CREDENTIALS("MFA-60004", "Incorrect user credentials.",
+        CLIENT_INCORRECT_USER_CREDENTIALS("E-60004", "Incorrect user credentials.",
                 "Basic Authentication failed for the user."),
-        CLIENT_INACTIVE_FLOW_ID("MFA-60005", "Inactive Flow Id", "Provided Flow Id is in inactive state : %s"),
-        CLIENT_INVALID_FLOW_ID("MFA-60006", "Invalid Flow Id", "Provided Flow Id does not exist : %s"),
-        CLIENT_AUTHSTEP_OUT_OF_BOUNDS("MFA-60007", "Auth Step Out Of Bounds", "Required Authentication steps have" +
+        CLIENT_INACTIVE_FLOW_ID("E-60005", "Inactive Flow Id", "Provided Flow Id is in inactive state : %s"),
+        CLIENT_INVALID_FLOW_ID("E-60006", "Invalid Flow Id", "Provided Flow Id does not exist : %s"),
+        CLIENT_AUTHSTEP_OUT_OF_BOUNDS("E-60007", "Auth Step Out Of Bounds", "Required Authentication steps have" +
                 " already been completed."),
-        CLIENT_AUTHENTICATOR_NOT_SUPPORTED("MFA-60008", "Unsupported Authenticator", "Provided Authenticator is not " +
-                "supported by MFA Authentication Service: %s"),
-        CLIENT_EXPIRED_FLOW_ID("MFA-60009", "Expired Flow Id.", "Provided Flow Id is expired : %s"),
-        CLIENT_LOCKED_ACCOUNT("MFA-60010", "Locked Account.", "User Account is Locked for the user : %s"),
-        CLIENT_DISABLED_ACCOUNT("MFA-60011", "Disabled Account.", "User Account is Disabled for the user : %s"),
-        CLIENT_EXPIRED_USER_PASSWORD("MFA-60012", "Expired User Password.", "User Password has Expired for the user :" +
+        CLIENT_AUTHENTICATOR_NOT_SUPPORTED("E-60008", "Unsupported Authenticator", "Provided Authenticator is not " +
+                "supported by E Authentication Service: %s"),
+        CLIENT_EXPIRED_FLOW_ID("E-60009", "Expired Flow Id.", "Provided Flow Id is expired : %s"),
+        CLIENT_LOCKED_ACCOUNT("E-60010", "Locked Account.", "User Account is Locked for the user : %s"),
+        CLIENT_DISABLED_ACCOUNT("E-60011", "Disabled Account.", "User Account is Disabled for the user : %s"),
+        CLIENT_EXPIRED_USER_PASSWORD("E-60012", "Expired User Password.", "User Password has Expired for the user :" +
                 " %s"),
-        CLIENT_USERID_FLOWID_MISMATCH("MFA-60013", "Incorrect User Id.",
+        CLIENT_USERID_FLOWID_MISMATCH("E-60013", "Incorrect User Id.",
                 "User Id is incorrect for the provided Flow Id : %s"),
-        CLIENT_INVALID_USER("MFA-60014", "Incorrect User Credentials.", "User does not exist : %s"),
-        CLIENT_USER_SP_TENANT_MISMATCH("MFA-60015", "IsSaasApp is disabled.", "Cross tenant access is restricted."),
-        CLIENT_CUSTOM_AUTHENTICATE_USER_ERROR("MFA-60016", "user authentication error.", "%s"),
+        CLIENT_INVALID_USER("E-60014", "Incorrect User Credentials.", "User does not exist : %s"),
+        CLIENT_USER_SP_TENANT_MISMATCH("E-60015", "IsSaasApp is disabled.", "Cross tenant access is restricted."),
+        CLIENT_CUSTOM_AUTHENTICATE_USER_ERROR("E-60016", "user authentication error.", "%s"),
 
         // Server error codes.
-        SERVER_RETRIEVING_SP_ERROR("MFA-65001", "Service provider error.",
+        SERVER_RETRIEVING_SP_ERROR("E-65001", "Service provider error.",
                 "Error retrieving service provider."),
-        SERVER_AUTHENTICATE_USER_ERROR("MFA-65002", "user authentication error.",
+        SERVER_AUTHENTICATE_USER_ERROR("E-65002", "user authentication error.",
                 "Error validating user credentials for the user : %s."),
-        SERVER_USER_STORE_MANAGER_ERROR ("MFA-65003", "user store manager error.", "Error retrieving user store " +
+        SERVER_USER_STORE_MANAGER_ERROR ("E-65003", "user store manager error.", "Error retrieving user store " +
                 "manager."),
-        SERVER_RETRIEVING_USER_ID_ERROR ("MFA-65004", "user store manager error.", "Error retrieving userId for" +
+        SERVER_RETRIEVING_USER_ID_ERROR ("E-65004", "user store manager error.", "Error retrieving userId for" +
                 " the username : %s."),
-        SERVER_RETRIEVING_USER_NAME_ERROR ("MFA-65005", "user store manager error.", "Error retrieving username for" +
+        SERVER_RETRIEVING_USER_NAME_ERROR ("E-65005", "user store manager error.", "Error retrieving username for" +
                 " the userId : %s."),
-        SERVER_INVALID_APP_ID("MFA-60006", "Service Provider App ID is invalid.",
+        SERVER_INVALID_APP_ID("E-60006", "Service Provider App ID is invalid.",
                 "Service Provider App ID is invalid. App ID: %s"),
-        SERVER_ACCOUNT_STATUS_ERROR("MFA-60007", "User Account Error.",
+        SERVER_ACCOUNT_STATUS_ERROR("E-60007", "User Account Error.",
                 "Error while checking the account status for the user : %s."),
-        SERVER_UNEXPECTED_ERROR("MFA-65008", "An unexpected server error occurred.",
+        SERVER_UNEXPECTED_ERROR("E-65008", "An unexpected server error occurred.",
                 "An unexpected server error occurred."),
-        SERVER_CONFIG_FILE_NOT_FOUND_ERROR("MFA-65009", "Config file could not be found.",
+        SERVER_CONFIG_FILE_NOT_FOUND_ERROR("E-65009", "Config file could not be found.",
                 "Config file could not be found: %s"),
-        SERVER_REQUEST_PARAM_READING_ERROR("MFA-65010", "Error sanitizing request parameters.",
+        SERVER_REQUEST_PARAM_READING_ERROR("E-65010", "Error sanitizing request parameters.",
                 "Error while sanitizing the request parameter : %s."),
-        SERVER_PROPERTY_NOT_DEFINED_ERROR("MFA-65011", "Property not found.", "Property is not defined in " +
+        SERVER_PROPERTY_NOT_DEFINED_ERROR("E-65011", "Property not found.", "Property is not defined in " +
                 "configuration file."),
-        SERVER_CONFIG_LOADING_IO_ERROR("MFA-65012", "Error while loading MFA Auth configs.",
-                "Error while loading MFA Auth configs."),
-        SERVER_CONFIG_FILE_CLOSURE_IO_ERROR("MFA-65013", "Failed to close the FileInputStream.",
+        SERVER_CONFIG_LOADING_IO_ERROR("E-65012", "Error while loading E Auth configs.",
+                "Error while loading E Auth configs."),
+        SERVER_CONFIG_FILE_CLOSURE_IO_ERROR("E-65013", "Failed to close the FileInputStream.",
                 "Failed to close the FileInputStream for file %s."),
-        SERVER_AUTHENTICATOR_SERVICE_ERROR("MFA-65014", "Failed to retrieve Authenticator Service.",
+        SERVER_AUTHENTICATOR_SERVICE_ERROR("E-65014", "Failed to retrieve Authenticator Service.",
                 "Authenticator Service Object is null.");
 
         private final String code;

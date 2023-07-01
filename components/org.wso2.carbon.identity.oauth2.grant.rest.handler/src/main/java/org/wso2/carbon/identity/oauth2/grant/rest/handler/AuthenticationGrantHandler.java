@@ -1,4 +1,4 @@
-package org.wso2.carbon.identity.oauth2.grant.mfa.granttype;
+package org.wso2.carbon.identity.oauth2.grant.rest.handler;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -7,11 +7,11 @@ import org.wso2.carbon.identity.application.authentication.framework.model.Authe
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.ResponseHeader;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.AuthenticationServiceImpl;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.constant.Constants;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.dao.CacheBackedFlowIdDAO;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.dao.FlowIdDO;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.AuthenticationServiceImpl;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.CacheBackedFlowIdDAO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.FlowIdDO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 import org.wso2.carbon.identity.oauth2.model.RequestParameter;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
 import org.wso2.carbon.identity.oauth2.token.handlers.grant.PasswordGrantHandler;

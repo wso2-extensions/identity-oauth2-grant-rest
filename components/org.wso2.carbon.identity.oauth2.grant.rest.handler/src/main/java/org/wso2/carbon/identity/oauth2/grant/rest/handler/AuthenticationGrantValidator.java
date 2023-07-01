@@ -1,4 +1,4 @@
-package org.wso2.carbon.identity.oauth2.grant.mfa.granttype;
+package org.wso2.carbon.identity.oauth2.grant.rest.handler;
 
 import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.validators.AbstractValidator;

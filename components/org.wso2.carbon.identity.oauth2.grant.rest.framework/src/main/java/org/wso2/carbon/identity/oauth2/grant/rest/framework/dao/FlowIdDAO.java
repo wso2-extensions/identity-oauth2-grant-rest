@@ -17,8 +17,8 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework.dao;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationException;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework.dao;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 
 public interface FlowIdDAO {
     /**

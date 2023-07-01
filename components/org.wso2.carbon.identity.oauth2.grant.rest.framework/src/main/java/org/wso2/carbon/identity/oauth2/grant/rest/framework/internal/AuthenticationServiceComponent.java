@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.carbon.identity.oauth2.grant.mfa.framework.internal;
+package org.wso2.carbon.identity.oauth2.grant.rest.framework.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,23 +32,20 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.extension.identity.emailotp.common.EmailOtpService;
 import org.wso2.carbon.identity.application.mgt.listener.ApplicationMgtListener;
 import org.wso2.carbon.identity.multi.attribute.login.mgt.MultiAttributeLoginService;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.AuthenticationListenerService;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.AuthenticationAuthService;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.AuthenticationServiceImpl;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.exception.AuthenticationException;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.listener.AccountDisableListener;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.listener.AccountLockListener;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.listener.ApplicationCacheListener;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.listener.PasswordExpiryListener;
-import org.wso2.carbon.identity.oauth2.grant.mfa.framework.util.Util;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.AuthenticationListenerService;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.AuthenticationService;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.AuthenticationServiceImpl;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.listener.ApplicationCacheListener;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.Util;
 import org.wso2.carbon.identity.smsotp.common.SMSOTPService;
 import org.wso2.carbon.user.core.service.RealmService;
 
 
 /**
- * OSGI service component of the MFA Authentication service.
+ * OSGI service component of the Rest Authentication service.
  */
-@Component(name = "org.wso2.carbon.identity.oauth2.grant.mfa", immediate = true)
+@Component(name = "org.wso2.carbon.identity.oauth2.grant.rest.auth.service", immediate = true)
 public class AuthenticationServiceComponent {
 
 	private static final Log LOG = LogFactory.getLog(AuthenticationServiceComponent.class);
@@ -62,23 +59,23 @@ public class AuthenticationServiceComponent {
 
 			if (isEnabled) {
 				BundleContext bundleContext = componentContext.getBundleContext();
-				bundleContext.registerService(AuthenticationAuthService.class.getName(), new AuthenticationServiceImpl(), null);
-				LOG.debug("MFA Authentication Service component activated successfully.");
+				bundleContext.registerService(AuthenticationService.class.getName(), new AuthenticationServiceImpl(), null);
+				LOG.debug("Authentication Service component activated successfully.");
 				bundleContext.registerService(ApplicationMgtListener.class.getName(), new ApplicationCacheListener(),
 						null);
 				LOG.debug("Application Management Listener Service component activated successfully.");
 			} else {
-				LOG.error("MFA Authentication Service is not enabled.");
+				LOG.error("Authentication Service is not enabled.");
 			}
 		} catch (Throwable e) {
-			LOG.error("Error while activating MFA Authentication Service.", e);
+			LOG.error("Error while activating Authentication Service.", e);
 		}
 	}
 
 	@Deactivate
 	protected void deactivate(ComponentContext componentContext) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("MFA Authentication Service component is deactivated");
+			LOG.debug("Authentication Service component is deactivated");
 		}
 	}
 
@@ -169,23 +166,23 @@ public class AuthenticationServiceComponent {
 			service = AuthenticationListenerService.class,
 			cardinality = ReferenceCardinality.MULTIPLE,
 			policy = ReferencePolicy.DYNAMIC,
-			unbind = "unsetMFAAuthListenerService")
-	protected void setMFAAuthListenerService(AuthenticationListenerService mfaAuthListenerService)
+			unbind = "unsetAuthListenerService")
+	protected void setAuthListenerService(AuthenticationListenerService authListenerService)
 			throws AuthenticationException {
 
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("Setting MFA Authentication Listener Service.");
+			LOG.debug("Setting Authentication Listener Service.");
 		}
 
-		AuthenticationServiceDataHolder.getInstance().setMFAAuthListenerService(mfaAuthListenerService);
+		AuthenticationServiceDataHolder.getInstance().setAuthListenerService(authListenerService);
 	}
 
-	protected void unsetMFAAuthListenerService(AuthenticationListenerService mfaAuthListenerService) {
+	protected void unsetAuthListenerService(AuthenticationListenerService authListenerService) {
 
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("Unset MFA Authentication Listener Service.");
+			LOG.debug("Unset Authentication Listener Service.");
 		}
-		AuthenticationServiceDataHolder.getInstance().setMFAAuthListenerService(null);
+		AuthenticationServiceDataHolder.getInstance().setAuthListenerService(null);
 	}
 
 	/**
