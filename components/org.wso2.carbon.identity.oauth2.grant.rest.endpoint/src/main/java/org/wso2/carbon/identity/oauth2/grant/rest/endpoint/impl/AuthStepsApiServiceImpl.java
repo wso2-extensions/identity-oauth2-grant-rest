@@ -18,8 +18,11 @@
 
 package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.*;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.*;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RequestSnatizerUtil;
+
 import java.util.List;
 import javax.ws.rs.core.Response;
 
@@ -27,6 +30,9 @@ public class AuthStepsApiServiceImpl implements AuthStepsApiService {
 
     @Override
     public Response authStepsGet(String clientId) {
+
+
+
 
         // do some magic!
         return Response.ok().entity("magic!").build();

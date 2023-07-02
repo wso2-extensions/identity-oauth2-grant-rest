@@ -18,16 +18,46 @@
 
 package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.impl;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.*;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.*;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.EndpointUtils;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RequestSnatizerUtil;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationInitializationResponseDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
+
 import java.util.List;
 import javax.ws.rs.core.Response;
+import javax.xml.ws.Endpoint;
 
 public class InitAuthenticatorApiServiceImpl implements InitAuthenticatorApiService {
 
+    private static final Log LOG = LogFactory.getLog(InitAuthenticatorApiServiceImpl.class);
     @Override
     public Response initAuthenticatorPost(AuthenticatorInitializationRequest authenticatorInitializationRequest) {
 
+        String authenticator = RequestSnatizerUtil.trimString(authenticatorInitializationRequest.getAuthenticator());
+        String flowId = StringUtils.trim(authenticatorInitializationRequest.getFlowId());
+
+        try {
+
+            AuthenticationInitializationResponseDTO responseDTO = EndpointUtils.getAuthService()
+                    .executeAuthStep(flowId, authenticator);
+            AuthenticatorInitializationResponse response = new AuthenticatorInitializationResponse()
+                    .flowId(responseDTO.getFlowId())
+                    .authenticator(responseDTO.getAuthenticator());
+            return Response.ok(response).build();
+
+        } catch (AuthenticationClientException e) {
+            return EndpointUtils.handleBadRequestResponse(authenticator, e, LOG);
+        } catch (AuthenticationException e) {
+            return EndpointUtils.handleServerErrorResponse(authenticator, e, LOG);
+        } catch (Throwable e) {
+            return EndpointUtils.handleUnexpectedServerError(authenticator, e, LOG);
+        }
         // do some magic!
         return Response.ok().entity("magic!").build();
     }

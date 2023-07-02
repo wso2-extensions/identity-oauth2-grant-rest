@@ -34,6 +34,7 @@ import org.wso2.carbon.identity.application.mgt.ApplicationManagementServiceImpl
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticatorDetailsDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthnticatedAuthenticatorDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.internal.AuthenticationServiceDataHolder;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.Util;
@@ -57,7 +58,7 @@ public class RestAuthenticationContext {
 
 	private int userTenantId;
 
-	private LinkedHashMap<Integer, String> authenticatedSteps;
+	private List<AuthnticatedAuthenticatorDTO> authenticatedSteps;
 
 	private ServiceProvider serviceProvider;
 
@@ -134,7 +135,7 @@ public class RestAuthenticationContext {
 		return userTenantId;
 	}
 
-	public LinkedHashMap<Integer, String> getAuthenticatedSteps() {
+	public List<AuthnticatedAuthenticatorDTO> getAuthenticatedSteps() {
 		return authenticatedSteps;
 	}
 
@@ -205,7 +206,7 @@ public class RestAuthenticationContext {
 		return this;
 	}
 
-	public RestAuthenticationContext setAuthenticatedSteps(LinkedHashMap<Integer, String> authenticatedSteps) {
+	public RestAuthenticationContext setAuthenticatedSteps(List<AuthnticatedAuthenticatorDTO> authenticatedSteps) {
 
 		this.authenticatedSteps = authenticatedSteps;
 		return this;
@@ -264,7 +265,7 @@ public class RestAuthenticationContext {
 		private String username;
 		private String userId;
 		private int userTenantId;
-		private LinkedHashMap<Integer, String> authenticatedSteps = new LinkedHashMap<>();
+		private List<AuthnticatedAuthenticatorDTO> authenticatedSteps;
 		private ServiceProvider serviceProvider;
 		private LinkedHashMap<Integer, List<String>> authenticationSteps;
 		private String clientId;
@@ -325,7 +326,7 @@ public class RestAuthenticationContext {
 			return this;
 		}
 
-		public Builder authenticatedSteps(LinkedHashMap<Integer, String> authenticatedSteps) {
+		public Builder authenticatedSteps(List<AuthnticatedAuthenticatorDTO> authenticatedSteps) {
 
 			this.authenticatedSteps = authenticatedSteps;
 			return this;

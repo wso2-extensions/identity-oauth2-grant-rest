@@ -1,6 +1,6 @@
 package org.wso2.carbon.identity.oauth2.grant.rest.framework.dto;
 
-public class AuthenticationFlowValidationRequest {
+public class AuthenticationFlowValidationRequest extends AuthenticationFlowRequest {
 
     private String authenticator;
     private String flowId;

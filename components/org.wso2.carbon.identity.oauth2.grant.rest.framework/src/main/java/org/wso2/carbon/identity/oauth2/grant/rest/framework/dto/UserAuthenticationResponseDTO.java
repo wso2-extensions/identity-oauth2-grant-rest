@@ -20,7 +20,7 @@
 package org.wso2.carbon.identity.oauth2.grant.rest.framework.dto;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.List;
 
 public class UserAuthenticationResponseDTO {
 
@@ -28,10 +28,10 @@ public class UserAuthenticationResponseDTO {
     private boolean isValidPassword;
     private String userId;
     private boolean isAuthFlowCompleted;
-    private LinkedHashMap<Integer, String> authenticatedSteps;
+    private List<AuthnticatedAuthenticatorDTO> authenticatedSteps;
     private Object authenticationSteps;
     private int nextStep;
-    private AuthenticationValidationFailureReasonDTO failureReason;
+    private AuthenticationFailureReasonDTO failureReason;
     private ArrayList<AuthenticationStepDetailsDTO> authenticationStepDetails;
 
 
@@ -71,11 +71,11 @@ public class UserAuthenticationResponseDTO {
         return this;
     }
 
-    public LinkedHashMap<Integer, String> getAuthenticatedSteps() {
+    public List<AuthnticatedAuthenticatorDTO> getAuthenticatedSteps() {
         return authenticatedSteps;
     }
 
-    public UserAuthenticationResponseDTO setAuthenticatedSteps(LinkedHashMap<Integer, String> authenticatedSteps) {
+    public UserAuthenticationResponseDTO setAuthenticatedSteps(List<AuthnticatedAuthenticatorDTO> authenticatedSteps) {
         this.authenticatedSteps = authenticatedSteps;
         return this;
     }
@@ -98,11 +98,11 @@ public class UserAuthenticationResponseDTO {
         return this;
     }
 
-    public AuthenticationValidationFailureReasonDTO getFailureReason() {
+    public AuthenticationFailureReasonDTO getFailureReason() {
         return failureReason;
     }
 
-    public UserAuthenticationResponseDTO setFailureReason(AuthenticationValidationFailureReasonDTO failureReason) {
+    public UserAuthenticationResponseDTO setFailureReason(AuthenticationFailureReasonDTO failureReason) {
         this.failureReason = failureReason;
         return this;
     }

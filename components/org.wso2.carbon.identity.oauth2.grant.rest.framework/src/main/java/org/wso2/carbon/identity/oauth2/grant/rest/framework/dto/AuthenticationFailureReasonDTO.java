@@ -26,14 +26,14 @@ import org.wso2.carbon.identity.smsotp.common.constant.Constants;
  * This class represents the model of the OTP validation
  * failure reason message, if any.
  */
-public class AuthenticationValidationFailureReasonDTO {
+public class AuthenticationFailureReasonDTO {
 
 	String code;
 	String message;
 	String description;
 	int remainingAttempts;
 
-	public AuthenticationValidationFailureReasonDTO(String code, String message, String description) {
+	public AuthenticationFailureReasonDTO(String code, String message, String description) {
 
 		this.code = code;
 		this.message = message;
@@ -41,7 +41,7 @@ public class AuthenticationValidationFailureReasonDTO {
 		this.remainingAttempts = 0;
 	}
 
-	public AuthenticationValidationFailureReasonDTO
+	public AuthenticationFailureReasonDTO
 			(String code, String message, String description, int remainingAttempts) {
 
 		this.code = code;
@@ -50,7 +50,7 @@ public class AuthenticationValidationFailureReasonDTO {
 		this.remainingAttempts = remainingAttempts;
 	}
 
-	public AuthenticationValidationFailureReasonDTO(Constants.ErrorMessage error, String data) {
+	public AuthenticationFailureReasonDTO(Constants.ErrorMessage error, String data) {
 
 		this.code = error.getCode();
 		this.message = error.getMessage();
@@ -66,7 +66,7 @@ public class AuthenticationValidationFailureReasonDTO {
 	 * @param data                      Data passed for the string argument in error message.
 	 * @param remainingFailedAttempts   No of remaining validation attempts.
 	 */
-	public AuthenticationValidationFailureReasonDTO
+	public AuthenticationFailureReasonDTO
 	(Constants.ErrorMessage error, String data, int remainingFailedAttempts) {
 
 		this.code = error.getCode();

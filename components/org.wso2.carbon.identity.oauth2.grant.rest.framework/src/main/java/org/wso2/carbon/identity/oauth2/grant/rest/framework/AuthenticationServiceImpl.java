@@ -111,7 +111,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = User.getUserFromUserName(flowIdDO.getFullQualifiedUserName());
         authContext.setUser(user);
         authContext.setServiceProvider(flowIdDO.getServiceProviderAppId());
-        authContext.setAuthenticatedSteps(flowIdDO.getAuthenticatedSteps());
+        authContext.setAuthenticatedSteps(null);
         authContext.setFlowIdIdentifier(flowIdDO.getFlowIdIdentifier());
         authContext.setUserTenantId(flowIdDO.getUserTenantId());
         authContext.setSpTenantId(flowIdDO.getSpTenantId());
@@ -615,7 +615,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         flowIdDO.setExpiryTime(flowIdDO.getGeneratedTime() + authContext.getFlowIdValidityPeriod());
         flowIdDO.setAuthFlowCompleted(authContext.isAuthFlowCompleted());
         flowIdDO.setServiceProviderAppId(authContext.getServiceProvider().getApplicationID());
-        flowIdDO.setAuthenticatedSteps(authContext.getAuthenticatedSteps());
+        flowIdDO.setAuthenticatedSteps(null);
         flowIdDO.setSpTenantId(authContext.getSpTenantId());
         flowIdDO.setUserTenantId(authContext.getUserTenantId());
 
@@ -637,7 +637,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         //responseDTO.setAuthenticationStepDetails(authContext.getAuthenticationsStepsForSP());
         responseDTO.setAuthFlowCompleted(authContext.isAuthFlowCompleted());
         responseDTO.setNextStep(fetchNextAuthStep
-                (authContext.getAuthenticatedSteps(), authContext.getAuthenticationSteps()));
+                (null, authContext.getAuthenticationSteps()));
 
         return responseDTO;
     }
@@ -671,7 +671,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     buildAuthValidationResponse(RestAuthenticationContext authContext, FlowIdDO flowIdDO, Object failureReasonDTO) {
 
         UserAuthenticationResponseDTO userAuthenticationResponse = new UserAuthenticationResponseDTO();
-        AuthenticationValidationFailureReasonDTO failureReason = null;
+        AuthenticationFailureReasonDTO failureReason = null;
 
         if (authContext.isValidPassword()) {
             updateAuthenticatedSteps(authContext.getAuthenticatedSteps(),
@@ -693,14 +693,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .setAuthenticatedSteps(authContext.getAuthenticatedSteps())
                // .setAuthenticationStepDetails
                 //        (authContext.getAuthenticationsStepsForSP())
-                .setNextStep(fetchNextAuthStep(authContext.getAuthenticatedSteps(),
+                .setNextStep(fetchNextAuthStep(null,
                         authContext.getAuthenticationSteps()));
 
         if (failureReasonDTO != null) {
             if (failureReasonDTO instanceof FailureReasonDTO) {
 
                 FailureReasonDTO failureReasonDO = (FailureReasonDTO) failureReasonDTO;
-                failureReason = new AuthenticationValidationFailureReasonDTO(failureReasonDO.getCode(),
+                failureReason = new AuthenticationFailureReasonDTO(failureReasonDO.getCode(),
                         failureReasonDO.getMessage(), failureReasonDO.getDescription());
 
             } else if (failureReasonDTO instanceof
@@ -708,7 +708,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
                 org.wso2.carbon.extension.identity.emailotp.common.dto.FailureReasonDTO failureReasonDO =
                         (org.wso2.carbon.extension.identity.emailotp.common.dto.FailureReasonDTO) failureReasonDTO;
-                failureReason = new AuthenticationValidationFailureReasonDTO(failureReasonDO.getCode(),
+                failureReason = new AuthenticationFailureReasonDTO(failureReasonDO.getCode(),
                         failureReasonDO.getMessage(), failureReasonDO.getDescription());
 
             }
@@ -786,8 +786,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @param stepNo             Successfully authenticated Authentication Step Number.
      * @param authenticator      Successfully authenticated Authenticator.
      */
-    private void updateAuthenticatedSteps(LinkedHashMap<Integer, String> authenticatedSteps, Integer stepNo,
+    private void updateAuthenticatedSteps(List<AuthnticatedAuthenticatorDTO> authenticatedSteps, Integer stepNo,
                                           String authenticator) {
-        authenticatedSteps.put(stepNo, authenticator);
+        authenticatedSteps.add(null);
     }
 }

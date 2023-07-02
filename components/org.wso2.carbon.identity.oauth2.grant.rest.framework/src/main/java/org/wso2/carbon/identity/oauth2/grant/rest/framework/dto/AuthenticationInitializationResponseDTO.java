@@ -29,18 +29,22 @@ public class AuthenticationInitializationResponseDTO {
 	private String authenticator;
 
 	public String getFlowId() {
+
 		return flowId;
 	}
 
 	public void setFlowId(String flowId) {
+
 		this.flowId = flowId;
 	}
 
 	public String getAuthenticator() {
+
 		return authenticator;
 	}
 
 	public void setAuthenticator(String authenticator) {
+
 		this.authenticator = authenticator;
 	}
 
