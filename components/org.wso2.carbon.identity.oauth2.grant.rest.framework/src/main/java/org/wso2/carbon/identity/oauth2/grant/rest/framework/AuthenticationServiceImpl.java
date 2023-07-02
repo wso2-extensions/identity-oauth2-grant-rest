@@ -51,6 +51,7 @@ import org.wso2.carbon.user.core.common.AbstractUserStoreManager;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -69,7 +70,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @throws AuthenticationException if any server or client error occurred.
      */
     @Override
-    public ArrayList<AuthenticationStepDetailsDTO> getAuthenticationStepsFromSP(String clientId) throws AuthenticationException {
+    public AuthenticationStepsResponseDTO getAuthenticationStepsFromSP(String clientId)
+            throws AuthenticationException {
 
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.BASIC_AUTH_PARAM_CLIENT_ID, clientId);
@@ -80,7 +82,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         .serviceProvider(clientId)
                         .buildServiceProviderAuthenticationSteps();
 
-        return buildAuthStepsResponseDTO(authContext.getAuthenticationSteps());
+        return buildAuthenticationStepsForSP(authContext);
 
     }
 
@@ -717,7 +719,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return userAuthenticationResponse;
     }
 
-    public static ArrayList<AuthenticationStepDetailsDTO> buildAuthStepsResponseDTO(
+    private AuthenticationStepsResponseDTO buildAuthenticationStepsForSP(RestAuthenticationContext authContext) {
+
+        AuthenticationStepsResponseDTO responseDTO = new AuthenticationStepsResponseDTO();
+        responseDTO.setAuthenticationSteps(getConfiguredAuthenticationStepsForSP(authContext.getAuthenticationSteps()));
+        return responseDTO;
+    }
+
+    public static ArrayList<AuthenticationStepDetailsDTO> getConfiguredAuthenticationStepsForSP(
             LinkedHashMap<Integer, List<String>> authenticationSteps) {
 
         AuthenticatorDetailsDTO authenticatorDetailsDTO;
@@ -739,7 +748,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             authenticationStepDetailsDTO = new AuthenticationStepDetailsDTO();
             authenticationStepDetailsDTO.setStepNo(authenticatorStep);
-            authenticationStepDetailsDTO.setAuthenticatorDetailsDTO(authenticatorDetailsDTOList);
+            authenticationStepDetailsDTO.setAuthenticatorDetails(authenticatorDetailsDTOList);
             authenticationStepDetails.add(authenticationStepDetailsDTO);
         }
         return authenticationStepDetails;
@@ -786,8 +795,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @param stepNo             Successfully authenticated Authentication Step Number.
      * @param authenticator      Successfully authenticated Authenticator.
      */
-    private void updateAuthenticatedSteps(List<AuthnticatedAuthenticatorDTO> authenticatedSteps, Integer stepNo,
+    private void updateAuthenticatedSteps(LinkedHashMap<Integer, String> authenticatedSteps, Integer stepNo,
                                           String authenticator) {
-        authenticatedSteps.add(null);
+        authenticatedSteps.put(stepNo, authenticator);
     }
 }

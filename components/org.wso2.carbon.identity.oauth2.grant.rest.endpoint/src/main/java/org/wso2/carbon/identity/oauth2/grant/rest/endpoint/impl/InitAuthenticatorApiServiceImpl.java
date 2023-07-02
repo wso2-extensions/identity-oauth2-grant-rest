@@ -58,7 +58,7 @@ public class InitAuthenticatorApiServiceImpl implements InitAuthenticatorApiServ
         } catch (Throwable e) {
             return EndpointUtils.handleUnexpectedServerError(authenticator, e, LOG);
         }
-        // do some magic!
-        return Response.ok().entity("magic!").build();
+
+
     }
 }

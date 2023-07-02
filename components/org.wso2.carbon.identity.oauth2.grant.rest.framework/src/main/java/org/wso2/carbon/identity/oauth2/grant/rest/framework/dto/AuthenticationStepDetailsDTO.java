@@ -23,15 +23,15 @@ import java.util.ArrayList;
 
 public class AuthenticationStepDetailsDTO {
     private int stepNo;
-    private ArrayList<AuthenticatorDetailsDTO> authenticatorDetailsDTO;
+    private ArrayList<AuthenticatorDetailsDTO> authenticatorDetails;
 
     public void setStepNo(int stepNo) {
 
         this.stepNo = stepNo;
     }
-    public void setAuthenticatorDetailsDTO(ArrayList<AuthenticatorDetailsDTO> authenticatorDetailsDTO) {
+    public void setAuthenticatorDetails(ArrayList<AuthenticatorDetailsDTO> authenticatorDetails) {
 
-        this.authenticatorDetailsDTO = authenticatorDetailsDTO;
+        this.authenticatorDetails = authenticatorDetails;
     }
     public int getStepNo() {
 
@@ -39,6 +39,6 @@ public class AuthenticationStepDetailsDTO {
     }
     public ArrayList<AuthenticatorDetailsDTO> getAuthenticatorDetails() {
 
-        return this.authenticatorDetailsDTO;
+        return this.authenticatorDetails;
     }
 }

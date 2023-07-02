@@ -19,10 +19,7 @@
 
 package org.wso2.carbon.identity.oauth2.grant.rest.framework;
 
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationInitializationResponseDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthStepsDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationStepDetailsDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.UserAuthenticationResponseDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.*;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 
 import java.util.ArrayList;
@@ -38,7 +35,7 @@ public interface AuthenticationService {
      * @param clientId      UUID to track the flow
      * @throws AuthenticationException if any server or client error occurred.
      */
-    ArrayList<AuthenticationStepDetailsDTO> getAuthenticationStepsFromSP(String clientId) throws AuthenticationException;
+    AuthenticationStepsResponseDTO getAuthenticationStepsFromSP(String clientId) throws AuthenticationException;
 
     /**
      * This method initialize the authentication flow with BasicAuth or Identifier First.

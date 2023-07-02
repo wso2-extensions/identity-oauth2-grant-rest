@@ -19,22 +19,46 @@
 package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.*;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.*;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.EndpointUtils;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RequestSnatizerUtil;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationStepsResponseDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 
 import java.util.List;
 import javax.ws.rs.core.Response;
 
 public class AuthStepsApiServiceImpl implements AuthStepsApiService {
 
+    private static final Log LOG = LogFactory.getLog(AuthStepsApiServiceImpl.class);
     @Override
     public Response authStepsGet(String clientId) {
 
+        try {
+            AuthenticationStepsResponseDTO responseDTO = EndpointUtils
+                    .getAuthService()
+                    .getAuthenticationStepsFromSP(clientId);
 
+            AuthnStepConfig authnStepConfig = new AuthnStepConfig();
+            authnStepConfig.setStepNo(1);
+            authnStepConfig.setAuthenticatorConfigs(null);
+            
+            AuthenticationStepsResponse response =
+                    new AuthenticationStepsResponse().authenticationSteps(null);
 
+            return Response.ok("magic").build();
 
-        // do some magic!
-        return Response.ok().entity("magic!").build();
+        } catch (AuthenticationClientException e) {
+            return EndpointUtils.handleBadRequestResponse(clientId, e, LOG);
+        } catch (AuthenticationException e) {
+            return EndpointUtils.handleServerErrorResponse(clientId, e, LOG);
+        } catch (Throwable e) {
+            return EndpointUtils.handleUnexpectedServerError(clientId, e, LOG);
+        }
+
     }
 }

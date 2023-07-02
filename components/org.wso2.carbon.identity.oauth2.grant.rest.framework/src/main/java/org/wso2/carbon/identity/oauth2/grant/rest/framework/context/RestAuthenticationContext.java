@@ -34,7 +34,6 @@ import org.wso2.carbon.identity.application.mgt.ApplicationManagementServiceImpl
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticatorDetailsDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthnticatedAuthenticatorDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.internal.AuthenticationServiceDataHolder;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.Util;
@@ -58,7 +57,7 @@ public class RestAuthenticationContext {
 
 	private int userTenantId;
 
-	private List<AuthnticatedAuthenticatorDTO> authenticatedSteps;
+	private LinkedHashMap<Integer, String> authenticatedSteps;
 
 	private ServiceProvider serviceProvider;
 
@@ -135,7 +134,7 @@ public class RestAuthenticationContext {
 		return userTenantId;
 	}
 
-	public List<AuthnticatedAuthenticatorDTO> getAuthenticatedSteps() {
+	public LinkedHashMap<Integer, String> getAuthenticatedSteps() {
 		return authenticatedSteps;
 	}
 
@@ -206,7 +205,7 @@ public class RestAuthenticationContext {
 		return this;
 	}
 
-	public RestAuthenticationContext setAuthenticatedSteps(List<AuthnticatedAuthenticatorDTO> authenticatedSteps) {
+	public RestAuthenticationContext setAuthenticatedSteps(LinkedHashMap<Integer, String> authenticatedSteps) {
 
 		this.authenticatedSteps = authenticatedSteps;
 		return this;
@@ -265,7 +264,7 @@ public class RestAuthenticationContext {
 		private String username;
 		private String userId;
 		private int userTenantId;
-		private List<AuthnticatedAuthenticatorDTO> authenticatedSteps;
+		private LinkedHashMap<Integer, String> authenticatedSteps = new LinkedHashMap<>();
 		private ServiceProvider serviceProvider;
 		private LinkedHashMap<Integer, List<String>> authenticationSteps;
 		private String clientId;
@@ -326,7 +325,7 @@ public class RestAuthenticationContext {
 			return this;
 		}
 
-		public Builder authenticatedSteps(List<AuthnticatedAuthenticatorDTO> authenticatedSteps) {
+		public Builder authenticatedSteps(LinkedHashMap<Integer, String> authenticatedSteps) {
 
 			this.authenticatedSteps = authenticatedSteps;
 			return this;
@@ -456,7 +455,7 @@ public class RestAuthenticationContext {
 
 		try {
 			serviceProvider = ApplicationManagementServiceImpl.getInstance().getServiceProviderByClientId(clientId,
-							Constants.CLIENT_TYPE, getTenantDomain());
+					Constants.CLIENT_TYPE, getTenantDomain());
 		} catch (IdentityApplicationManagementException e) {
 
 			throw Util.handleServerException(Constants.ErrorMessage.SERVER_RETRIEVING_SP_ERROR ,

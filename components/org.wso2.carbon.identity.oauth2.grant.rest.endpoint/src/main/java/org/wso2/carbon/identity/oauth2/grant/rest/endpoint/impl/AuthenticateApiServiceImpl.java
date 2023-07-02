@@ -52,10 +52,10 @@ public class AuthenticateApiServiceImpl implements AuthenticateApiService {
             if(RequestSnatizerUtil.isNotEmpty(clientId) && RequestSnatizerUtil.isNotEmpty(userIdentifier) &&
                     RequestSnatizerUtil.isEmpty(flowId)) {
                 responseDTO = EndpointUtils.getAuthService().initializeAuthFlow(clientId, authenticator, password,
-                        userIdentifier, "");
+                        userIdentifier, "carbon.super");
             } else if (RequestSnatizerUtil.isNotEmpty(flowId) && RequestSnatizerUtil.isNotEmpty(userIdentifier) &&
                     RequestSnatizerUtil.isEmpty(clientId)) {
-                responseDTO = null;
+                responseDTO = EndpointUtils.getAuthService().processAuthStepResponse(flowId, authenticator, password);
             }
 
             AuthenticationFailureReasonDTO failureReasonDTO = responseDTO.getFailureReason();

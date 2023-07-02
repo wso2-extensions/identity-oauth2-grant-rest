@@ -39,14 +39,25 @@
     <bean id="postprocess" class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
     <context:component-scan base-package="org.wso2.carbon.identity.oauth2.grant.rest.endpoints"/>
 
-    <bean id="authenticationApi" class="org.wso2.carbon.identity.oauth2.grant.rest.endpoints.AuthenticationApi"/>
+    <bean id="authenticationApi" class="org.wso2.carbon.identity.oauth2.grant.rest.endpoint.AuthenticateApi"/>
+    <bean id="authstepsApi" class="org.wso2.carbon.identity.oauth2.grant.rest.endpoint.AuthStepsApi"/>
+    <bean id="initauthenticatorApi" class="org.wso2.carbon.identity.oauth2.grant.rest.endpoint.InitAuthenticatorApi"/>
+
     <bean id="authenticationApiServiceImpl"
-         class="org.wso2.carbon.identity.oauth2.grant.rest.endpoint.impl.AuthenticationApiServiceImpl"/>
+         class="org.wso2.carbon.identity.oauth2.grant.rest.endpoint.impl.AuthenticateApiServiceImpl"/>
+    <bean id="authStepsApiServiceImpl"
+          class="org.wso2.carbon.identity.oauth2.grant.rest.endpoint.impl.AuthStepsApiServiceImpl"/>
+    <bean id="initauthenticatorApiServiceImpl"
+          class="org.wso2.carbon.identity.oauth2.grant.rest.endpoint.impl.InitAuthenticatorApiServiceImpl"/>
 
    <jaxrs:server id="RestAuthServices" address="/">
        <jaxrs:serviceBeans>
            <ref bean="authenticationApi"/>
-           <ref bean="authenticationApiServiceImpl"/>
+           <ref bean="authStepsApiServiceImpl"/>
+           <ref bean="authstepsApi"/>
+           <ref bean="authStepsApiServiceImpl"/>
+           <ref bean="initauthenticatorApi"/>
+           <ref bean="initauthenticatorApiServiceImpl"/>
        </jaxrs:serviceBeans>
        <jaxrs:providers>
            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>

@@ -20,7 +20,7 @@
 package org.wso2.carbon.identity.oauth2.grant.rest.framework.dto;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
 
 public class UserAuthenticationResponseDTO {
 
@@ -28,7 +28,7 @@ public class UserAuthenticationResponseDTO {
     private boolean isValidPassword;
     private String userId;
     private boolean isAuthFlowCompleted;
-    private List<AuthnticatedAuthenticatorDTO> authenticatedSteps;
+    private LinkedHashMap<Integer, String> authenticatedSteps;
     private Object authenticationSteps;
     private int nextStep;
     private AuthenticationFailureReasonDTO failureReason;
@@ -71,11 +71,11 @@ public class UserAuthenticationResponseDTO {
         return this;
     }
 
-    public List<AuthnticatedAuthenticatorDTO> getAuthenticatedSteps() {
+    public LinkedHashMap<Integer, String> getAuthenticatedSteps() {
         return authenticatedSteps;
     }
 
-    public UserAuthenticationResponseDTO setAuthenticatedSteps(List<AuthnticatedAuthenticatorDTO> authenticatedSteps) {
+    public UserAuthenticationResponseDTO setAuthenticatedSteps(LinkedHashMap<Integer, String> authenticatedSteps) {
         this.authenticatedSteps = authenticatedSteps;
         return this;
     }
