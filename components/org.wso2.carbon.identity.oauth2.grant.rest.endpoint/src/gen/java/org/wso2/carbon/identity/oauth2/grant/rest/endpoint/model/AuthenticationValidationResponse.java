@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationFailureReason;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthnStepConfig;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthnticatedAuthenticator;
 import javax.validation.constraints.*;
 
 
@@ -39,7 +40,7 @@ public class AuthenticationValidationResponse  {
     private Boolean isStepSuccess;
     private String flowId;
     private Boolean isAuthFlowCompleted;
-    private List<AuthnStepConfig> authenticatedSteps = new ArrayList<>();
+    private List<AuthnticatedAuthenticator> authenticatedSteps = new ArrayList<>();
 
     private List<AuthnStepConfig> authenticationSteps = new ArrayList<>();
 
@@ -109,7 +110,7 @@ public class AuthenticationValidationResponse  {
 
     /**
     **/
-    public AuthenticationValidationResponse authenticatedSteps(List<AuthnStepConfig> authenticatedSteps) {
+    public AuthenticationValidationResponse authenticatedSteps(List<AuthnticatedAuthenticator> authenticatedSteps) {
 
         this.authenticatedSteps = authenticatedSteps;
         return this;
@@ -120,14 +121,14 @@ public class AuthenticationValidationResponse  {
     @Valid
     @NotNull(message = "Property authenticatedSteps cannot be null.")
 
-    public List<AuthnStepConfig> getAuthenticatedSteps() {
+    public List<AuthnticatedAuthenticator> getAuthenticatedSteps() {
         return authenticatedSteps;
     }
-    public void setAuthenticatedSteps(List<AuthnStepConfig> authenticatedSteps) {
+    public void setAuthenticatedSteps(List<AuthnticatedAuthenticator> authenticatedSteps) {
         this.authenticatedSteps = authenticatedSteps;
     }
 
-    public AuthenticationValidationResponse addAuthenticatedStepsItem(AuthnStepConfig authenticatedStepsItem) {
+    public AuthenticationValidationResponse addAuthenticatedStepsItem(AuthnticatedAuthenticator authenticatedStepsItem) {
         this.authenticatedSteps.add(authenticatedStepsItem);
         return this;
     }

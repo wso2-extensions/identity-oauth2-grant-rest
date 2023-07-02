@@ -47,7 +47,7 @@ public class AuthnStepConfig  {
         return this;
     }
     
-    @ApiModelProperty(example = "1", value = "")
+    @ApiModelProperty(example = "2", value = "")
     @JsonProperty("stepNo")
     @Valid
     public Integer getStepNo() {

@@ -46,7 +46,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthenticationStepsResponse'
-              example: [{"stepNo":1,"authenticatorDetails":[{"authenticatorName":"BasicAuthenticator"}]},{"stepNo":2,"authenticatorDetails":[{"authenticatorName":"BasicAuthenticator"},{"authenticatorName":"SMSOTP"},{"authenticatorName":"EmailOTP"}]},{"stepNo":3,"authenticatorDetails":[{"authenticatorName":"SMSOTP"},{"authenticatorName":"EmailOTP"}]}]
+              # example: [{"stepNo":1,"authenticatorDetails":[{"authenticatorName":"BasicAuthenticator"}]},{"stepNo":2,"authenticatorDetails":[{"authenticatorName":"BasicAuthenticator"},{"authenticatorName":"SMSOTP"},{"authenticatorName":"EmailOTP"}]},{"stepNo":3,"authenticatorDetails":[{"authenticatorName":"SMSOTP"},{"authenticatorName":"EmailOTP"}]}]
 
         '400':
           description: Bad Request
@@ -122,7 +122,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthenticationValidationResponse'
-              example: {"isStepSuccess":true,"flowId":"df09d285-f86f-465b-9959-005841e549c5","isAuthFlowCompleted":false,"authenticatedSteps":[{"stepNo":1,"authenticatorConfigs":[{"authenticatorName":"BasicAuthenticator"}]}],"authenticationSteps":[{"stepNo":1,"authenticatorDetails":[{"authenticatorName":"BasicAuthenticator"}]},{"stepNo":2,"authenticatorDetails":[{"authenticatorName":"BasicAuthenticator"},{"authenticatorName":"SMSOTP"},{"authenticatorName":"EmailOTP"}]},{"stepNo":3,"authenticatorDetails":[{"authenticatorName":"SMSOTP"},{"authenticatorName":"EmailOTP"}]}],"nextStep":3,"failureReason":{"code":"SMS-60006","message":"ExpiredPassword.","description":"Expired Password provided for the user."}}
+              # example: {"isStepSuccess":true,"flowId":"df09d285-f86f-465b-9959-005841e549c5","isAuthFlowCompleted":false,"authenticatedSteps":[{"stepNo":1,"authenticatorConfigs":[{"authenticatorName":"BasicAuthenticator"}]}],"authenticationSteps":[{"stepNo":1,"authenticatorDetails":[{"authenticatorName":"BasicAuthenticator"}]},{"stepNo":2,"authenticatorDetails":[{"authenticatorName":"BasicAuthenticator"},{"authenticatorName":"SMSOTP"},{"authenticatorName":"EmailOTP"}]},{"stepNo":3,"authenticatorDetails":[{"authenticatorName":"SMSOTP"},{"authenticatorName":"EmailOTP"}]}],"nextStep":3,"failureReason":{"code":"SMS-60006","message":"ExpiredPassword.","description":"Expired Password provided for the user."}}
 
         '400':
           description: Bad Request
@@ -304,12 +304,11 @@ components:
         #Successfully Authenticated Steps
         authenticatedSteps:
           type: object
-          $ref: '#/components/schemas/AuthnSequenceDetails'
+          $ref: '#/components/schemas/AuthnticatedStepsConfig'
         #Authentication steps defined for the Service Provider
         authenticationSteps:
           type: object
           $ref: '#/components/schemas/AuthnSequenceDetails'
-          example: [{"stepNo":1,"authenticatorDetails":[{"authenticatorName":"BasicAuthenticator"}]},{"stepNo":2,"authenticatorDetails":[{"authenticatorName":"BasicAuthenticator"},{"authenticatorName":"SMSOTP"},{"authenticatorName":"EmailOTP"}]},{"stepNo":3,"authenticatorDetails":[{"authenticatorName":"SMSOTP"},{"authenticatorName":"EmailOTP"}]}]
         nextStep:
           type: integer
           example: 3
@@ -414,11 +413,12 @@ components:
       properties:
         stepNo:
           type: integer
-          example: 1
+          example: 2
         authenticatorConfigs:
           type: array
           items:
             $ref: '#/components/schemas/AuthenticatorConfig'
+            
 
     #-----------------------------------------------------
     # AuthnSequenceDetails object
@@ -427,5 +427,22 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/AuthnStepConfig'
-
-
+    #-----------------------------------------------------
+    # AuthnticatedStepsConfig object
+    #-----------------------------------------------------
+    AuthnticatedStepsConfig:
+      type: array
+      items:
+        $ref: '#/components/schemas/AuthnticatedAuthenticator'
+    #-----------------------------------------------------
+    # AuthnticatedAuthenticator object
+    #-----------------------------------------------------
+    AuthnticatedAuthenticator:
+      type: object
+      properties:
+        stepNo:
+          type: integer
+          example: 1
+        authenticatorName:
+          type: string
+          example: 'IdentifierExecutor'
