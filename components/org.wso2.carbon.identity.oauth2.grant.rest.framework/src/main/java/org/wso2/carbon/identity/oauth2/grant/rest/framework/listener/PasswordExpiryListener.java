@@ -59,6 +59,7 @@ public class PasswordExpiryListener extends AbstractAuthenticationListener {
 
 	@Override
 	public boolean doPreAuthenticate (RestAuthenticationContext authContext) throws AuthenticationException {
+
 		String tenantAwareUserName = MultitenantUtils.getTenantAwareUsername(authContext.getUser().getUserName());
 
 		// check whether user password is expired

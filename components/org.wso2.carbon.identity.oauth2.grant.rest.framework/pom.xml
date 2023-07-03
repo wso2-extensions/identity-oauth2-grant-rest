@@ -21,13 +21,12 @@
 
     <parent>
         <groupId>org.wso2.carbon.identity.oauth2.grant.rest</groupId>
-        <artifactId>identity-oauth2-grant-auth-rest</artifactId>
+        <artifactId>identity.oauth2.grant.auth.rest</artifactId>
         <version>1.0.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-    <groupId>org.wso2.carbon.identity.oauth2.grant.rest</groupId>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>identity-oauth2-grant-auth-rest-framework</artifactId>
+    <artifactId>org.wso2.carbon.identity.oauth2.grant.rest.framework</artifactId>
     <name>Identity OAuth2 Grant Auth Framework</name>
     <packaging>bundle</packaging>
     <dependencies>

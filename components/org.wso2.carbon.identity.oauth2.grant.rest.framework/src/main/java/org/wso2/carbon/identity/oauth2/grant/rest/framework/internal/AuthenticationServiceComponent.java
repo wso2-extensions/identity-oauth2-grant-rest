@@ -45,7 +45,7 @@ import org.wso2.carbon.user.core.service.RealmService;
 /**
  * OSGI service component of the Rest Authentication service.
  */
-@Component(name = "org.wso2.carbon.identity.oauth2.grant.rest.auth.service", immediate = true)
+@Component(name = "org.wso2.carbon.identity.oauth2.grant.rest", immediate = true)
 public class AuthenticationServiceComponent {
 
 	private static final Log LOG = LogFactory.getLog(AuthenticationServiceComponent.class);
@@ -59,10 +59,11 @@ public class AuthenticationServiceComponent {
 
 			if (isEnabled) {
 				BundleContext bundleContext = componentContext.getBundleContext();
-				bundleContext.registerService(AuthenticationService.class.getName(), new AuthenticationServiceImpl(), null);
-				LOG.debug("Authentication Service component activated successfully.");
-				bundleContext.registerService(ApplicationMgtListener.class.getName(), new ApplicationCacheListener(),
-						null);
+				bundleContext.registerService(AuthenticationService.class.getName(),
+						new AuthenticationServiceImpl(), null);
+				LOG.info("Authentication Service component activated successfully.");
+				bundleContext.registerService(ApplicationMgtListener.class.getName(),
+						new ApplicationCacheListener(), null);
 				LOG.debug("Application Management Listener Service component activated successfully.");
 			} else {
 				LOG.error("Authentication Service is not enabled.");

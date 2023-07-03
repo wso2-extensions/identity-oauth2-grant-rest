@@ -36,7 +36,8 @@ public class AuthStepsApiServiceImpl implements AuthStepsApiService {
     public Response authStepsGet(String clientId) {
 
         try {
-            AuthenticationStepsResponseDTO responseDTO = EndpointUtils
+            AuthenticationStepsResponseDTO responseDTO = null;
+            responseDTO = EndpointUtils
                     .getAuthService()
                     .getAuthenticationStepsFromSP(clientId);
 

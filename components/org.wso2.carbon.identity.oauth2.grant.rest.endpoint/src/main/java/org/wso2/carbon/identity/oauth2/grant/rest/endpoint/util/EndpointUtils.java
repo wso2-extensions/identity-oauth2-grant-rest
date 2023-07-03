@@ -43,7 +43,7 @@ public class EndpointUtils {
     public static AuthenticationService getAuthService() {
 
         return (AuthenticationService) PrivilegedCarbonContext.getThreadLocalCarbonContext().
-                getOSGiService(AuthenticationService.class, null);
+                getOSGiService(AuthenticationService.class.getClass(), null);
     }
 
     private static void logDebug(Log log, Throwable throwable) {
