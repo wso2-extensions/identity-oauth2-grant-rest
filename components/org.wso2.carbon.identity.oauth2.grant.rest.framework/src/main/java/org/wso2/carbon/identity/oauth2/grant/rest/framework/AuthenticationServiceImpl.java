@@ -50,7 +50,6 @@ import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.common.AbstractUserStoreManager;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
-
 import java.util.*;
 
 /**
@@ -635,7 +634,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         responseDTO.setFlowId(authContext.getNewFlowdId());
         responseDTO.setAuthenticationSteps(authContext.getAuthenticationSteps());
         responseDTO.setAuthenticatedSteps(authContext.getAuthenticatedSteps());
-        //responseDTO.setAuthenticationStepDetails(authContext.getAuthenticationsStepsForSP());
+        responseDTO.setAuthenticationStepDetails
+                (getConfiguredAuthenticationStepsForSP(authContext.getAuthenticationSteps()));
         responseDTO.setAuthFlowCompleted(authContext.isAuthFlowCompleted());
         responseDTO.setNextStep(fetchNextAuthStep
                 (null, authContext.getAuthenticationSteps()));

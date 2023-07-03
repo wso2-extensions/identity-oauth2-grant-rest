@@ -26,7 +26,6 @@ import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationServerException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.Util;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

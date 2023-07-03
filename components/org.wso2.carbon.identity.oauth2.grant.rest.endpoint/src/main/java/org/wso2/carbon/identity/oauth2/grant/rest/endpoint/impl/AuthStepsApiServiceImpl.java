@@ -18,18 +18,15 @@
 
 package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.impl;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.*;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.*;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.AuthStepsApiService;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationStepsResponse;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthnStepConfig;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.EndpointUtils;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RequestSnatizerUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationStepsResponseDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
-
-import java.util.List;
 import javax.ws.rs.core.Response;
 
 public class AuthStepsApiServiceImpl implements AuthStepsApiService {

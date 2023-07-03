@@ -45,4 +45,3 @@ public class SQLQueries {
             " WHERE MTU" +
             ".FLOW_ID_IDENTIFIER = ? AND MTAS.FLOW_ID_IDENTIFIER = MTU.FLOW_ID_IDENTIFIER;";
 }
-//identity-oauth2-grant-auth-rest

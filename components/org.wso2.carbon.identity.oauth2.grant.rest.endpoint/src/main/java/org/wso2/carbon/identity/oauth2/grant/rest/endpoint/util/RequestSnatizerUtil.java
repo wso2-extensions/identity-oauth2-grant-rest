@@ -9,12 +9,12 @@ public class RequestSnatizerUtil {
         return StringUtils.trim(requestValue);
     }
 
-    public static boolean isNotEmpty(String requestValue){
+    public static boolean isNotEmpty(String requestValue) {
 
         return StringUtils.isNotEmpty(requestValue);
     }
 
-    public static boolean isEmpty(String requestValue){
+    public static boolean isEmpty(String requestValue) {
 
         return StringUtils.isEmpty(requestValue);
     }

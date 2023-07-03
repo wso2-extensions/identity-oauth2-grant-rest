@@ -21,17 +21,15 @@ package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.*;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.*;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.InitAuthenticatorApiService;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticatorInitializationRequest;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticatorInitializationResponse;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.EndpointUtils;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RequestSnatizerUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationInitializationResponseDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
-
-import java.util.List;
 import javax.ws.rs.core.Response;
-import javax.xml.ws.Endpoint;
 
 public class InitAuthenticatorApiServiceImpl implements InitAuthenticatorApiService {
 
@@ -58,7 +56,5 @@ public class InitAuthenticatorApiServiceImpl implements InitAuthenticatorApiServ
         } catch (Throwable e) {
             return EndpointUtils.handleUnexpectedServerError(authenticator, e, LOG);
         }
-
-
     }
 }

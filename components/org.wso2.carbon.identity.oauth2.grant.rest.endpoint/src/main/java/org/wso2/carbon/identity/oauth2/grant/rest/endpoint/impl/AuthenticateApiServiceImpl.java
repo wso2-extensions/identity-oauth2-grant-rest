@@ -20,16 +20,16 @@ package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.*;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.*;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.AuthenticateApiService;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationFailureReason;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationValidationRequest;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationValidationResponse;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.EndpointUtils;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RequestSnatizerUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationFailureReasonDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.UserAuthenticationResponseDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
-
-import java.util.List;
 import javax.ws.rs.core.Response;
 
 public class AuthenticateApiServiceImpl implements AuthenticateApiService {
@@ -46,10 +46,10 @@ public class AuthenticateApiServiceImpl implements AuthenticateApiService {
         String authenticator = RequestSnatizerUtil.trimString(authenticationValidationRequest.getAuthenticator());
         UserAuthenticationResponseDTO responseDTO = null;
 
-        try{
+        try {
             //TODO: if authenticator is not avialble in the request body, flow should terminate immediately.
            // if the authentication flow initialize
-            if(RequestSnatizerUtil.isNotEmpty(clientId) && RequestSnatizerUtil.isNotEmpty(userIdentifier) &&
+            if (RequestSnatizerUtil.isNotEmpty(clientId) && RequestSnatizerUtil.isNotEmpty(userIdentifier) &&
                     RequestSnatizerUtil.isEmpty(flowId)) {
                 responseDTO = EndpointUtils.getAuthService().initializeAuthFlow(clientId, authenticator, password,
                         userIdentifier, "carbon.super");

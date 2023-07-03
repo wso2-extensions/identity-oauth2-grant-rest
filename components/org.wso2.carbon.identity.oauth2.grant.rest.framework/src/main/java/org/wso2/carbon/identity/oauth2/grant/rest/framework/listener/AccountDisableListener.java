@@ -50,9 +50,10 @@ public class AccountDisableListener extends AbstractAuthenticationListener {
 		try {
 			if (Utils.isAccountDisabled(authContext.getUser())) {
 				throw Util.handleClientException(
-						Constants.ErrorMessage.CLIENT_DISABLED_ACCOUNT, authContext.getUser().toFullQualifiedUsername());
+						Constants.ErrorMessage.CLIENT_DISABLED_ACCOUNT,
+						authContext.getUser().toFullQualifiedUsername());
 			}
-		} catch(IdentityRecoveryException e){
+		} catch (IdentityRecoveryException e) {
 			throw Util.handleServerException(Constants.ErrorMessage.SERVER_ACCOUNT_STATUS_ERROR,
 					String.format("Error while checking the account status for the user : %s.",
 							authContext.getUser().toFullQualifiedUsername()), e);

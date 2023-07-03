@@ -18,11 +18,11 @@
  */
 
 package org.wso2.carbon.identity.oauth2.grant.rest.framework;
-
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.*;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationInitializationResponseDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationStepsResponseDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.UserAuthenticationResponseDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 
-import java.util.ArrayList;
 
 /**
  * This interface holds back-channel authentication services to process step based authentication.

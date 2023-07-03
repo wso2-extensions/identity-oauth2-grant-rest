@@ -22,18 +22,17 @@ package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util;
 import org.apache.commons.logging.Log;
 import org.slf4j.MDC;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.AuthenticationService;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationError;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception.BadRequestException;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception.ConflictRequestException;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception.ForbiddenException;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception.InternalServerErrorException;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception.NotFoundException;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationError;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.AuthenticationService;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
-
-import java.util.*;
+import java.util.UUID;
 import javax.ws.rs.core.Response;
 import static org.wso2.carbon.identity.oauth2.grant.rest.endpoint.constant.Constants.CORRELATION_ID_MDC;
 
