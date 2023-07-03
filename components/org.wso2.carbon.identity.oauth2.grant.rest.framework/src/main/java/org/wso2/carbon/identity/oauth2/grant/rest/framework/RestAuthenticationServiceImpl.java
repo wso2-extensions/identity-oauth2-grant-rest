@@ -34,7 +34,12 @@ import org.wso2.carbon.identity.oauth2.grant.rest.framework.context.RestAuthenti
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.CacheBackedFlowIdDAO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.FlowIdDAOImpl;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.FlowIdDO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.*;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthStepConfigsDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationFailureReasonDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationInitializationResponseDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationStepsResponseDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticatorConfigDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.UserAuthenticationResponseDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.handler.AuthenticationStepExecutorService;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.handler.AuthenticationStepExecutorServiceImpl;
@@ -50,15 +55,19 @@ import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.common.AbstractUserStoreManager;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * This class implements the AuthenticationService interface.
+ * This class implements the RestAuthenticationService interface.
  */
-public class AuthenticationServiceImpl implements AuthenticationService {
+public class RestAuthenticationServiceImpl implements RestAuthenticationService {
     private static SMSOTPService smsOtpService;
     private static EmailOtpService emailOTPService;
-    private static final Log log = LogFactory.getLog(AuthenticationServiceImpl.class);
+    private static final Log log = LogFactory.getLog(RestAuthenticationServiceImpl.class);
 
 
     /**
@@ -66,6 +75,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      *
      * @param clientId      UUID to track the flow
      * @throws AuthenticationException if any server or client error occurred.
+     * return AuthenticationStepsResponseDTO
      */
     @Override
     public AuthenticationStepsResponseDTO getAuthenticationStepsFromSP(String clientId)
@@ -85,7 +95,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     /**
-     * {@inheritDoc}
+     * This method process the authentication response from the client.
+     *
+     * @param flowId            UUID to track the flow.
+     * @param authenticator     Authenticator Name.
+     * @param password       	Password to be validated.
+     * @return UserAuthenticationResponseDTO
+     * @throws AuthenticationException if any server or client error occurred.
      */
     @Override
     public UserAuthenticationResponseDTO processAuthStepResponse(String flowId, String authenticator, String password)
@@ -180,7 +196,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     /**
-     * {@inheritDoc}
+     * This method initialize the authentication flow for the current step.
+     *
+     * @param flowId        UUID to track the flow.
+     * @param authenticator Authenticator Name.
+     * @return AuthenticationInitializationResponseDTO
+     * @throws AuthenticationException if any server or client error occurred.
      */
     @Override
     public AuthenticationInitializationResponseDTO
@@ -245,7 +266,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     /**
-     * {@inheritDoc}
+     * This method initialize the authentication flow with BasicAuth or Identifier First.
+     *
+     * @param clientId          clientId.
+     * @param authenticator     Authenticator Name.
+     * @param password       	Password to be validated.
+     * @return UserAuthenticationResponseDTO
+     * @throws AuthenticationException if any server or client error occurred.
      */
     @Override
     public UserAuthenticationResponseDTO initializeAuthFlow
@@ -331,8 +358,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     private HashMap<String, String> getResolvedUsername(String username, String userTenantDomain)
             throws AuthenticationException {
-        HashMap<String, String> params = new HashMap<>();
 
+        HashMap<String, String> params = new HashMap<>();
         if (AuthenticationServiceDataHolder.getInstance().getMultiAttributeLogin().isEnabled(userTenantDomain)) {
             ResolvedUserResult resolvedUserResult =
                     AuthenticationServiceDataHolder.getInstance().getMultiAttributeLogin()
@@ -387,7 +414,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @param authContext       User object of the user.
      * @throws AuthenticationException if any server or client error occurred.
      */
-    @SuppressWarnings("checkstyle:FallThrough")
     private void executeListeners(RestAuthenticationContext authContext, String event)
             throws AuthenticationException {
 
@@ -632,9 +658,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         UserAuthenticationResponseDTO responseDTO = new UserAuthenticationResponseDTO();
         responseDTO.setFlowId(authContext.getNewFlowdId());
-        responseDTO.setAuthenticationSteps(authContext.getAuthenticationSteps());
+        responseDTO.setAuthenticationSteps(getConfiguredAuthenticationStepsForSP(authContext.getAuthenticationSteps()));
         responseDTO.setAuthenticatedSteps(authContext.getAuthenticatedSteps());
-        responseDTO.setAuthenticationStepDetails
+        responseDTO.setAuthenticationSteps
                 (getConfiguredAuthenticationStepsForSP(authContext.getAuthenticationSteps()));
         responseDTO.setAuthFlowCompleted(authContext.isAuthFlowCompleted());
         responseDTO.setNextStep(fetchNextAuthStep
@@ -656,10 +682,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         AuthenticationInitializationResponseDTO responseDTO = new AuthenticationInitializationResponseDTO();
         responseDTO.setFlowId(authContext.getNewFlowdId());
         responseDTO.setAuthenticator(authContext.getCurrentAuthenticator());
-
         return responseDTO;
     }
-
 
     /**
      * This method builds Authentication Validation Response.
@@ -686,14 +710,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             flowIdDO.setFlowId(authContext.getNewFlowdId());
         }
 
-        //authContext.setAuthenticationsStepsForSP(authContext.getInitAuthSteps());
-
         userAuthenticationResponse.setValid(authContext.isValidPassword())
                 .setUserId(authContext.getUserId())
                 .setFlowId(authContext.getNewFlowdId()).setAuthFlowCompleted(authContext.isAuthFlowCompleted())
                 .setAuthenticatedSteps(authContext.getAuthenticatedSteps())
-               // .setAuthenticationStepDetails
-                //        (authContext.getAuthenticationsStepsForSP())
+                .setAuthenticationSteps(getConfiguredAuthenticationStepsForSP(authContext.getAuthenticationSteps()))
                 .setNextStep(fetchNextAuthStep(null,
                         authContext.getAuthenticationSteps()));
 

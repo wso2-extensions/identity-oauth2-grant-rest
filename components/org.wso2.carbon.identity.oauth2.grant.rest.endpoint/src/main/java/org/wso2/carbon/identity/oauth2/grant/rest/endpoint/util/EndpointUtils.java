@@ -28,7 +28,7 @@ import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception.ForbiddenEx
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception.InternalServerErrorException;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception.NotFoundException;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationError;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.AuthenticationService;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.RestAuthenticationService;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
@@ -40,10 +40,10 @@ import static org.wso2.carbon.identity.oauth2.grant.rest.endpoint.constant.Const
  * This class provides util functions for Auth REST APIs.
  */
 public class EndpointUtils {
-    public static AuthenticationService getAuthService() {
+    public static RestAuthenticationService getAuthService() {
 
-        return (AuthenticationService) PrivilegedCarbonContext.getThreadLocalCarbonContext().
-                getOSGiService(AuthenticationService.class.getClass(), null);
+        return (RestAuthenticationService) PrivilegedCarbonContext.getThreadLocalCarbonContext().
+                getOSGiService(RestAuthenticationService.class, null);
     }
 
     private static void logDebug(Log log, Throwable throwable) {

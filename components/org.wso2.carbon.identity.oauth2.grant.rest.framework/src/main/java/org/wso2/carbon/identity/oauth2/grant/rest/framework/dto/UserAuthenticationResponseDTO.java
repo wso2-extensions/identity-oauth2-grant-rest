@@ -30,12 +30,9 @@ public class UserAuthenticationResponseDTO {
     private String userId;
     private boolean isAuthFlowCompleted;
     private LinkedHashMap<Integer, String> authenticatedSteps;
-    private Object authenticationSteps;
+    private List<AuthStepConfigsDTO> authenticationSteps = new ArrayList<>();
     private int nextStep;
     private AuthenticationFailureReasonDTO failureReason;
-    private List<AuthStepConfigsDTO> authenticationStepDetails = new ArrayList<>();
-
-
     public boolean isValidPassword() {
         return isValidPassword;
     }
@@ -45,77 +42,76 @@ public class UserAuthenticationResponseDTO {
         return this;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
     public UserAuthenticationResponseDTO setUserId(String userId) {
+
         this.userId = userId;
         return this;
     }
 
     public String getFlowId() {
+
         return flowId;
     }
 
     public UserAuthenticationResponseDTO setFlowId(String flowId) {
+
         this.flowId = flowId;
         return this;
     }
 
     public boolean isAuthFlowCompleted() {
+
         return isAuthFlowCompleted;
     }
 
     public UserAuthenticationResponseDTO setAuthFlowCompleted(boolean authFlowCompleted) {
+
         this.isAuthFlowCompleted = authFlowCompleted;
         return this;
     }
 
     public LinkedHashMap<Integer, String> getAuthenticatedSteps() {
+
         return authenticatedSteps;
     }
 
     public UserAuthenticationResponseDTO setAuthenticatedSteps(LinkedHashMap<Integer, String> authenticatedSteps) {
+
         this.authenticatedSteps = authenticatedSteps;
         return this;
     }
 
     public Object getAuthenticationSteps() {
+
         return authenticationSteps;
     }
 
-    public UserAuthenticationResponseDTO setAuthenticationSteps(Object authenticationSteps) {
+    public UserAuthenticationResponseDTO setAuthenticationSteps(List<AuthStepConfigsDTO> authenticationSteps) {
+
         this.authenticationSteps = authenticationSteps;
         return this;
     }
 
     public int getNextStep() {
+
         return nextStep;
     }
 
     public UserAuthenticationResponseDTO setNextStep(int nextStep) {
+
         this.nextStep = nextStep;
         return this;
     }
 
     public AuthenticationFailureReasonDTO getFailureReason() {
+
         return failureReason;
     }
 
     public UserAuthenticationResponseDTO setFailureReason(AuthenticationFailureReasonDTO failureReason) {
+
         this.failureReason = failureReason;
         return this;
-    }
-    public UserAuthenticationResponseDTO setAuthenticationStepDetails
-            (List<AuthStepConfigsDTO> authenticationStepDetails) {
-
-        this.authenticationStepDetails = authenticationStepDetails;
-        return this;
-    }
-    public List<AuthStepConfigsDTO> getAuthenticationStepDetails() {
-
-        return authenticationStepDetails;
     }
 
 }

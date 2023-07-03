@@ -27,13 +27,14 @@ import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.Authentica
 /**
  * This interface holds back-channel authentication services to process step based authentication.
  */
-public interface AuthenticationService {
+public interface RestAuthenticationService {
 
     /**
      * This method returns the Steps for the Authentication flow.
      *
      * @param clientId      UUID to track the flow
      * @throws AuthenticationException if any server or client error occurred.
+     * return AuthenticationStepsResponseDTO
      */
     AuthenticationStepsResponseDTO getAuthenticationStepsFromSP(String clientId) throws AuthenticationException;
 
@@ -43,7 +44,7 @@ public interface AuthenticationService {
      * @param clientId      clientId.
      * @param authenticator Authenticator Name.
      * @param password       	Password to be validated.
-     * @return OTP validation result.
+     * @return UserAuthenticationResponseDTO
      * @throws AuthenticationException if any server or client error occurred.
      */
     UserAuthenticationResponseDTO initializeAuthFlow
@@ -53,9 +54,9 @@ public interface AuthenticationService {
     /**
      * This method initialize the authentication flow for the current step.
      *
-     * @param flowId      UUID to track the flow.
+     * @param flowId        UUID to track the flow.
      * @param authenticator Authenticator Name.
-     * @return OTP validation result.
+     * @return AuthenticationInitializationResponseDTO
      * @throws AuthenticationException if any server or client error occurred.
      */
     AuthenticationInitializationResponseDTO executeAuthStep(String flowId,
@@ -64,10 +65,10 @@ public interface AuthenticationService {
     /**
      * This method process the authentication response from the client.
      *
-     * @param flowId      UUID to track the flow.
-     * @param authenticator Authenticator Name.
+     * @param flowId            UUID to track the flow.
+     * @param authenticator     Authenticator Name.
      * @param password       	Password to be validated.
-     * @return OTP validation result.
+     * @return UserAuthenticationResponseDTO
      * @throws AuthenticationException if any server or client error occurred.
      */
     UserAuthenticationResponseDTO processAuthStepResponse(String flowId, String authenticator, String password)

@@ -33,10 +33,12 @@ import org.wso2.carbon.extension.identity.emailotp.common.EmailOtpService;
 import org.wso2.carbon.identity.application.mgt.listener.ApplicationMgtListener;
 import org.wso2.carbon.identity.multi.attribute.login.mgt.MultiAttributeLoginService;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.AuthenticationListenerService;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.AuthenticationService;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.AuthenticationServiceImpl;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.RestAuthenticationService;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.RestAuthenticationServiceImpl;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.listener.AbstractAuthenticationListener;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.listener.ApplicationCacheListener;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.listener.AuthenticationListener;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.Util;
 import org.wso2.carbon.identity.smsotp.common.SMSOTPService;
 import org.wso2.carbon.user.core.service.RealmService;
@@ -59,12 +61,15 @@ public class AuthenticationServiceComponent {
 
 			if (isEnabled) {
 				BundleContext bundleContext = componentContext.getBundleContext();
-				bundleContext.registerService(AuthenticationService.class.getName(),
-						new AuthenticationServiceImpl(), null);
+				bundleContext.registerService(RestAuthenticationService.class.getName(),
+						new RestAuthenticationServiceImpl(), null);
 				LOG.info("Authentication Service component activated successfully.");
 				bundleContext.registerService(ApplicationMgtListener.class.getName(),
 						new ApplicationCacheListener(), null);
-				LOG.debug("Application Management Listener Service component activated successfully.");
+				LOG.info("Application Management Listener Service component activated successfully.");
+				bundleContext.registerService(AuthenticationListener.class.getName(),
+						new AbstractAuthenticationListener(), null);
+				LOG.info("REST Authentication Listener Service component activated successfully.");
 			} else {
 				LOG.error("Authentication Service is not enabled.");
 			}
