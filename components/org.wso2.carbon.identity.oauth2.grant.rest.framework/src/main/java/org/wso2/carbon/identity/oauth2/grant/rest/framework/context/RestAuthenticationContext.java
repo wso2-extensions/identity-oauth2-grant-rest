@@ -33,7 +33,6 @@ import org.wso2.carbon.identity.application.common.model.User;
 import org.wso2.carbon.identity.application.mgt.ApplicationManagementServiceImpl;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticatorDetailsDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.internal.AuthenticationServiceDataHolder;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.Util;
@@ -88,8 +87,6 @@ public class RestAuthenticationContext {
 	private boolean isMandatoryAuthenticator;
 
 	private String multiAttributeLoginClaimURI;
-
-	private ArrayList<AuthenticatorDetailsDTO> authenticatorDetailsDTOList;
 
 	private RestAuthenticationContext(Builder builder) {
 

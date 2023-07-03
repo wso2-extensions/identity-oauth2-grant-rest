@@ -32,7 +32,7 @@ public class UserAuthenticationResponseDTO {
     private Object authenticationSteps;
     private int nextStep;
     private AuthenticationFailureReasonDTO failureReason;
-    private ArrayList<AuthenticationStepDetailsDTO> authenticationStepDetails;
+    private ArrayList<AuthStepConfigsDTO> authenticationStepDetails;
 
 
     public boolean isValidPassword() {
@@ -107,11 +107,11 @@ public class UserAuthenticationResponseDTO {
         return this;
     }
     public UserAuthenticationResponseDTO setAuthenticationStepDetails
-            (ArrayList<AuthenticationStepDetailsDTO> authenticationStepDetails) {
+            (ArrayList<AuthStepConfigsDTO> authenticationStepDetails) {
         this.authenticationStepDetails = authenticationStepDetails;
         return this;
     }
-    public ArrayList<AuthenticationStepDetailsDTO> getAuthenticationStepDetails() {
+    public ArrayList<AuthStepConfigsDTO> getAuthenticationStepDetails() {
         return authenticationStepDetails;
     }
 

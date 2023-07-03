@@ -5,13 +5,13 @@ import java.util.List;
 
 public class AuthenticationStepsResponseDTO {
 
-    private List<AuthenticationStepDetailsDTO> authenticationSteps = new ArrayList<>();
+    private List<AuthStepConfigsDTO> authenticationSteps = new ArrayList<>();
 
-    public List<AuthenticationStepDetailsDTO> getAuthenticationSteps() {
+    public List<AuthStepConfigsDTO> getAuthenticationSteps() {
         return authenticationSteps;
     }
 
-    public void setAuthenticationSteps(List<AuthenticationStepDetailsDTO> authenticationSteps) {
+    public void setAuthenticationSteps(List<AuthStepConfigsDTO> authenticationSteps) {
         this.authenticationSteps = authenticationSteps;
     }
 }

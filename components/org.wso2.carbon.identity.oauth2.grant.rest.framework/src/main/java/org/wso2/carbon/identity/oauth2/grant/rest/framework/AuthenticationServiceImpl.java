@@ -51,7 +51,6 @@ import org.wso2.carbon.user.core.common.AbstractUserStoreManager;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -726,30 +725,30 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return responseDTO;
     }
 
-    public static ArrayList<AuthenticationStepDetailsDTO> getConfiguredAuthenticationStepsForSP(
+    public static ArrayList<AuthStepConfigsDTO> getConfiguredAuthenticationStepsForSP(
             LinkedHashMap<Integer, List<String>> authenticationSteps) {
 
-        AuthenticatorDetailsDTO authenticatorDetailsDTO;
-        AuthenticationStepDetailsDTO authenticationStepDetailsDTO;
-        ArrayList<AuthenticationStepDetailsDTO> authenticationStepDetails = new ArrayList<>();
+        AuthenticatorConfigDTO authenticatorConfigDTO;
+        AuthStepConfigsDTO authStepConfigsDTO;
+        ArrayList<AuthStepConfigsDTO> authenticationStepDetails = new ArrayList<>();
 
         for (Map.Entry<Integer, List<String>> entry : authenticationSteps.entrySet()) {
 
             int authenticatorStep = entry.getKey();
             List<String> authenticatorName = entry.getValue();
 
-            ArrayList<AuthenticatorDetailsDTO> authenticatorDetailsDTOList = new ArrayList<>();
+            ArrayList<AuthenticatorConfigDTO> authenticatorDetailsDTOList = new ArrayList<>();
 
             for (String name : authenticatorName) {
-                authenticatorDetailsDTO = new AuthenticatorDetailsDTO();
-                authenticatorDetailsDTO.setAuthenticatorName(name);
-                authenticatorDetailsDTOList.add(authenticatorDetailsDTO);
+                authenticatorConfigDTO = new AuthenticatorConfigDTO();
+                authenticatorConfigDTO.setAuthenticatorName(name);
+                authenticatorDetailsDTOList.add(authenticatorConfigDTO);
             }
 
-            authenticationStepDetailsDTO = new AuthenticationStepDetailsDTO();
-            authenticationStepDetailsDTO.setStepNo(authenticatorStep);
-            authenticationStepDetailsDTO.setAuthenticatorDetails(authenticatorDetailsDTOList);
-            authenticationStepDetails.add(authenticationStepDetailsDTO);
+            authStepConfigsDTO = new AuthStepConfigsDTO();
+            authStepConfigsDTO.setStepNo(authenticatorStep);
+            authStepConfigsDTO.setAuthenticatorDetails(authenticatorDetailsDTOList);
+            authenticationStepDetails.add(authStepConfigsDTO);
         }
         return authenticationStepDetails;
     }
