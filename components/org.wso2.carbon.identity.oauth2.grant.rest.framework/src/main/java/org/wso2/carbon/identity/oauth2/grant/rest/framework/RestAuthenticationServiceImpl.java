@@ -27,6 +27,7 @@ import org.wso2.carbon.extension.identity.emailotp.common.EmailOtpService;
 import org.wso2.carbon.identity.application.common.model.ServiceProvider;
 import org.wso2.carbon.identity.application.common.model.User;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
+import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.multi.attribute.login.mgt.MultiAttributeLoginService;
 import org.wso2.carbon.identity.multi.attribute.login.mgt.ResolvedUserResult;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
@@ -34,13 +35,19 @@ import org.wso2.carbon.identity.oauth2.grant.rest.framework.context.RestAuthenti
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.CacheBackedFlowIdDAO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.FlowIdDAOImpl;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.FlowIdDO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.*;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationInitializationResponseDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationStepsResponseDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticatorConfigDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticatedAuthenticatorDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationFailureReasonDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.UserAuthenticationResponseDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthStepConfigsDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.handler.AuthenticationStepExecutorService;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.handler.AuthenticationStepExecutorServiceImpl;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.internal.AuthenticationServiceDataHolder;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.listener.AuthenticationListener;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.Util;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.RestAuthUtil;
 import org.wso2.carbon.identity.smsotp.common.SMSOTPService;
 import org.wso2.carbon.identity.smsotp.common.dto.FailureReasonDTO;
 import org.wso2.carbon.identity.smsotp.common.dto.GenerationResponseDTO;
@@ -173,7 +180,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                 Object failureReasonDTO = null;
                 userAuthenticationResponse = buildAuthValidationResponse(authContext, flowIdDO, failureReasonDTO);
             } else {
-                throw Util.handleClientException(Constants.ErrorMessage.CLIENT_AUTHENTICATOR_NOT_SUPPORTED,
+                throw RestAuthUtil.handleClientException(Constants.ErrorMessage.CLIENT_AUTHENTICATOR_NOT_SUPPORTED,
                         authenticator);
             }
         }
@@ -246,9 +253,9 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                                                 IdentityTenantUtil.getTenantDomain(authContext.getUserTenantId()));
                 authContext.setNewFlowId(authResponseDTO.getTransactionId()).setPassword(authResponseDTO.getEmailOTP());
             } else if (authenticator.equals(Constants.AUTHENTICATOR_NAME_BASIC_AUTH)) {
-                authContext.setNewFlowId(Util.generateUUID());
+                authContext.setNewFlowId(RestAuthUtil.generateUUID());
             } else {
-                throw Util.handleClientException(Constants.ErrorMessage.CLIENT_AUTHENTICATOR_NOT_SUPPORTED,
+                throw RestAuthUtil.handleClientException(Constants.ErrorMessage.CLIENT_AUTHENTICATOR_NOT_SUPPORTED,
                         authenticator);
             }
         }
@@ -317,11 +324,11 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                         getUserStoreManager(authContext.getUserTenantId());
                         updateAuthenticatedSteps(authContext.getAuthenticatedSteps(), 1, authenticator);
                     } else {
-                        throw Util.handleClientException(
+                        throw RestAuthUtil.handleClientException(
                                 Constants.ErrorMessage.CLIENT_INVALID_USER, userIdentifier);
                     }
                 } catch (UserStoreException e) {
-                    throw Util.handleServerException(Constants.ErrorMessage.SERVER_AUTHENTICATE_USER_ERROR,
+                    throw RestAuthUtil.handleServerException(Constants.ErrorMessage.SERVER_AUTHENTICATE_USER_ERROR,
                             String.format("Error while authenticating the user : %s.", userIdentifier), e);
                 }
                 break;
@@ -329,7 +336,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                 if (validateUserCredentials(resolvedUsername, password, authContext.getUserTenantId())) {
                     updateAuthenticatedSteps(authContext.getAuthenticatedSteps(), 1, authenticator);
                 } else {
-                    throw Util.handleClientException(
+                    throw RestAuthUtil.handleClientException(
                             Constants.ErrorMessage.CLIENT_INCORRECT_USER_CREDENTIALS, userIdentifier);
                 }
                 break;
@@ -368,11 +375,11 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
 
             } else if (ResolvedUserResult.UserResolvedStatus.FAIL.equals(resolvedUserResult.getResolvedStatus())) {
                 if (resolvedUserResult.getErrorMessage() != null) {
-                    throw Util.handleClientException(Constants.ErrorMessage.CLIENT_CUSTOM_AUTHENTICATE_USER_ERROR,
+                    throw RestAuthUtil.handleClientException(Constants.ErrorMessage.CLIENT_CUSTOM_AUTHENTICATE_USER_ERROR,
                             resolvedUserResult.getErrorMessage());
                 }
             } else {
-                throw Util.handleClientException(
+                throw RestAuthUtil.handleClientException(
                         Constants.ErrorMessage.CLIENT_INVALID_USER, username);
             }
         } else {
@@ -397,7 +404,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
 
         if (serviceProvider.isSaasApp() == false) {
             if (userTenantId != spTenantId) {
-                throw Util.handleClientException(
+                throw RestAuthUtil.handleClientException(
                         Constants.ErrorMessage.CLIENT_USER_SP_TENANT_MISMATCH);
             }
         }
@@ -458,7 +465,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         if (flowIdDO.getUserId().equals(userId)) {
             return true;
         } else {
-            throw Util.handleClientException(
+            throw RestAuthUtil.handleClientException(
                     Constants.ErrorMessage.CLIENT_USERID_FLOWID_MISMATCH, flowIdDO.getFlowId());
         }
     }
@@ -475,12 +482,21 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
             throws AuthenticationException {
 
         String tenantAwareUserName = MultitenantUtils.getTenantAwareUsername(username);
-        boolean authorized;
+        boolean authorized = false;
         try {
             authorized = getUserStoreManager(userTenantId).authenticate(tenantAwareUserName, password);
         } catch (UserStoreException e) {
-            throw Util.handleClientException(Constants.ErrorMessage.CLIENT_LOCKED_ACCOUNT,
-                    String.format("Error while checking the account status for the user : %s.", username), e);
+            String errorCode = IdentityUtil.getIdentityErrorMsg().getErrorCode().toString();
+            if (errorCode.equals(Constants.ACCOUNT_DISABLE_ERROR_CODE)) {
+                throw RestAuthUtil.handleClientException(Constants.ErrorMessage.CLIENT_DISABLED_ACCOUNT,
+                        String.format("Error while checking the account status for the user : %s.", username), e);
+            } else {
+                if (errorCode.split(":")[0].equals(Constants.ACCOUNT_LOCK_ERROR_CODE)) {
+                    throw RestAuthUtil.handleClientException(Constants.ErrorMessage.CLIENT_LOCKED_ACCOUNT,
+                            String.format("Error while checking the account status for the user : %s. :s", username,
+                                    errorCode.split(":")[1]), e);
+                }
+            }
         }
         return authorized;
     }
@@ -499,7 +515,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
             userStoreManager = (AbstractUserStoreManager) AuthenticationServiceDataHolder.getInstance()
                     .getRealmService().getTenantUserRealm(userTenantId).getUserStoreManager();
         } catch (UserStoreException e) {
-            throw Util.handleServerException(Constants.ErrorMessage.SERVER_USER_STORE_MANAGER_ERROR,
+            throw RestAuthUtil.handleServerException(Constants.ErrorMessage.SERVER_USER_STORE_MANAGER_ERROR,
                     "Error while retrieving user store manager.", e);
         }
 
@@ -522,12 +538,12 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
             userId = getUserStoreManager(userTenantId).getUserIDFromUserName(tenantAwareUsername);
 
         } catch (UserStoreException e) {
-            throw Util.handleServerException(Constants.ErrorMessage.SERVER_RETRIEVING_USER_ID_ERROR,
+            throw RestAuthUtil.handleServerException(Constants.ErrorMessage.SERVER_RETRIEVING_USER_ID_ERROR,
                     String.format("Error while retrieving userId for the username : %s.", username), e);
         }
 
         if (userId == null) {
-            throw Util.handleClientException(Constants.ErrorMessage.CLIENT_INVALID_USER, username);
+            throw RestAuthUtil.handleClientException(Constants.ErrorMessage.CLIENT_INVALID_USER, username);
         }
 
         return userId;
@@ -585,12 +601,12 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
 
         int nextAuthStep = fetchNextAuthStep(authenticatedSteps, authenticationSteps);
         if (nextAuthStep == -1) {
-            throw Util.handleClientException(
+            throw RestAuthUtil.handleClientException(
                     Constants.ErrorMessage.CLIENT_AUTHSTEP_OUT_OF_BOUNDS, authenticator);
         }
         List<String> authenticators = authenticationSteps.get(nextAuthStep);
         if (!authenticators.contains(authenticator)) {
-            throw Util.handleClientException(Constants.ErrorMessage.CLIENT_INVALID_AUTHENTICATOR, authenticator);
+            throw RestAuthUtil.handleClientException(Constants.ErrorMessage.CLIENT_INVALID_AUTHENTICATOR, authenticator);
         }
     }
 
@@ -606,12 +622,12 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
 
         int nextAuthStep = fetchNextAuthStep(authenticationSteps);
         if (nextAuthStep == -1) {
-            throw Util.handleClientException(
+            throw RestAuthUtil.handleClientException(
                     Constants.ErrorMessage.CLIENT_AUTHSTEP_OUT_OF_BOUNDS, authenticator);
         }
         List<String> authenticators = authenticationSteps.get(nextAuthStep);
         if (!authenticators.contains(authenticator)) {
-            throw Util.handleClientException(
+            throw RestAuthUtil.handleClientException(
                     Constants.ErrorMessage.CLIENT_INVALID_AUTHENTICATOR, authenticator);
         }
     }
@@ -809,10 +825,10 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                 isValidFlowId = true;
                 break;
             case Constants.FLOW_ID_STATE_INACTIVE:
-                throw Util.handleClientException(
+                throw RestAuthUtil.handleClientException(
                         Constants.ErrorMessage.CLIENT_INACTIVE_FLOW_ID, flowIdDO.getFlowId());
             case Constants.FLOW_ID_STATE_EXPIRED:
-                throw Util.handleClientException(
+                throw RestAuthUtil.handleClientException(
                         Constants.ErrorMessage.CLIENT_EXPIRED_FLOW_ID, flowIdDO.getFlowId());
         }
 

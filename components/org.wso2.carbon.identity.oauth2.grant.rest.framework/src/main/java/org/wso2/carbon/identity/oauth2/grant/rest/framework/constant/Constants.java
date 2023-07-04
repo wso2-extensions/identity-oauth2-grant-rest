@@ -99,7 +99,8 @@ public class Constants {
     public static final String PRE_AUTHENTICATION = "PRE_AUTHENTICATION";
     public static final String POST_AUTHENTICATION = "POST_AUTHENTICATION";
 
-
+    public static final String ACCOUNT_LOCK_ERROR_CODE = "17003";
+    public static final String ACCOUNT_DISABLE_ERROR_CODE = "17004";
     /**
      * Rest Auth Service error codes.
      */
