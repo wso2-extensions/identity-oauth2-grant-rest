@@ -25,7 +25,7 @@ import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationServerException;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.Util;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.RestAuthUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -124,7 +124,7 @@ public class FlowIdDAOImpl implements FlowIdDAO {
             throw new AuthenticationServerException("Error while retrieving flowId data.", e);
         }
 
-        throw Util.handleClientException(
+        throw RestAuthUtil.handleClientException(
                 Constants.ErrorMessage.CLIENT_INVALID_FLOW_ID, flowId);
     }
 

@@ -37,8 +37,8 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.UUID;
 
-public class Util {
-    private static final Log LOG = LogFactory.getLog(Util.class);
+public class RestAuthUtil {
+    private static final Log LOG = LogFactory.getLog(RestAuthUtil.class);
 
     /**
      * This method returns the SHA-256 hash of a given string.
@@ -53,7 +53,7 @@ public class Util {
     public static String generateUUID() {
         String uuid = UUID.randomUUID().toString();
         if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Flow Id hash: %s.", Util.getHash(uuid)));
+            LOG.debug(String.format("Flow Id hash: %s.", RestAuthUtil.getHash(uuid)));
         }
         return uuid;
     }
@@ -89,13 +89,13 @@ public class Util {
             throw handleServerException(
                     Constants.ErrorMessage.SERVER_CONFIG_FILE_NOT_FOUND_ERROR, configFilePath);
         } catch (IOException e) {
-            throw Util.handleServerException(Constants.ErrorMessage.SERVER_CONFIG_LOADING_IO_ERROR, e);
+            throw RestAuthUtil.handleServerException(Constants.ErrorMessage.SERVER_CONFIG_LOADING_IO_ERROR, e);
         } finally {
             if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    throw Util.handleServerException(Constants.ErrorMessage.SERVER_CONFIG_FILE_CLOSURE_IO_ERROR,
+                    throw RestAuthUtil.handleServerException(Constants.ErrorMessage.SERVER_CONFIG_FILE_CLOSURE_IO_ERROR,
                             Constants.CONFIG_FILE_NAME, e);
                 }
             }
