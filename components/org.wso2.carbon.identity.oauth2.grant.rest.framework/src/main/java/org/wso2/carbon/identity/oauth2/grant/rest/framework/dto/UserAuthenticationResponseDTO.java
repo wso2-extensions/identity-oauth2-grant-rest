@@ -81,7 +81,7 @@ public class UserAuthenticationResponseDTO {
         return this;
     }
 
-    public Object getAuthenticationSteps() {
+    public List<AuthStepConfigsDTO> getAuthenticationSteps() {
 
         return authenticationSteps;
     }

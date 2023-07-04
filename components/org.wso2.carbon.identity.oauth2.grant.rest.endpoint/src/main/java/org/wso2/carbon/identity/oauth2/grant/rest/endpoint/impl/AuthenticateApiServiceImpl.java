@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.AuthenticateApiService;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.*;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RestAuthenticationResponseBuilder;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RestEndpointUtils;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RequestSnatizerUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationFailureReasonDTO;
@@ -69,8 +70,10 @@ public class AuthenticateApiServiceImpl implements AuthenticateApiService {
             AuthenticationValidationResponse response = new AuthenticationValidationResponse()
                     .isStepSuccess(responseDTO.isValidPassword())
                     .flowId(responseDTO.getFlowId())
-                    .authenticatedSteps(null)
-                    .authenticationSteps(null)
+                    .authenticatedSteps(RestAuthenticationResponseBuilder.buildPostAuthenticatedAuthenticatorResponse
+                            (responseDTO.getAuthenticatedSteps()))
+                    .authenticationSteps(RestAuthenticationResponseBuilder.buildAuthenticationStepsResponse
+                            (responseDTO.getAuthenticationSteps()))
                     .isAuthFlowCompleted(responseDTO.isAuthFlowCompleted())
                     .nextStep(responseDTO.getNextStep())
                     .failureReason(failureReason);
