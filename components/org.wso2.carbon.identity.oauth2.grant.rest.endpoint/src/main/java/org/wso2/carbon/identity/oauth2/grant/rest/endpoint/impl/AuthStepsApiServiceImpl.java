@@ -42,7 +42,8 @@ public class AuthStepsApiServiceImpl implements AuthStepsApiService {
 
             AuthenticationStepsResponse response =
                     new AuthenticationStepsResponse().authenticationSteps
-                            (RestAuthenticationResponseBuilder.buildAuthenticationStepsResponse(responseDTO));
+                            (RestAuthenticationResponseBuilder.buildAuthenticationStepsResponse
+                                    (responseDTO.getAuthenticationSteps()));
 
             return Response.ok(response).build();
 

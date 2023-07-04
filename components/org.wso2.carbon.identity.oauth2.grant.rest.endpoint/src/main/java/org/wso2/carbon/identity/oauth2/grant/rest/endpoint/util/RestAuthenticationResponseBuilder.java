@@ -1,23 +1,39 @@
 package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util;
 
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticatedAuthenticator;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticatorConfig;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthnStepConfig;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthStepConfigsDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationStepsResponseDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticatedAuthenticatorDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticatorConfigDTO;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class RestAuthenticationResponseBuilder {
 
-    public static void buildPostAuthenticationResponse() {
+    public static List<AuthenticatedAuthenticator> buildPostAuthenticatedAuthenticatorResponse
+            (List<AuthenticatedAuthenticatorDTO> authenticatedAuthenticators) {
+
+        AuthenticatedAuthenticator authenticatedAuthenticator;
+        List<AuthenticatedAuthenticator> authenticatedAuthenticatorsList = new ArrayList<>();
+
+        for (AuthenticatedAuthenticatorDTO authenticatedAuthenticatorDTO : authenticatedAuthenticators) {
+
+            authenticatedAuthenticator = new AuthenticatedAuthenticator();
+            int stepNo = authenticatedAuthenticatorDTO.getStepNo();
+            String authenticatorName = authenticatedAuthenticatorDTO.getAuthenticatorName();
+
+            authenticatedAuthenticator.setStepNo(stepNo);
+            authenticatedAuthenticator.setAuthenticatorName(authenticatorName);
+            authenticatedAuthenticatorsList.add(authenticatedAuthenticator);
+
+        }
+        return authenticatedAuthenticatorsList;
 
     }
 
-    public static List<AuthnStepConfig> buildAuthenticationStepsResponse(AuthenticationStepsResponseDTO responseDTO) {
+    public static List<AuthnStepConfig> buildAuthenticationStepsResponse(List<AuthStepConfigsDTO> authenticationSteps) {
 
-        List<AuthStepConfigsDTO> authenticationSteps = responseDTO.getAuthenticationSteps(); //framework
         List<AuthnStepConfig> authenticationStepsList = new ArrayList<>();
 
         AuthnStepConfig authnStepConfig;
@@ -45,5 +61,4 @@ public class RestAuthenticationResponseBuilder {
 
         return authenticationStepsList;
     }
-
 }

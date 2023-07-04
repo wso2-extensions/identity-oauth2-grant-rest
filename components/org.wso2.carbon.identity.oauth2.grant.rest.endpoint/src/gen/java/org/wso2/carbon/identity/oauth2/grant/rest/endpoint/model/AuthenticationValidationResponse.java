@@ -19,28 +19,21 @@
 package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationFailureReason;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthnStepConfig;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthnticatedAuthenticator;
 import javax.validation.constraints.*;
 
 
-import io.swagger.annotations.*;
 import java.util.Objects;
 import javax.validation.Valid;
-import javax.xml.bind.annotation.*;
 
 public class AuthenticationValidationResponse  {
   
     private Boolean isStepSuccess;
     private String flowId;
     private Boolean isAuthFlowCompleted;
-    private List<AuthnticatedAuthenticator> authenticatedSteps = new ArrayList<>();
+    private List<AuthenticatedAuthenticator> authenticatedSteps = new ArrayList<>();
 
     private List<AuthnStepConfig> authenticationSteps = new ArrayList<>();
 
@@ -110,7 +103,7 @@ public class AuthenticationValidationResponse  {
 
     /**
     **/
-    public AuthenticationValidationResponse authenticatedSteps(List<AuthnticatedAuthenticator> authenticatedSteps) {
+    public AuthenticationValidationResponse authenticatedSteps(List<AuthenticatedAuthenticator> authenticatedSteps) {
 
         this.authenticatedSteps = authenticatedSteps;
         return this;
@@ -121,14 +114,14 @@ public class AuthenticationValidationResponse  {
     @Valid
     @NotNull(message = "Property authenticatedSteps cannot be null.")
 
-    public List<AuthnticatedAuthenticator> getAuthenticatedSteps() {
+    public List<AuthenticatedAuthenticator> getAuthenticatedSteps() {
         return authenticatedSteps;
     }
-    public void setAuthenticatedSteps(List<AuthnticatedAuthenticator> authenticatedSteps) {
+    public void setAuthenticatedSteps(List<AuthenticatedAuthenticator> authenticatedSteps) {
         this.authenticatedSteps = authenticatedSteps;
     }
 
-    public AuthenticationValidationResponse addAuthenticatedStepsItem(AuthnticatedAuthenticator authenticatedStepsItem) {
+    public AuthenticationValidationResponse addAuthenticatedStepsItem(AuthenticatedAuthenticator authenticatedStepsItem) {
         this.authenticatedSteps.add(authenticatedStepsItem);
         return this;
     }
