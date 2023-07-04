@@ -39,7 +39,7 @@ import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.Authentica
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.listener.AbstractAuthenticationListener;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.listener.ApplicationCacheListener;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.listener.AuthenticationListener;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.Util;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.RestAuthUtil;
 import org.wso2.carbon.identity.smsotp.common.SMSOTPService;
 import org.wso2.carbon.user.core.service.RealmService;
 
@@ -56,7 +56,7 @@ public class AuthenticationServiceComponent {
 	protected void activate(ComponentContext componentContext) {
 
 		try {
-			Util.readConfigurations();
+			RestAuthUtil.readConfigurations();
 			boolean isEnabled = AuthenticationServiceDataHolder.getConfigs().isEnabled();
 
 			if (isEnabled) {

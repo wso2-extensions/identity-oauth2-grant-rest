@@ -5,7 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 
 /**
- * Util methods for REST Grant Type.
+ * RestAuthUtil methods for REST Grant Type.
  */
 public class AuthenticationGrantUtils {
 

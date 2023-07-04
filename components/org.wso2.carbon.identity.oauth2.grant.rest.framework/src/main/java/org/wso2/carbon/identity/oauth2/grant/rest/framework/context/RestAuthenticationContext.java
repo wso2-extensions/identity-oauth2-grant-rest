@@ -35,7 +35,8 @@ import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.internal.AuthenticationServiceDataHolder;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.Util;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.RestAuthUtil;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -279,14 +280,14 @@ public class RestAuthenticationContext {
 			for (HashMap.Entry<String, String> entry : params.entrySet()) {
 				if (entry.getValue() == null) {
 					String missingParam = entry.getKey();
-					throw Util.handleClientException
+					throw RestAuthUtil.handleClientException
 							(Constants.ErrorMessage.CLIENT_MANDATORY_VALIDATION_PARAMETERS_EMPTY, missingParam);
 				}
 				try {
 					Method method = this.getClass().getDeclaredMethod(entry.getKey(),String.class);
 					method.invoke(this, entry.getValue());
 				} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-					throw Util.handleServerException(Constants.ErrorMessage.SERVER_REQUEST_PARAM_READING_ERROR,
+					throw RestAuthUtil.handleServerException(Constants.ErrorMessage.SERVER_REQUEST_PARAM_READING_ERROR,
 							String.format("Error while sanitizing the request parameter : %s.", entry.getKey()), e);
 				}
 			}
@@ -411,8 +412,8 @@ public class RestAuthenticationContext {
 		static int tenantDomain;
 		public RestAuthenticationContext buildForAuthFlowInitialize() throws AuthenticationException {
 
-			return newFlowId(Util.generateUUID())
-					.newFlowIdIdentifier(Util.generateUUID())
+			return newFlowId(RestAuthUtil.generateUUID())
+					.newFlowIdIdentifier(RestAuthUtil.generateUUID())
 					.serviceProvider(this.clientId)
 					.flowIdState(Constants.FLOW_ID_STATE_ACTIVE)
 					.flowIdValidityPeriod(AuthenticationServiceDataHolder.getConfigs().getFlowIdValidityPeriod())
@@ -422,13 +423,13 @@ public class RestAuthenticationContext {
 
 		//TODO: We can improve this further
 		public RestAuthenticationContext buildForAuthStepInitialize() {
-			return newFlowIdIdentifier(Util.generateUUID())
+			return newFlowIdIdentifier(RestAuthUtil.generateUUID())
 					.build();
 		}
 
 		public RestAuthenticationContext buildForAuthStepValidate() {
-			return newFlowIdIdentifier(Util.generateUUID())
-					.newFlowId(Util.generateUUID())
+			return newFlowIdIdentifier(RestAuthUtil.generateUUID())
+					.newFlowId(RestAuthUtil.generateUUID())
 					.build();
 		}
 
@@ -455,14 +456,14 @@ public class RestAuthenticationContext {
 					Constants.CLIENT_TYPE, getTenantDomain());
 		} catch (IdentityApplicationManagementException e) {
 
-			throw Util.handleServerException(Constants.ErrorMessage.SERVER_RETRIEVING_SP_ERROR ,
+			throw RestAuthUtil.handleServerException(Constants.ErrorMessage.SERVER_RETRIEVING_SP_ERROR ,
 					String.format("Error while retrieving service provider for the clientId : %s.", clientId), e);
 		}
 
 		if (isValidClientId(serviceProvider)) {
 			return serviceProvider;
 		} else {
-			throw Util.handleClientException(
+			throw RestAuthUtil.handleClientException(
 					Constants.ErrorMessage.CLIENT_INVALID_CLIENT_ID, clientId);
 		}
 
@@ -482,7 +483,7 @@ public class RestAuthenticationContext {
 		try {
 			serviceProvider = ApplicationManagementServiceImpl.getInstance().getServiceProvider(serviceProviderAppId);
 		} catch (IdentityApplicationManagementException e) {
-			throw Util.handleServerException(Constants.ErrorMessage.SERVER_RETRIEVING_SP_ERROR,
+			throw RestAuthUtil.handleServerException(Constants.ErrorMessage.SERVER_RETRIEVING_SP_ERROR,
 					String.format("Error while retrieving service provider for the App ID : %s.",
 							serviceProviderAppId), e);
 		}
@@ -490,7 +491,7 @@ public class RestAuthenticationContext {
 		if (isValidClientId(serviceProvider)) {
 			return serviceProvider;
 		} else {
-			throw Util.handleClientException(Constants.ErrorMessage.SERVER_INVALID_APP_ID,
+			throw RestAuthUtil.handleClientException(Constants.ErrorMessage.SERVER_INVALID_APP_ID,
 					String.valueOf(serviceProviderAppId));
 		}
 

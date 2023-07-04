@@ -27,7 +27,7 @@ import org.wso2.carbon.extension.identity.emailotp.common.exception.EmailOtpExce
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.Util;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.RestAuthUtil;
 import org.wso2.carbon.identity.smsotp.common.SMSOTPService;
 import org.wso2.carbon.identity.smsotp.common.exception.SMSOTPException;
 
@@ -61,7 +61,7 @@ public class AuthenticationStepExecutorServiceImpl implements
                     LOG.debug("Email OTP generated");
                 }
             } else if (authenticatorService == null) {
-                throw Util.handleServerException(Constants.ErrorMessage.SERVER_AUTHENTICATOR_SERVICE_ERROR,
+                throw RestAuthUtil.handleServerException(Constants.ErrorMessage.SERVER_AUTHENTICATOR_SERVICE_ERROR,
                         String.format("Authenticator Service Object is null."));
             }
         } catch (EmailOtpException | SMSOTPException e) {
@@ -98,7 +98,7 @@ public class AuthenticationStepExecutorServiceImpl implements
                     LOG.debug("Email OTP validated");
                 }
             } else if (authenticatorService == null) {
-                throw Util.handleServerException(Constants.ErrorMessage.SERVER_AUTHENTICATOR_SERVICE_ERROR,
+                throw RestAuthUtil.handleServerException(Constants.ErrorMessage.SERVER_AUTHENTICATOR_SERVICE_ERROR,
                         String.format("Authenticator Service Object is null."));
             }
         } catch (EmailOtpException | SMSOTPException e) {

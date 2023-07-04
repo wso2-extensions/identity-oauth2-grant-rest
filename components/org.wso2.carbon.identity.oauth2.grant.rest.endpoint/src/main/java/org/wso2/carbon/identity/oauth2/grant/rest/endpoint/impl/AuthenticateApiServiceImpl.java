@@ -47,7 +47,7 @@ public class AuthenticateApiServiceImpl implements AuthenticateApiService {
 
         try {
             //TODO: if authenticator is not avialble in the request body, flow should terminate immediately.
-           // if the authentication flow initialize
+            // if the authentication flow initialize
             if (RequestSnatizerUtil.isNotEmpty(clientId) && RequestSnatizerUtil.isNotEmpty(userIdentifier) &&
                     RequestSnatizerUtil.isEmpty(flowId)) {
                 responseDTO = RestEndpointUtils.getAuthService().initializeAuthFlow(clientId, authenticator, password,
