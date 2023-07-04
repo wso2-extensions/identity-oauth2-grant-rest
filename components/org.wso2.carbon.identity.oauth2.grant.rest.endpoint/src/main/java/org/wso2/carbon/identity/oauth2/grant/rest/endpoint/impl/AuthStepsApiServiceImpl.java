@@ -22,7 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.AuthStepsApiService;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationStepsResponse;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthnStepConfig;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RestAuthenticationResponseBuilder;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RestEndpointUtils;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationStepsResponseDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
@@ -36,19 +36,15 @@ public class AuthStepsApiServiceImpl implements AuthStepsApiService {
     public Response authStepsGet(String clientId) {
 
         try {
-            AuthenticationStepsResponseDTO responseDTO = null;
-            responseDTO = RestEndpointUtils
+            AuthenticationStepsResponseDTO responseDTO = RestEndpointUtils
                     .getAuthService()
                     .getAuthenticationStepsFromSP(clientId);
 
-            AuthnStepConfig authnStepConfig = new AuthnStepConfig();
-            authnStepConfig.setStepNo(1);
-            authnStepConfig.setAuthenticatorConfigs(null);
-            
             AuthenticationStepsResponse response =
-                    new AuthenticationStepsResponse().authenticationSteps(null);
+                    new AuthenticationStepsResponse().authenticationSteps
+                            (RestAuthenticationResponseBuilder.buildAuthenticationStepsResponse(responseDTO));
 
-            return Response.ok("magic").build();
+            return Response.ok(response).build();
 
         } catch (AuthenticationClientException e) {
             return RestEndpointUtils.handleBadRequestResponse(clientId, e, LOG);
@@ -57,6 +53,5 @@ public class AuthStepsApiServiceImpl implements AuthStepsApiService {
         } catch (Throwable e) {
             return RestEndpointUtils.handleUnexpectedServerError(clientId, e, LOG);
         }
-
     }
 }

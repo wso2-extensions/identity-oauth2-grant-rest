@@ -8,10 +8,12 @@ public class AuthenticationStepsResponseDTO {
     private List<AuthStepConfigsDTO> authenticationSteps = new ArrayList<>();
 
     public List<AuthStepConfigsDTO> getAuthenticationSteps() {
+
         return authenticationSteps;
     }
 
     public void setAuthenticationSteps(List<AuthStepConfigsDTO> authenticationSteps) {
+
         this.authenticationSteps = authenticationSteps;
     }
 }
