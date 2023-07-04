@@ -19,25 +19,20 @@
 package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import javax.validation.constraints.*;
 
 
-import io.swagger.annotations.*;
 import java.util.Objects;
 import javax.validation.Valid;
-import javax.xml.bind.annotation.*;
 
-public class AuthnticatedAuthenticator  {
+public class AuthenticatedAuthenticator {
   
     private Integer stepNo;
     private String authenticatorName;
 
     /**
     **/
-    public AuthnticatedAuthenticator stepNo(Integer stepNo) {
+    public AuthenticatedAuthenticator stepNo(Integer stepNo) {
 
         this.stepNo = stepNo;
         return this;
@@ -55,7 +50,7 @@ public class AuthnticatedAuthenticator  {
 
     /**
     **/
-    public AuthnticatedAuthenticator authenticatorName(String authenticatorName) {
+    public AuthenticatedAuthenticator authenticatorName(String authenticatorName) {
 
         this.authenticatorName = authenticatorName;
         return this;
@@ -82,9 +77,9 @@ public class AuthnticatedAuthenticator  {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        AuthnticatedAuthenticator authnticatedAuthenticator = (AuthnticatedAuthenticator) o;
-        return Objects.equals(this.stepNo, authnticatedAuthenticator.stepNo) &&
-            Objects.equals(this.authenticatorName, authnticatedAuthenticator.authenticatorName);
+        AuthenticatedAuthenticator authenticatedAuthenticator = (AuthenticatedAuthenticator) o;
+        return Objects.equals(this.stepNo, authenticatedAuthenticator.stepNo) &&
+            Objects.equals(this.authenticatorName, authenticatedAuthenticator.authenticatorName);
     }
 
     @Override
@@ -96,7 +91,7 @@ public class AuthnticatedAuthenticator  {
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("class AuthnticatedAuthenticator {\n");
+        sb.append("class AuthenticatedAuthenticator {\n");
         
         sb.append("    stepNo: ").append(toIndentedString(stepNo)).append("\n");
         sb.append("    authenticatorName: ").append(toIndentedString(authenticatorName)).append("\n");

@@ -433,9 +433,9 @@ components:
     AuthnticatedStepsConfig:
       type: array
       items:
-        $ref: '#/components/schemas/AuthnticatedAuthenticator'
+        $ref: '#/components/schemas/AuthenticatedAuthenticator'
     #-----------------------------------------------------
-    # AuthnticatedAuthenticator object
+    # AuthenticatedAuthenticator object
     #-----------------------------------------------------
     AuthnticatedAuthenticator:
       type: object
