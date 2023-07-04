@@ -39,7 +39,7 @@ import static org.wso2.carbon.identity.oauth2.grant.rest.endpoint.constant.Const
 /**
  * This class provides util functions for Auth REST APIs.
  */
-public class EndpointUtils {
+public class RestEndpointUtils {
     public static RestAuthenticationService getAuthService() {
 
         return (RestAuthenticationService) PrivilegedCarbonContext.getThreadLocalCarbonContext().

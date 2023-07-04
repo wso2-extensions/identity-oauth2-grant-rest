@@ -21,10 +21,8 @@ package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.AuthenticateApiService;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationFailureReason;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationValidationRequest;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationValidationResponse;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.EndpointUtils;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.*;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RestEndpointUtils;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RequestSnatizerUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationFailureReasonDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.UserAuthenticationResponseDTO;
@@ -51,11 +49,12 @@ public class AuthenticateApiServiceImpl implements AuthenticateApiService {
            // if the authentication flow initialize
             if (RequestSnatizerUtil.isNotEmpty(clientId) && RequestSnatizerUtil.isNotEmpty(userIdentifier) &&
                     RequestSnatizerUtil.isEmpty(flowId)) {
-                responseDTO = EndpointUtils.getAuthService().initializeAuthFlow(clientId, authenticator, password,
+                responseDTO = RestEndpointUtils.getAuthService().initializeAuthFlow(clientId, authenticator, password,
                         userIdentifier, "carbon.super");
-            } else if (RequestSnatizerUtil.isNotEmpty(flowId) && RequestSnatizerUtil.isNotEmpty(userIdentifier) &&
+            } else if (RequestSnatizerUtil.isNotEmpty(flowId) && RequestSnatizerUtil.isNotEmpty(password) &&
                     RequestSnatizerUtil.isEmpty(clientId)) {
-                responseDTO = EndpointUtils.getAuthService().processAuthStepResponse(flowId, authenticator, password);
+                responseDTO = RestEndpointUtils.getAuthService().processAuthStepResponse
+                        (flowId, authenticator, password);
             }
 
             AuthenticationFailureReasonDTO failureReasonDTO = responseDTO.getFailureReason();
@@ -79,11 +78,11 @@ public class AuthenticateApiServiceImpl implements AuthenticateApiService {
             return Response.ok(response).build();
 
         } catch (AuthenticationClientException e) {
-            return EndpointUtils.handleBadRequestResponse(authenticator, e, LOG);
+            return RestEndpointUtils.handleBadRequestResponse(authenticator, e, LOG);
         } catch (AuthenticationException e) {
-            return EndpointUtils.handleServerErrorResponse(authenticator, e, LOG);
+            return RestEndpointUtils.handleServerErrorResponse(authenticator, e, LOG);
         } catch (Throwable e) {
-            return EndpointUtils.handleUnexpectedServerError(authenticator, e, LOG);
+            return RestEndpointUtils.handleUnexpectedServerError(authenticator, e, LOG);
         }
     }
 }

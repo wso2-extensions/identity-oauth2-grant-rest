@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.InitAuthenticatorApiService;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticatorInitializationRequest;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticatorInitializationResponse;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.EndpointUtils;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RestEndpointUtils;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RequestSnatizerUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationInitializationResponseDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
@@ -42,7 +42,7 @@ public class InitAuthenticatorApiServiceImpl implements InitAuthenticatorApiServ
 
         try {
 
-            AuthenticationInitializationResponseDTO responseDTO = EndpointUtils.getAuthService()
+            AuthenticationInitializationResponseDTO responseDTO = RestEndpointUtils.getAuthService()
                     .executeAuthStep(flowId, authenticator);
             AuthenticatorInitializationResponse response = new AuthenticatorInitializationResponse()
                     .flowId(responseDTO.getFlowId())
@@ -50,11 +50,11 @@ public class InitAuthenticatorApiServiceImpl implements InitAuthenticatorApiServ
             return Response.ok(response).build();
 
         } catch (AuthenticationClientException e) {
-            return EndpointUtils.handleBadRequestResponse(authenticator, e, LOG);
+            return RestEndpointUtils.handleBadRequestResponse(authenticator, e, LOG);
         } catch (AuthenticationException e) {
-            return EndpointUtils.handleServerErrorResponse(authenticator, e, LOG);
+            return RestEndpointUtils.handleServerErrorResponse(authenticator, e, LOG);
         } catch (Throwable e) {
-            return EndpointUtils.handleUnexpectedServerError(authenticator, e, LOG);
+            return RestEndpointUtils.handleUnexpectedServerError(authenticator, e, LOG);
         }
     }
 }

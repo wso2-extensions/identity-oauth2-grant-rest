@@ -127,7 +127,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         User user = User.getUserFromUserName(flowIdDO.getFullQualifiedUserName());
         authContext.setUser(user);
         authContext.setServiceProvider(flowIdDO.getServiceProviderAppId());
-        authContext.setAuthenticatedSteps(null);
+        authContext.setAuthenticatedSteps(flowIdDO.getAuthenticatedSteps());
         authContext.setFlowIdIdentifier(flowIdDO.getFlowIdIdentifier());
         authContext.setUserTenantId(flowIdDO.getUserTenantId());
         authContext.setSpTenantId(flowIdDO.getSpTenantId());
@@ -641,7 +641,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         flowIdDO.setExpiryTime(flowIdDO.getGeneratedTime() + authContext.getFlowIdValidityPeriod());
         flowIdDO.setAuthFlowCompleted(authContext.isAuthFlowCompleted());
         flowIdDO.setServiceProviderAppId(authContext.getServiceProvider().getApplicationID());
-        flowIdDO.setAuthenticatedSteps(null);
+        flowIdDO.setAuthenticatedSteps(authContext.getAuthenticatedSteps());
         flowIdDO.setSpTenantId(authContext.getSpTenantId());
         flowIdDO.setUserTenantId(authContext.getUserTenantId());
 
@@ -660,11 +660,9 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         responseDTO.setFlowId(authContext.getNewFlowdId());
         responseDTO.setAuthenticationSteps(getConfiguredAuthenticationStepsForSP(authContext.getAuthenticationSteps()));
         responseDTO.setAuthenticatedSteps(authContext.getAuthenticatedSteps());
-        responseDTO.setAuthenticationSteps
-                (getConfiguredAuthenticationStepsForSP(authContext.getAuthenticationSteps()));
         responseDTO.setAuthFlowCompleted(authContext.isAuthFlowCompleted());
         responseDTO.setNextStep(fetchNextAuthStep
-                (null, authContext.getAuthenticationSteps()));
+                (authContext.getAuthenticatedSteps(), authContext.getAuthenticationSteps()));
 
         return responseDTO;
     }
@@ -715,7 +713,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                 .setFlowId(authContext.getNewFlowdId()).setAuthFlowCompleted(authContext.isAuthFlowCompleted())
                 .setAuthenticatedSteps(authContext.getAuthenticatedSteps())
                 .setAuthenticationSteps(getConfiguredAuthenticationStepsForSP(authContext.getAuthenticationSteps()))
-                .setNextStep(fetchNextAuthStep(null,
+                .setNextStep(fetchNextAuthStep(authContext.getAuthenticatedSteps(),
                         authContext.getAuthenticationSteps()));
 
         if (failureReasonDTO != null) {

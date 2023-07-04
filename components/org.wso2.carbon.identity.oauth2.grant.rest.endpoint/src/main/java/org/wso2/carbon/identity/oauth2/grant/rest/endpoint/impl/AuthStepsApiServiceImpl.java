@@ -23,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.AuthStepsApiService;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationStepsResponse;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthnStepConfig;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.EndpointUtils;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RestEndpointUtils;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationStepsResponseDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
@@ -37,7 +37,7 @@ public class AuthStepsApiServiceImpl implements AuthStepsApiService {
 
         try {
             AuthenticationStepsResponseDTO responseDTO = null;
-            responseDTO = EndpointUtils
+            responseDTO = RestEndpointUtils
                     .getAuthService()
                     .getAuthenticationStepsFromSP(clientId);
 
@@ -51,11 +51,11 @@ public class AuthStepsApiServiceImpl implements AuthStepsApiService {
             return Response.ok("magic").build();
 
         } catch (AuthenticationClientException e) {
-            return EndpointUtils.handleBadRequestResponse(clientId, e, LOG);
+            return RestEndpointUtils.handleBadRequestResponse(clientId, e, LOG);
         } catch (AuthenticationException e) {
-            return EndpointUtils.handleServerErrorResponse(clientId, e, LOG);
+            return RestEndpointUtils.handleServerErrorResponse(clientId, e, LOG);
         } catch (Throwable e) {
-            return EndpointUtils.handleUnexpectedServerError(clientId, e, LOG);
+            return RestEndpointUtils.handleUnexpectedServerError(clientId, e, LOG);
         }
 
     }
