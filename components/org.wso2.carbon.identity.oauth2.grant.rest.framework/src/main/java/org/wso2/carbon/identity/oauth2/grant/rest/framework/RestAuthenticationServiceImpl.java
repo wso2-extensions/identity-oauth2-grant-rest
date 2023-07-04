@@ -34,12 +34,7 @@ import org.wso2.carbon.identity.oauth2.grant.rest.framework.context.RestAuthenti
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.CacheBackedFlowIdDAO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.FlowIdDAOImpl;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.FlowIdDO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthStepConfigsDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationFailureReasonDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationInitializationResponseDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationStepsResponseDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticatorConfigDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.UserAuthenticationResponseDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.*;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.handler.AuthenticationStepExecutorService;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.handler.AuthenticationStepExecutorServiceImpl;
@@ -659,7 +654,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         UserAuthenticationResponseDTO responseDTO = new UserAuthenticationResponseDTO();
         responseDTO.setFlowId(authContext.getNewFlowdId());
         responseDTO.setAuthenticationSteps(getConfiguredAuthenticationStepsForSP(authContext.getAuthenticationSteps()));
-        responseDTO.setAuthenticatedSteps(authContext.getAuthenticatedSteps());
+        responseDTO.setAuthenticatedSteps(getConfiguredAuthenticatedStepsForSP(authContext.getAuthenticatedSteps()));
         responseDTO.setAuthFlowCompleted(authContext.isAuthFlowCompleted());
         responseDTO.setNextStep(fetchNextAuthStep
                 (authContext.getAuthenticatedSteps(), authContext.getAuthenticationSteps()));
@@ -711,7 +706,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         userAuthenticationResponse.setValid(authContext.isValidPassword())
                 .setUserId(authContext.getUserId())
                 .setFlowId(authContext.getNewFlowdId()).setAuthFlowCompleted(authContext.isAuthFlowCompleted())
-                .setAuthenticatedSteps(authContext.getAuthenticatedSteps())
+                .setAuthenticatedSteps(getConfiguredAuthenticatedStepsForSP(authContext.getAuthenticatedSteps()))
                 .setAuthenticationSteps(getConfiguredAuthenticationStepsForSP(authContext.getAuthenticationSteps()))
                 .setNextStep(fetchNextAuthStep(authContext.getAuthenticatedSteps(),
                         authContext.getAuthenticationSteps()));
@@ -744,12 +739,12 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         return responseDTO;
     }
 
-    public static ArrayList<AuthStepConfigsDTO> getConfiguredAuthenticationStepsForSP(
+    public static List<AuthStepConfigsDTO> getConfiguredAuthenticationStepsForSP(
             LinkedHashMap<Integer, List<String>> authenticationSteps) {
 
         AuthenticatorConfigDTO authenticatorConfigDTO;
         AuthStepConfigsDTO authStepConfigsDTO;
-        ArrayList<AuthStepConfigsDTO> authenticationStepDetails = new ArrayList<>();
+        List<AuthStepConfigsDTO> authenticationStepDetails = new ArrayList<>();
 
         for (Map.Entry<Integer, List<String>> entry : authenticationSteps.entrySet()) {
 
@@ -770,6 +765,24 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
             authenticationStepDetails.add(authStepConfigsDTO);
         }
         return authenticationStepDetails;
+    }
+
+
+    public static List<AuthenticatedAuthenticatorDTO> getConfiguredAuthenticatedStepsForSP(
+            LinkedHashMap<Integer, String> authenticatedSteps) {
+
+        AuthenticatedAuthenticatorDTO authenticatedAuthenticatorDTO;
+        List<AuthenticatedAuthenticatorDTO> authenticatedStepDetails = new ArrayList<>();
+
+        for (Map.Entry<Integer, String> entry :  authenticatedSteps.entrySet()) {
+
+            authenticatedAuthenticatorDTO = new AuthenticatedAuthenticatorDTO();
+            authenticatedAuthenticatorDTO.setStepNo(entry.getKey());
+            authenticatedAuthenticatorDTO.setAuthenticatorName(entry.getValue());
+            authenticatedStepDetails.add(authenticatedAuthenticatorDTO);
+
+        }
+        return authenticatedStepDetails;
     }
 
 

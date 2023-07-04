@@ -29,7 +29,7 @@ public class UserAuthenticationResponseDTO {
     private boolean isValidPassword;
     private String userId;
     private boolean isAuthFlowCompleted;
-    private LinkedHashMap<Integer, String> authenticatedSteps;
+    private List<AuthenticatedAuthenticatorDTO> authenticatedSteps = new ArrayList<>();
     private List<AuthStepConfigsDTO> authenticationSteps = new ArrayList<>();
     private int nextStep;
     private AuthenticationFailureReasonDTO failureReason;
@@ -70,12 +70,12 @@ public class UserAuthenticationResponseDTO {
         return this;
     }
 
-    public LinkedHashMap<Integer, String> getAuthenticatedSteps() {
+    public List<AuthenticatedAuthenticatorDTO> getAuthenticatedSteps() {
 
         return authenticatedSteps;
     }
 
-    public UserAuthenticationResponseDTO setAuthenticatedSteps(LinkedHashMap<Integer, String> authenticatedSteps) {
+    public UserAuthenticationResponseDTO setAuthenticatedSteps(List<AuthenticatedAuthenticatorDTO> authenticatedSteps) {
 
         this.authenticatedSteps = authenticatedSteps;
         return this;

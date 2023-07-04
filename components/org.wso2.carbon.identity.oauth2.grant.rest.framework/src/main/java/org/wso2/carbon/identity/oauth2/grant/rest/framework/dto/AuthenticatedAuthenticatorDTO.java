@@ -1,6 +1,6 @@
 package org.wso2.carbon.identity.oauth2.grant.rest.framework.dto;
 
-public class AuthnticatedAuthenticatorDTO {
+public class AuthenticatedAuthenticatorDTO {
 
     private Integer stepNo;
     private String authenticatorName;
