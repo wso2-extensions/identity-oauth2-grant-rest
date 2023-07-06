@@ -27,24 +27,18 @@ public class UserAuthenticationResponseDTO {
 
     private String flowId;
     private boolean isValidPassword;
-    private String userId;
     private boolean isAuthFlowCompleted;
     private List<AuthenticatedAuthenticatorDTO> authenticatedSteps = new ArrayList<>();
     private List<AuthStepConfigsDTO> authenticationSteps = new ArrayList<>();
     private int nextStep;
     private AuthenticationFailureReasonDTO failureReason;
     public boolean isValidPassword() {
+
         return isValidPassword;
     }
 
     public UserAuthenticationResponseDTO setValid(boolean isValid) {
         this.isValidPassword = isValid;
-        return this;
-    }
-
-    public UserAuthenticationResponseDTO setUserId(String userId) {
-
-        this.userId = userId;
         return this;
     }
 
