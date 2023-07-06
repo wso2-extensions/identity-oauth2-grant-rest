@@ -126,6 +126,67 @@ public class RestAuthUtil {
                 Integer.parseInt(timestampSkewValue) * 1000 : Constants.DEFAULT_FLOW_ID_TIMESTAMP_SKEW;
         configs.setTimestampSkew(timestampSkew);
 
+
+        String clientMandatoryParamsEmpty = StringUtils.trim(properties.getProperty
+                (Constants.CLIENT_MANDATORY_PARAMS_EMPTY));
+        configs.setClientMandatoryParamsEmpty(clientMandatoryParamsEmpty);
+
+        String clientInvalidAuthenticator = StringUtils.trim(properties.getProperty
+                (Constants.CLIENT_INVALID_AUTHENTICATOR));
+        configs.setClientInvalidAuthenticator(clientInvalidAuthenticator);
+
+        String clientInvalidClientId = StringUtils.trim(properties.getProperty
+                (Constants.CLIENT_INVALID_CLIENT_ID));
+        configs.setClientInvalidClientId(clientInvalidClientId);
+
+        String clientIncorrectUserCredentials = StringUtils.trim(properties.getProperty
+                (Constants.CLIENT_INCORRECT_USER_CREDENTIALS));
+        configs.setClientIncorrectUserCredentials(clientIncorrectUserCredentials);
+
+        String clientInactiveFlowId = StringUtils.trim(properties.getProperty
+                (Constants.CLIENT_INACTIVE_FLOW_ID));
+        configs.setClientInactiveFlowId(clientInactiveFlowId);
+
+        String clientInvalidFlowId = StringUtils.trim(properties.getProperty
+                (Constants.CLIENT_INVALID_FLOW_ID));
+        configs.setClientInvalidFlowId(clientInvalidFlowId);
+
+        String clientAuthStepOutOfBound = StringUtils.trim(properties.getProperty
+                (Constants.CLIENT_AUTH_STEP_OUT_OF_BOUND));
+        configs.setClientAuthStepOutOfBound(clientAuthStepOutOfBound);
+
+        String clientUnSupportedAuthenticator = StringUtils.trim(properties.getProperty
+                (Constants.CLIENT_UNSUPPORTED_AUTHENTICATOR));
+        configs.setClientUnSupportedAuthenticator(clientUnSupportedAuthenticator);
+
+        String clientExpiredFlowId = StringUtils.trim(properties.getProperty
+                (Constants.CLIENT_EXPIRED_FLOW_ID));
+        configs.setClientExpiredFlowId(clientExpiredFlowId);
+
+        String clientLockedUserAccount = StringUtils.trim(properties.getProperty
+                (Constants.CLIENT_LOCKED_USER_ACCOUNT));
+        configs.setClientLockedUserAccount(clientLockedUserAccount);
+
+        String clientDisabledUserAccount = StringUtils.trim(properties.getProperty
+                (Constants.CLIENT_DISABLED_USER_ACCOUNT));
+        configs.setClientDisabledUserAccount(clientDisabledUserAccount);
+
+        String clientFlowIdMismatch = StringUtils.trim(properties.getProperty
+                (Constants.CLIENT_FLOW_ID_MISMATCH));
+        configs.setClientFlowIdMismatch(clientFlowIdMismatch);
+
+        String clientInvalidUserCredentials = StringUtils.trim(properties.getProperty
+                (Constants.CLIENT_INVALID_USER_CREDENTIALS));
+        configs.setClientInvalidUserCredentials(clientInvalidUserCredentials);
+
+        String clientCrossTenantAccessRestriction = StringUtils.trim(properties.getProperty
+                (Constants.CLIENT_CROSS_TENANT_ACCESS_RESTRICTION));
+        configs.setClientCrossTenantAccessRestriction(clientCrossTenantAccessRestriction);
+
+        String clientUsernameResolveFailed = StringUtils.trim(properties.getProperty
+                (Constants.CLIENT_USERNAME_RESOLVE_FAIL));
+        configs.setClientUsernameResolveFailed(clientUsernameResolveFailed);
+
     }
 
     public static AuthenticationClientException handleClientException(Constants.ErrorMessage error) {
