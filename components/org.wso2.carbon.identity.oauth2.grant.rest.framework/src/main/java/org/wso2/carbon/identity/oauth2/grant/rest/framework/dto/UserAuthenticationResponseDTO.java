@@ -20,9 +20,11 @@
 package org.wso2.carbon.identity.oauth2.grant.rest.framework.dto;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
+/**
+ * This class is used to keep the response data after user is being authenticated.
+ */
 public class UserAuthenticationResponseDTO {
 
     private String flowId;

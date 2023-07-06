@@ -44,6 +44,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+/**
+ * Context object for the REST Authentication flow.
+ */
 public class RestAuthenticationContext {
 
 	private static final Log log = LogFactory.getLog(RestAuthenticationContext.class);
@@ -85,7 +88,6 @@ public class RestAuthenticationContext {
 
 	private boolean isValidPassword;
 
-	private boolean isMandatoryAuthenticator;
 
 	private String multiAttributeLoginClaimURI;
 
@@ -284,10 +286,11 @@ public class RestAuthenticationContext {
 							(Constants.ErrorMessage.CLIENT_MANDATORY_VALIDATION_PARAMETERS_EMPTY, missingParam);
 				}
 				try {
-					Method method = this.getClass().getDeclaredMethod(entry.getKey(),String.class);
+					Method method = this.getClass().getDeclaredMethod(entry.getKey(), String.class);
 					method.invoke(this, entry.getValue());
 				} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-					throw RestAuthUtil.handleServerException(Constants.ErrorMessage.SERVER_REQUEST_PARAM_READING_ERROR,
+					throw RestAuthUtil.handleServerException
+							(Constants.ErrorMessage.SERVER_REQUEST_PARAM_READING_ERROR,
 							String.format("Error while sanitizing the request parameter : %s.", entry.getKey()), e);
 				}
 			}
@@ -421,7 +424,6 @@ public class RestAuthenticationContext {
 					.build();
 		}
 
-		//TODO: We can improve this further
 		public RestAuthenticationContext buildForAuthStepInitialize() {
 			return newFlowIdIdentifier(RestAuthUtil.generateUUID())
 					.build();
@@ -433,7 +435,8 @@ public class RestAuthenticationContext {
 					.build();
 		}
 
-		public RestAuthenticationContext buildServiceProviderAuthenticationSteps() throws AuthenticationException {
+		public RestAuthenticationContext buildServiceProviderAuthenticationSteps()
+				throws AuthenticationException {
 
 			return serviceProvider(this.clientId).build();
 		}
@@ -566,14 +569,7 @@ public class RestAuthenticationContext {
 
 		return this.user;
 	}
-	public void setIsMandatoryAuthenticator(boolean isMandatoryAuthenticator) {
 
-		this.isMandatoryAuthenticator = isMandatoryAuthenticator;
-	}
-	public Boolean getIsMandatoryAuthenticator() {
-
-		return isMandatoryAuthenticator;
-	}
 	public void setMultiAttributeLoginClaim(String multiAttributeLoginClaimURI) {
 
 		this.multiAttributeLoginClaimURI = multiAttributeLoginClaimURI;

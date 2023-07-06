@@ -25,6 +25,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class is used to keep the constants relevant to framework component.
+ */
 public class Constants {
 
     public static final String CLIENT_TYPE = "oauth2";
@@ -71,21 +74,10 @@ public class Constants {
     public static final String DB_FIELD_USER_TENANT_ID = "USER_TENANT_ID";
     public static final String DB_FIELD_SP_TENANT_ID = "SP_TENANT_ID";
 
-    //Password Expiry Constants
-    public static final String STATE = "state";
-    public static final String LAST_CREDENTIAL_UPDATE_TIMESTAMP_CLAIM =
-            "http://wso2.org/claims/identity/lastPasswordUpdateTime";
-    public static final String CREATED_CLAIM = "http://wso2.org/claims/created";
-    public static final String CREATED_CLAIM_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-    public static final String CREATED_CLAIM_TIMEZONE = "GMT";
-    public static final String PASSWORD_CHANGE_EVENT_HANDLER_NAME = "passwordExpiry";
-    public static final String PASSWORD_EXPIRY_IN_DAYS_FROM_CONFIG = "passwordExpiry.passwordExpiryInDays";
-    public static final int PASSWORD_EXPIRY_IN_DAYS_DEFAULT_VALUE = 30;
 
     //Authentication Parameters
     public static final String BASIC_AUTH_PARAM_USERNAME = "username";
     public static final String LOGGED_USER_CLAIM = "loggedUserClaim";
-    public static final String BASIC_AUTH_PARAM_PASSWORD = "password";
     public static final String BASIC_AUTH_PARAM_CLIENT_ID = "clientId";
 
     public static final String INITIALIZE_PARAM_AUTHENTICATOR = "authenticator";
@@ -101,23 +93,6 @@ public class Constants {
 
     public static final String ACCOUNT_LOCK_ERROR_CODE = "17003";
     public static final String ACCOUNT_DISABLE_ERROR_CODE = "17004";
-
-
-    public static final String CLIENT_MANDATORY_PARAMS_EMPTY = "RestClient.mandatoryParamsEmpty";
-    public static final String CLIENT_INVALID_AUTHENTICATOR = "RestClient.invalidAuthenticator";
-    public static final String CLIENT_INVALID_CLIENT_ID = "RestClient.invalidClientId";
-    public static final String CLIENT_INCORRECT_USER_CREDENTIALS = "RestClient.incorrectUserCredentials";
-    public static final String CLIENT_INACTIVE_FLOW_ID = "RestClient.inactiveFlowId";
-    public static final String CLIENT_INVALID_FLOW_ID = "RestClient.invalidFlowId";
-    public static final String CLIENT_AUTH_STEP_OUT_OF_BOUND = "RestClient.authStepOutOfBound";
-    public static final String CLIENT_UNSUPPORTED_AUTHENTICATOR = "RestClient.unSupportedAuthenticator";
-    public static final String CLIENT_EXPIRED_FLOW_ID = "RestClient.expiredFlowId";
-    public static final String CLIENT_LOCKED_USER_ACCOUNT = "RestClient.lockedUserAccount";
-    public static final String CLIENT_DISABLED_USER_ACCOUNT = "RestClient.disabledUserAccount";
-    public static final String CLIENT_FLOW_ID_MISMATCH = "RestClient.flowIdMismatch";
-    public static final String CLIENT_INVALID_USER_CREDENTIALS = "RestClient.invalidUserCredentials";
-    public static final String CLIENT_CROSS_TENANT_ACCESS_RESTRICTION = "RestClient.crossTenantAccessRestriction";
-    public static final String CLIENT_USERNAME_RESOLVE_FAIL = "RestClient.usernameResolveFailed";
 
     /**
      * Rest Auth Service error codes.
@@ -141,54 +116,109 @@ public class Constants {
                 "E-60004",
                 "Incorrect user credentials.",
                 "Basic Authentication failed for the user."),
-        CLIENT_INACTIVE_FLOW_ID("E-60005", "Inactive Flow Id", "Provided Flow Id is in inactive state : %s"),
-        CLIENT_INVALID_FLOW_ID("E-60006", "Invalid Flow Id", "Provided Flow Id does not exist : %s"),
-        CLIENT_AUTHSTEP_OUT_OF_BOUNDS("E-60007", "Auth Step Out Of Bounds", "Required Authentication steps have" +
-                " already been completed."),
-        CLIENT_AUTHENTICATOR_NOT_SUPPORTED("E-60008", "Unsupported Authenticator", "Provided Authenticator is not " +
-                "supported by E Authentication Service: %s"),
+        CLIENT_INACTIVE_FLOW_ID(
+                "E-60005",
+                "Inactive Flow Id",
+                "Provided Flow Id is in inactive state : %s"),
+        CLIENT_INVALID_FLOW_ID(
+                "E-60006",
+                "Invalid Flow Id",
+                "Provided Flow Id does not exist : %s"),
+        CLIENT_AUTHSTEP_OUT_OF_BOUNDS(
+                "E-60007",
+                "Auth Step Out Of Bounds",
+                "Required Authentication steps have already been completed."),
+        CLIENT_AUTHENTICATOR_NOT_SUPPORTED(
+                "E-60008",
+                "Unsupported Authenticator",
+                "Provided Authenticator is not supported by E Authentication Service: %s"),
         CLIENT_EXPIRED_FLOW_ID(
                 "E-60009",
                 "Expired Flow Id.",
                 "Provided Flow Id is expired : %s"),
-        CLIENT_LOCKED_ACCOUNT("E-60010", "Locked Account.", "User Account is Locked for the user : %s"),
-        CLIENT_DISABLED_ACCOUNT("E-60011", "Disabled Account.", "User Account is Disabled for the user : %s"),
-        CLIENT_EXPIRED_USER_PASSWORD("E-60012", "Expired User Password.", "User Password has Expired for the user :" +
-                " %s"),
-        CLIENT_USERID_FLOWID_MISMATCH("E-60013", "Incorrect User Id.",
+        CLIENT_LOCKED_ACCOUNT(
+                "E-60010",
+                "Locked Account.",
+                "User Account is Locked for the user : %s"),
+        CLIENT_DISABLED_ACCOUNT(
+                "E-60011",
+                "Disabled Account.",
+                "User Account is Disabled for the user : %s"),
+
+        CLIENT_USERID_FLOWID_MISMATCH(
+                "E-60013",
+                "Incorrect User Id.",
                 "User Id is incorrect for the provided Flow Id : %s"),
-        CLIENT_INVALID_USER("E-60014", "Incorrect User Credentials.", "User does not exist : %s"),
-        CLIENT_USER_SP_TENANT_MISMATCH("E-60015", "IsSaasApp is disabled.", "Cross tenant access is restricted."),
-        CLIENT_CUSTOM_AUTHENTICATE_USER_ERROR("E-60016", "user authentication error.", "%s"),
+        CLIENT_INVALID_USER(
+                "E-60014",
+                "Incorrect User Credentials.",
+                "User does not exist : %s"),
+        CLIENT_USER_SP_TENANT_MISMATCH(
+                "E-60015",
+                "IsSaasApp is disabled.",
+                "Cross tenant access is restricted."),
+        CLIENT_CUSTOM_AUTHENTICATE_USER_ERROR(
+                "E-60016",
+                "user authentication error.",
+                "%s"),
+
 
         // Server error codes.
-        SERVER_RETRIEVING_SP_ERROR("E-65001", "Service provider error.",
+        SERVER_RETRIEVING_SP_ERROR(
+                "E-65001",
+                "Service provider error.",
                 "Error retrieving service provider."),
-        SERVER_AUTHENTICATE_USER_ERROR("E-65002", "user authentication error.",
+        SERVER_AUTHENTICATE_USER_ERROR(
+                "E-65002",
+                "user authentication error.",
                 "Error validating user credentials for the user : %s."),
-        SERVER_USER_STORE_MANAGER_ERROR ("E-65003", "user store manager error.", "Error retrieving user store " +
-                "manager."),
-        SERVER_RETRIEVING_USER_ID_ERROR ("E-65004", "user store manager error.", "Error retrieving userId for" +
-                " the username : %s."),
-        SERVER_RETRIEVING_USER_NAME_ERROR ("E-65005", "user store manager error.", "Error retrieving username for" +
-                " the userId : %s."),
-        SERVER_INVALID_APP_ID("E-60006", "Service Provider App ID is invalid.",
+        SERVER_USER_STORE_MANAGER_ERROR (
+                "E-65003",
+                "user store manager error.",
+                "Error retrieving user store manager."),
+        SERVER_RETRIEVING_USER_ID_ERROR (
+                "E-65004",
+                "user store manager error.",
+                "Error retrieving userId for the username : %s."),
+        SERVER_RETRIEVING_USER_NAME_ERROR (
+                "E-65005",
+                "user store manager error.",
+                "Error retrieving username for the userId : %s."),
+        SERVER_INVALID_APP_ID(
+                "E-60006",
+                "Service Provider App ID is invalid.",
                 "Service Provider App ID is invalid. App ID: %s"),
-        SERVER_ACCOUNT_STATUS_ERROR("E-60007", "User Account Error.",
+        SERVER_ACCOUNT_STATUS_ERROR(
+                "E-60007",
+                "User Account Error.",
                 "Error while checking the account status for the user : %s."),
-        SERVER_UNEXPECTED_ERROR("E-65008", "An unexpected server error occurred.",
+        SERVER_UNEXPECTED_ERROR(
+                "E-65008",
+                "An unexpected server error occurred.",
                 "An unexpected server error occurred."),
-        SERVER_CONFIG_FILE_NOT_FOUND_ERROR("E-65009", "Config file could not be found.",
+        SERVER_CONFIG_FILE_NOT_FOUND_ERROR(
+                "E-65009",
+                "Config file could not be found.",
                 "Config file could not be found: %s"),
-        SERVER_REQUEST_PARAM_READING_ERROR("E-65010", "Error sanitizing request parameters.",
+        SERVER_REQUEST_PARAM_READING_ERROR(
+                "E-65010",
+                "Error sanitizing request parameters.",
                 "Error while sanitizing the request parameter : %s."),
-        SERVER_PROPERTY_NOT_DEFINED_ERROR("E-65011", "Property not found.", "Property is not defined in " +
-                "configuration file."),
-        SERVER_CONFIG_LOADING_IO_ERROR("E-65012", "Error while loading E Auth configs.",
+        SERVER_PROPERTY_NOT_DEFINED_ERROR(
+                "E-65011",
+                "Property not found.",
+                "Property is not defined in configuration file."),
+        SERVER_CONFIG_LOADING_IO_ERROR(
+                "E-65012",
+                "Error while loading E Auth configs.",
                 "Error while loading E Auth configs."),
-        SERVER_CONFIG_FILE_CLOSURE_IO_ERROR("E-65013", "Failed to close the FileInputStream.",
+        SERVER_CONFIG_FILE_CLOSURE_IO_ERROR(
+                "E-65013",
+                "Failed to close the FileInputStream.",
                 "Failed to close the FileInputStream for file %s."),
-        SERVER_AUTHENTICATOR_SERVICE_ERROR("E-65014", "Failed to retrieve Authenticator Service.",
+        SERVER_AUTHENTICATOR_SERVICE_ERROR(
+                "E-65014",
+                "Failed to retrieve Authenticator Service.",
                 "Authenticator Service Object is null.");
 
         private final String code;
@@ -223,11 +253,8 @@ public class Constants {
         }
     }
 
-    // Forbidden error codes.
     private static List<String> forbiddenErrors = new ArrayList<>();
-    // Conflict error codes.
     private static List<String> conflictErrors = new ArrayList<>();
-    // Not Found error codes.
     private static List<String> notFoundErrors = Arrays.asList(ErrorMessage.CLIENT_INVALID_CLIENT_ID.code);
 
     public static boolean isForbiddenError(String errorCode) {

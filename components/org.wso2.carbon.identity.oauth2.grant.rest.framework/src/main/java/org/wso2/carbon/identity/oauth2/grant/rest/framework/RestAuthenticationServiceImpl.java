@@ -26,7 +26,6 @@ import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.extension.identity.emailotp.common.EmailOtpService;
 import org.wso2.carbon.identity.application.common.model.ServiceProvider;
 import org.wso2.carbon.identity.application.common.model.User;
-import org.wso2.carbon.identity.core.model.IdentityErrorMsgContext;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.multi.attribute.login.mgt.MultiAttributeLoginService;
@@ -36,13 +35,13 @@ import org.wso2.carbon.identity.oauth2.grant.rest.framework.context.RestAuthenti
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.CacheBackedFlowIdDAO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.FlowIdDAOImpl;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.FlowIdDO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthStepConfigsDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticatedAuthenticatorDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationFailureReasonDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationInitializationResponseDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationStepsResponseDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticatorConfigDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticatedAuthenticatorDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationFailureReasonDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.UserAuthenticationResponseDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthStepConfigsDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.handler.AuthenticationStepExecutorService;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.handler.AuthenticationStepExecutorServiceImpl;
@@ -110,11 +109,19 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     public UserAuthenticationResponseDTO processAuthStepResponse(String flowId, String authenticator, String password)
             throws AuthenticationException {
 
+        if (log.isDebugEnabled()) {
+            log.debug("authentication flow started with flowId,authenticator name and password");
+        }
+
         AuthenticationStepExecutorService authenticationStepExecutorService =
                 new AuthenticationStepExecutorServiceImpl();
 
         UserAuthenticationResponseDTO userAuthenticationResponse = null;
         boolean showFailureReason = AuthenticationServiceDataHolder.getConfigs().isShowFailureReason();
+
+        if (log.isDebugEnabled()) {
+            log.debug("ShowFailureReason enabled.");
+        }
 
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.VALIDATE_PARAM_FLOW_ID, flowId);
@@ -139,6 +146,9 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                 authContext.getSpTenantId());
 
         executeListeners(authContext, Constants.PRE_AUTHENTICATION);
+        if (log.isDebugEnabled()) {
+            log.debug("PRE_AUTHENTICATION listener triggered.");
+        }
 
         if (isValidFlowId(flowIdDO) && validateUser(flowIdDO, authContext.getUserId())) {
 
@@ -183,7 +193,8 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                 if (!isValidPwd) {
                     authnFailDto = new AuthenticationFailureReasonDTO(
                             "BasicAuthenticator-60016",
-                            "Incorrect Password for BasicAuthenticator", "User Authentication Failed");
+                            "Incorrect Password for BasicAuthenticator",
+                            "User Authentication Failed");
                 }
                 userAuthenticationResponse = buildAuthValidationResponse(authContext, flowIdDO, authnFailDto);
             } else {
@@ -285,7 +296,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
      */
     @Override
     public UserAuthenticationResponseDTO initializeAuthFlow
-            (String clientId, String authenticator, String password, String userIdentifier, String requestTenantDomain)
+    (String clientId, String authenticator, String password, String userIdentifier, String requestTenantDomain)
             throws AuthenticationException {
 
         String userTenantDomain = requestTenantDomain == null ?
@@ -385,7 +396,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                 if (resolvedUserResult.getErrorMessage() != null) {
                     throw RestAuthUtil.handleClientException
                             (Constants.ErrorMessage.CLIENT_CUSTOM_AUTHENTICATE_USER_ERROR,
-                            resolvedUserResult.getErrorMessage());
+                                    resolvedUserResult.getErrorMessage());
                 }
             } else {
                 throw RestAuthUtil.handleClientException(
@@ -433,10 +444,12 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                 for (AuthenticationListener listener : AuthenticationListenerServiceImpl.getAuthenticationListeners()) {
                     listener.doPreAuthenticate(authContext);
                 }
+                break;
             case Constants.POST_AUTHENTICATION:
                 for (AuthenticationListener listener : AuthenticationListenerServiceImpl.getAuthenticationListeners()) {
                     listener.doPostAuthenticate(authContext);
                 }
+                break;
         }
     }
 
@@ -495,8 +508,6 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         try {
             authorized = getUserStoreManager(userTenantId).authenticate(tenantAwareUserName, password);
         } catch (UserStoreException e) {
-            IdentityErrorMsgContext identityErrorMsgContext = IdentityUtil.getIdentityErrorMsg();
-            log.error(identityErrorMsgContext.getErrorCode());
             String errorCode = IdentityUtil.getIdentityErrorMsg().getErrorCode();
             if (errorCode.equals(Constants.ACCOUNT_DISABLE_ERROR_CODE)) {
                 throw RestAuthUtil.handleClientException(Constants.ErrorMessage.CLIENT_DISABLED_ACCOUNT,
@@ -612,12 +623,15 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
 
         int nextAuthStep = fetchNextAuthStep(authenticatedSteps, authenticationSteps);
         if (nextAuthStep == -1) {
+            log.error("Auth Steps out of bound.");
             throw RestAuthUtil.handleClientException(
                     Constants.ErrorMessage.CLIENT_AUTHSTEP_OUT_OF_BOUNDS, authenticator);
         }
         List<String> authenticators = authenticationSteps.get(nextAuthStep);
         if (!authenticators.contains(authenticator)) {
-            throw RestAuthUtil.handleClientException(Constants.ErrorMessage.CLIENT_INVALID_AUTHENTICATOR, authenticator);
+            log.error("Invalid authenticator : " + authenticator);
+            throw RestAuthUtil.handleClientException
+                    (Constants.ErrorMessage.CLIENT_INVALID_AUTHENTICATOR, authenticator);
         }
     }
 
@@ -769,6 +783,9 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
 
         AuthenticationStepsResponseDTO responseDTO = new AuthenticationStepsResponseDTO();
         responseDTO.setAuthenticationSteps(getConfiguredAuthenticationStepsForSP(authContext.getAuthenticationSteps()));
+        if (log.isDebugEnabled()) {
+           log.debug("Authentication steps returned from SP configurations.");
+        }
         return responseDTO;
     }
 
@@ -817,7 +834,6 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         }
         return authenticatedStepDetails;
     }
-
 
     /**
      * This method checks whether the provided Flow Id is valid.

@@ -25,6 +25,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ * This class is to handle Internal Server(500) Exceptions.
+ */
 public class InternalServerErrorException extends WebApplicationException {
 
     public InternalServerErrorException(AuthenticationError error) {

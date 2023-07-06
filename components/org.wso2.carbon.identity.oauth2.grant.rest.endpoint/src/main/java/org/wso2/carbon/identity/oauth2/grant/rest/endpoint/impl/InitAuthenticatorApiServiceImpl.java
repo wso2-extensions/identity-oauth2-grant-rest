@@ -24,20 +24,23 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.InitAuthenticatorApiService;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticatorInitializationRequest;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticatorInitializationResponse;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RequestSanitizerUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RestEndpointUtils;
-import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RequestSnatizerUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationInitializationResponseDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 import javax.ws.rs.core.Response;
 
+/**
+ *This class is used to initialize the authentication flow.
+ */
 public class InitAuthenticatorApiServiceImpl implements InitAuthenticatorApiService {
 
     private static final Log LOG = LogFactory.getLog(InitAuthenticatorApiServiceImpl.class);
     @Override
     public Response initAuthenticatorPost(AuthenticatorInitializationRequest authenticatorInitializationRequest) {
 
-        String authenticator = RequestSnatizerUtil.trimString(authenticatorInitializationRequest.getAuthenticator());
+        String authenticator = RequestSanitizerUtil.trimString(authenticatorInitializationRequest.getAuthenticator());
         String flowId = StringUtils.trim(authenticatorInitializationRequest.getFlowId());
 
         try {

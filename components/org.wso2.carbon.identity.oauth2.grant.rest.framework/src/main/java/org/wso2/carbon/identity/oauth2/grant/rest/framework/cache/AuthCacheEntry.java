@@ -22,6 +22,9 @@ package org.wso2.carbon.identity.oauth2.grant.rest.framework.cache;
 import org.wso2.carbon.identity.core.cache.CacheEntry;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.FlowIdDO;
 
+/**
+ * This class is used to keep a cache entry to rest authentication through the flowId.
+ */
 public class AuthCacheEntry extends CacheEntry {
 
     private static final long serialVersionUID = 3112605038259278777L;

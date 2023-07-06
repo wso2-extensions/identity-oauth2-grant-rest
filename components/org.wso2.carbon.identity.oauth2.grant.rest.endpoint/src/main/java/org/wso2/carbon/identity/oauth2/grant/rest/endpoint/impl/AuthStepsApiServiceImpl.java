@@ -29,6 +29,9 @@ import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.Authentica
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 import javax.ws.rs.core.Response;
 
+/**
+ *This class is used to get authentications steps configured to the given Service Provider.
+ */
 public class AuthStepsApiServiceImpl implements AuthStepsApiService {
 
     private static final Log LOG = LogFactory.getLog(AuthStepsApiServiceImpl.class);

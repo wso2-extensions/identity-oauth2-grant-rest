@@ -48,4 +48,5 @@ public class AuthenticationGrantUtils {
         }
         throw new IdentityOAuth2Exception (errorMessage, e);
     }
+
 }

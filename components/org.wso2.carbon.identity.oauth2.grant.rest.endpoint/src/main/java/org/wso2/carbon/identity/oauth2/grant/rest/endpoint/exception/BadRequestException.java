@@ -25,6 +25,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ * This class is to handle Bad Request(400) Exceptions.
+ */
 public class BadRequestException extends WebApplicationException  {
 
     private String message;

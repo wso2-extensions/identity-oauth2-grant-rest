@@ -26,6 +26,9 @@ import org.wso2.carbon.identity.application.common.model.ServiceProvider;
 import org.wso2.carbon.identity.application.mgt.listener.AbstractApplicationMgtListener;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.cache.AuthCache;
 
+/**
+ * This class is used to keep cache data when multi menancy is used.
+ */
 public class ApplicationCacheListener extends AbstractApplicationMgtListener {
 
 	private static final Log LOG = LogFactory.getLog(ApplicationCacheListener.class);

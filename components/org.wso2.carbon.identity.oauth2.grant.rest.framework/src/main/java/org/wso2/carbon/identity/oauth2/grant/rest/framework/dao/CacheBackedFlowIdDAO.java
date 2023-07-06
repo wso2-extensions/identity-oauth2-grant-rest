@@ -27,6 +27,9 @@ import org.wso2.carbon.identity.oauth2.grant.rest.framework.cache.AuthCacheEntry
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.cache.AuthCacheKey;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 
+/**
+ * This class is used to function the caching in API  based REST authentication flow.
+ */
 public class CacheBackedFlowIdDAO extends FlowIdDAOImpl {
 
     private static final Log log = LogFactory.getLog(CacheBackedFlowIdDAO.class);

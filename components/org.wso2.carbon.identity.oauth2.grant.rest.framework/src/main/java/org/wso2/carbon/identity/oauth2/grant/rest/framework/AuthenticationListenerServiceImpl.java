@@ -27,9 +27,12 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * This class is used to execute extensible listeners developed for this connector.
+ */
 public class AuthenticationListenerServiceImpl implements AuthenticationListenerService {
 
-	private static final Log log = LogFactory.getLog(AuthenticationListenerServiceImpl.class);
+	private static final Log LOG = LogFactory.getLog(AuthenticationListenerServiceImpl.class);
 	private static Map<Integer, AuthenticationListener> authenticationListeners;
 	private static Collection<AuthenticationListener> authenticationListenerCollection;
 

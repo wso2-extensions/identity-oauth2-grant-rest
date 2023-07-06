@@ -21,6 +21,9 @@ package org.wso2.carbon.identity.oauth2.grant.rest.framework.dto;
 
 import java.util.ArrayList;
 
+/**
+ * This class is used to keep single authentication step with one or multiple authenticator names.
+ */
 public class AuthStepConfigsDTO {
     private int stepNo;
     private ArrayList<AuthenticatorConfigDTO> authenticatorDetails;
@@ -41,4 +44,5 @@ public class AuthStepConfigsDTO {
 
         return this.authenticatorDetails;
     }
+
 }

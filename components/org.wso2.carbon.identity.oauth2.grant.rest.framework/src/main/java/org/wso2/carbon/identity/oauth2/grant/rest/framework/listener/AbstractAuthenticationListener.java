@@ -22,6 +22,9 @@ package org.wso2.carbon.identity.oauth2.grant.rest.framework.listener;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.context.RestAuthenticationContext;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 
+/**
+ * The abstract class for extensible listeners.
+ */
 public class AbstractAuthenticationListener implements AuthenticationListener {
 
 	@Override

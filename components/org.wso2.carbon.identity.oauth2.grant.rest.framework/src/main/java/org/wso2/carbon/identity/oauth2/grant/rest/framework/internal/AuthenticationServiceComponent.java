@@ -36,9 +36,7 @@ import org.wso2.carbon.identity.oauth2.grant.rest.framework.AuthenticationListen
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.RestAuthenticationService;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.RestAuthenticationServiceImpl;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.listener.AbstractAuthenticationListener;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.listener.ApplicationCacheListener;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.listener.AuthenticationListener;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.RestAuthUtil;
 import org.wso2.carbon.identity.smsotp.common.SMSOTPService;
 import org.wso2.carbon.user.core.service.RealmService;
@@ -67,9 +65,6 @@ public class AuthenticationServiceComponent {
 				bundleContext.registerService(ApplicationMgtListener.class.getName(),
 						new ApplicationCacheListener(), null);
 				LOG.info("Application Management Listener Service component activated successfully.");
-				bundleContext.registerService(AuthenticationListener.class.getName(),
-						new AbstractAuthenticationListener(), null);
-				LOG.info("REST Authentication Listener Service component activated successfully.");
 			} else {
 				LOG.error("Authentication Service is not enabled.");
 			}

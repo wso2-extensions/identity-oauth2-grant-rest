@@ -25,6 +25,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ * This class is to handle Bad ConflictRequest Exceptions.
+ */
 public class ConflictRequestException extends WebApplicationException {
 
     private String message;

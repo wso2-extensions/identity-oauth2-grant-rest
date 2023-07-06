@@ -31,6 +31,9 @@ import org.wso2.carbon.identity.oauth2.grant.rest.framework.util.RestAuthUtil;
 import org.wso2.carbon.identity.smsotp.common.SMSOTPService;
 import org.wso2.carbon.identity.smsotp.common.exception.SMSOTPException;
 
+/**
+ * This class is used to generate and validate OTPs.
+ */
 public class AuthenticationStepExecutorServiceImpl implements
         AuthenticationStepExecutorService {
 

@@ -9,6 +9,10 @@ import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticatorCon
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *This class is used to map the authenticators objects with for authentication steps and authenticated steps defined
+ * in framework component.
+ */
 public class RestAuthenticationResponseBuilder {
 
     public static List<AuthenticatedAuthenticator> buildPostAuthenticatedAuthenticatorResponse

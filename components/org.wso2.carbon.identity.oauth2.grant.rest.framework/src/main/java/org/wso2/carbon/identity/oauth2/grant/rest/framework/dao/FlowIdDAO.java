@@ -20,6 +20,9 @@
 package org.wso2.carbon.identity.oauth2.grant.rest.framework.dao;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 
+/**
+ * CacheBackedFlowIDDAO and FlowIdDAOImpl class is implemented via this interface.
+ */
 public interface FlowIdDAO {
     /**
      * This method is to insert Flow Id Data.

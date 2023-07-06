@@ -21,6 +21,9 @@ package org.wso2.carbon.identity.oauth2.grant.rest.framework.handler;
 
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 
+/**
+ * Interface for generate and validate OTPs.
+ */
 public interface AuthenticationStepExecutorService {
     /**
      * This method returns OTP Generation Response.

@@ -32,9 +32,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 
+/**
+ * This class is used to implement the functions for DB layer.
+ */
 public class FlowIdDAOImpl implements FlowIdDAO {
 
-    private static final Log log = LogFactory.getLog(FlowIdDAOImpl.class);
+    private static final Log LOG = LogFactory.getLog(FlowIdDAOImpl.class);
     private static volatile FlowIdDAOImpl instance;
     public static FlowIdDAOImpl getInstance() {
         if (instance == null) {
@@ -53,8 +56,8 @@ public class FlowIdDAOImpl implements FlowIdDAO {
     @Override
     public void addFlowIdData(FlowIdDO flowIdDO) throws AuthenticationException {
         try (Connection connection = IdentityDatabaseUtil.getDBConnection(true)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Adding Flow ID data to the database.");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Adding Flow ID data to the database.");
             }
 
             try (PreparedStatement prepStmt1 = connection.prepareStatement(SQLQueries.ADD_FLOW_ID);
@@ -142,8 +145,8 @@ public class FlowIdDAOImpl implements FlowIdDAO {
     @Override
     public void updateFlowIdState(String flowIdIdentifier, String flowIdState) throws AuthenticationException {
         try (Connection connection = IdentityDatabaseUtil.getDBConnection(true)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Changing the Flow ID state as INACTIVE for used Flow IDs.");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Changing the Flow ID state as INACTIVE for used Flow IDs.");
             }
 
             try (PreparedStatement prepStmt = connection.prepareStatement(SQLQueries.UPDATE_FLOW_ID_STATE)) {
@@ -170,8 +173,8 @@ public class FlowIdDAOImpl implements FlowIdDAO {
     public void addAuthenticatedStep(int stepNo, String authenticator, String flowIdIdentifier)
             throws AuthenticationException {
         try (Connection connection = IdentityDatabaseUtil.getDBConnection(true)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Adding Flow ID data to the Authentication Steps table.");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Adding Flow ID data to the Authentication Steps table.");
             }
             try (PreparedStatement prepStmt = connection.prepareStatement(SQLQueries.ADD_AUTHENTICATED_STEP)) {
 
@@ -197,8 +200,8 @@ public class FlowIdDAOImpl implements FlowIdDAO {
 
         try (Connection connection = IdentityDatabaseUtil.getDBConnection(true)) {
 
-            if (log.isDebugEnabled()) {
-                log.debug("Adding refreshed Flow ID data to the database.");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Adding refreshed Flow ID data to the database.");
             }
 
             try (PreparedStatement prepStmt1 = connection.prepareStatement(SQLQueries.ADD_FLOW_ID);

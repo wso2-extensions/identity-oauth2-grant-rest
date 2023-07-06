@@ -14,14 +14,14 @@ import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.FlowIdDO;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 import org.wso2.carbon.identity.oauth2.model.RequestParameter;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
-import org.wso2.carbon.identity.oauth2.token.handlers.grant.PasswordGrantHandler;
+import org.wso2.carbon.identity.oauth2.token.handlers.grant.AbstractAuthorizationGrantHandler;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 import java.util.HashMap;
 
 /**
  * Grant Handler for REST OAuth2 Grant.
  */
-public class AuthenticationGrantHandler extends PasswordGrantHandler {
+public class AuthenticationGrantHandler extends AbstractAuthorizationGrantHandler {
 
     private static final Log log = LogFactory.getLog(AuthenticationGrantHandler.class);
 
@@ -30,7 +30,7 @@ public class AuthenticationGrantHandler extends PasswordGrantHandler {
      *
      * @param oAuthTokenReqMessageContext   OAuthTokenReqMessageContext
      * @return true or false if the grant_type is valid or not.
-     * @throws IdentityOAuth2Exception      Error when validating the User Migration Grant
+     * @throws IdentityOAuth2Exception      Error when validating the Grant
      */
     @Override
     public boolean validateGrant(OAuthTokenReqMessageContext oAuthTokenReqMessageContext)
@@ -52,7 +52,8 @@ public class AuthenticationGrantHandler extends PasswordGrantHandler {
             try {
                 flowIdDO = CacheBackedFlowIdDAO.getInstance().getFlowIdData(flowId);
             } catch (AuthenticationException e) {
-                AuthenticationGrantUtils.handleException("Error while retrieving FlowId data", e);
+                AuthenticationGrantUtils.handleException
+                        (AuthenticationGrantConstants.ErrorMessage.ERROR_FLOW_ID_RETRIEVING, e);
             }
 
             AuthenticatedUser user = OAuth2Util.getUserFromUserName(username);
@@ -62,7 +63,8 @@ public class AuthenticationGrantHandler extends PasswordGrantHandler {
                 isValidUser = flowIdDO.getUserId().equals(authServiceInstance.getUserIDFromUserName(username,
                         IdentityTenantUtil.getTenantId(user.getTenantDomain())));
             } catch (AuthenticationException e) {
-                AuthenticationGrantUtils.handleException("Error while validating the User", e);
+                AuthenticationGrantUtils.handleException
+                        (AuthenticationGrantConstants.ErrorMessage.ERROR_VALIDATING_USER, e);
             }
 
             oAuthTokenReqMessageContext.setAuthorizedUser(user);
@@ -76,24 +78,28 @@ public class AuthenticationGrantHandler extends PasswordGrantHandler {
                            CacheBackedFlowIdDAO.getInstance().updateFlowIdState(flowId,
                                    Constants.FLOW_ID_STATE_INACTIVE);
                        } catch (AuthenticationException e) {
-                           AuthenticationGrantUtils.handleException("Error while updating Flow Id state", e);
+                           AuthenticationGrantUtils.handleException
+                                   (AuthenticationGrantConstants.ErrorMessage.ERROR_UPDATING_FLOW_ID_STATE, e);
                        }
                        return true;
                    } else {
-                       AuthenticationGrantUtils.handleException("The user has not completed the Required REST steps");
+                       AuthenticationGrantUtils.handleException
+                               (AuthenticationGrantConstants.ErrorMessage.ERROR_INCOMPLETED_AUTHENTICATION_STEPS);
                    }
                 } else {
-                    AuthenticationGrantUtils.handleException("Invalid Flow Id.");
+                    AuthenticationGrantUtils.handleException
+                            (AuthenticationGrantConstants.ErrorMessage.ERROR_INVALID_FLOW_ID);
                 }
             } catch (AuthenticationException e) {
-                AuthenticationGrantUtils.handleException("Error while validating the Flow Id", e);
+                AuthenticationGrantUtils.handleException
+                        (AuthenticationGrantConstants.ErrorMessage.ERROR_VALIDATING_FLOW_ID, e);
             }
 
         } else {
-            AuthenticationGrantUtils.handleException("Provided flowId contains a null value");
+            AuthenticationGrantUtils.handleException(AuthenticationGrantConstants.ErrorMessage.ERROR_FLOW_ID_NULL);
         }
 
-        responseBuilder(oAuthTokenReqMessageContext);
+        grantValidationFailedResponseBuilder(oAuthTokenReqMessageContext);
         return false;
     }
 
@@ -115,7 +121,7 @@ public class AuthenticationGrantHandler extends PasswordGrantHandler {
             if (parameter.getKey().equals(AuthenticationGrantConstants.GRANT_TYPE_KEY)) {
                 if (!(AuthenticationGrantConstants.REST_AUTH_GRANT_NAME.equals(parameter.getValue()[0]))) {
                     log.error("Grant type is not supported");
-                    throw  new IdentityOAuth2Exception("Unsupported grant_type value");
+                    throw  new IdentityOAuth2Exception(AuthenticationGrantConstants.ErrorMessage.ERROR_FLOW_ID_NULL);
                 }
             }
             params.put(parameter.getKey(), parameter.getValue()[0]);
@@ -129,7 +135,7 @@ public class AuthenticationGrantHandler extends PasswordGrantHandler {
      *
      * @param oAuthTokenReqMessageContext    OAuthTokenReqMessageContext
      */
-    public void responseBuilder(OAuthTokenReqMessageContext oAuthTokenReqMessageContext) {
+    public void grantValidationFailedResponseBuilder(OAuthTokenReqMessageContext oAuthTokenReqMessageContext) {
         ResponseHeader responseHeader = new ResponseHeader();
         responseHeader.setKey("HTTP_STATUS_CODE");
         responseHeader.setValue("401");
@@ -138,13 +144,4 @@ public class AuthenticationGrantHandler extends PasswordGrantHandler {
         oAuthTokenReqMessageContext.addProperty("RESPONSE_HEADERS", new ResponseHeader[]{responseHeader});
     }
 
-    @Override
-    public boolean authorizeAccessDelegation(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
-        return true;
-    }
-
-    @Override
-    public boolean validateScope(OAuthTokenReqMessageContext toReqMsgCtx) throws IdentityOAuth2Exception {
-        return true;
-    }
 }

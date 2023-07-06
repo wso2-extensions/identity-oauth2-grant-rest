@@ -19,6 +19,10 @@
 
 package org.wso2.carbon.identity.oauth2.grant.rest.framework.cache;
 import org.wso2.carbon.identity.core.cache.BaseCache;
+
+/**
+ * This class is used to get a cache instance when request is being dispatched to same node.
+ */
 public class AuthCache extends BaseCache<AuthCacheKey, AuthCacheEntry> {
     public static final String AUTH_CACHE_NAME = "AuthCache";
     private static volatile AuthCache instance;

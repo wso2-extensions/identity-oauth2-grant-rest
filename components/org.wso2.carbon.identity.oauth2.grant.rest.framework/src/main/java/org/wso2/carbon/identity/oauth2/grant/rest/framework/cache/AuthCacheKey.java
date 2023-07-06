@@ -23,6 +23,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.core.cache.CacheKey;
 
+/**
+ * This method is used to keep a cache identifier.
+ */
 public class AuthCacheKey extends CacheKey {
 
     private static final Log log = LogFactory.getLog(AuthCacheKey.class);
