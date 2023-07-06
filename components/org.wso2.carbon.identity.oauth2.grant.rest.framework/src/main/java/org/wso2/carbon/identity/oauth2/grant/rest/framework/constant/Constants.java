@@ -1,3 +1,4 @@
+
 /*
  *  Copyright (c) 2023, WSO2 LLC (http://www.wso2.org) All Rights Reserved.
  *
@@ -14,7 +15,6 @@
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License.
- *
  */
 
 package org.wso2.carbon.identity.oauth2.grant.rest.framework.constant;
@@ -101,19 +101,45 @@ public class Constants {
 
     public static final String ACCOUNT_LOCK_ERROR_CODE = "17003";
     public static final String ACCOUNT_DISABLE_ERROR_CODE = "17004";
+
+
+    public static final String CLIENT_MANDATORY_PARAMS_EMPTY = "RestClient.mandatoryParamsEmpty";
+    public static final String CLIENT_INVALID_AUTHENTICATOR = "RestClient.invalidAuthenticator";
+    public static final String CLIENT_INVALID_CLIENT_ID = "RestClient.invalidClientId";
+    public static final String CLIENT_INCORRECT_USER_CREDENTIALS = "RestClient.incorrectUserCredentials";
+    public static final String CLIENT_INACTIVE_FLOW_ID = "RestClient.inactiveFlowId";
+    public static final String CLIENT_INVALID_FLOW_ID = "RestClient.invalidFlowId";
+    public static final String CLIENT_AUTH_STEP_OUT_OF_BOUND = "RestClient.authStepOutOfBound";
+    public static final String CLIENT_UNSUPPORTED_AUTHENTICATOR = "RestClient.unSupportedAuthenticator";
+    public static final String CLIENT_EXPIRED_FLOW_ID = "RestClient.expiredFlowId";
+    public static final String CLIENT_LOCKED_USER_ACCOUNT = "RestClient.lockedUserAccount";
+    public static final String CLIENT_DISABLED_USER_ACCOUNT = "RestClient.disabledUserAccount";
+    public static final String CLIENT_FLOW_ID_MISMATCH = "RestClient.flowIdMismatch";
+    public static final String CLIENT_INVALID_USER_CREDENTIALS = "RestClient.invalidUserCredentials";
+    public static final String CLIENT_CROSS_TENANT_ACCESS_RESTRICTION = "RestClient.crossTenantAccessRestriction";
+    public static final String CLIENT_USERNAME_RESOLVE_FAIL = "RestClient.usernameResolveFailed";
+
     /**
      * Rest Auth Service error codes.
      */
     public enum ErrorMessage {
 
         // Client error codes.
-        CLIENT_MANDATORY_VALIDATION_PARAMETERS_EMPTY("E-60001", "Mandatory parameters not found.",
+        CLIENT_MANDATORY_VALIDATION_PARAMETERS_EMPTY(
+                "E-60001",
+                "Mandatory parameters not found.",
                 "Mandatory parameters not found : %s."),
-        CLIENT_INVALID_AUTHENTICATOR("E-60002", "Invalid authenticator",
+        CLIENT_INVALID_AUTHENTICATOR(
+                "E-60002",
+                "Invalid authenticator",
                 "%s is not present in the current authentication step."),
-        CLIENT_INVALID_CLIENT_ID("E-60003", "Invalid client Id.",
+        CLIENT_INVALID_CLIENT_ID(
+                "E-60003",
+                "Invalid client Id.",
                 "Provided client id does not exist : %s"),
-        CLIENT_INCORRECT_USER_CREDENTIALS("E-60004", "Incorrect user credentials.",
+        CLIENT_INCORRECT_USER_CREDENTIALS(
+                "E-60004",
+                "Incorrect user credentials.",
                 "Basic Authentication failed for the user."),
         CLIENT_INACTIVE_FLOW_ID("E-60005", "Inactive Flow Id", "Provided Flow Id is in inactive state : %s"),
         CLIENT_INVALID_FLOW_ID("E-60006", "Invalid Flow Id", "Provided Flow Id does not exist : %s"),
@@ -121,7 +147,10 @@ public class Constants {
                 " already been completed."),
         CLIENT_AUTHENTICATOR_NOT_SUPPORTED("E-60008", "Unsupported Authenticator", "Provided Authenticator is not " +
                 "supported by E Authentication Service: %s"),
-        CLIENT_EXPIRED_FLOW_ID("E-60009", "Expired Flow Id.", "Provided Flow Id is expired : %s"),
+        CLIENT_EXPIRED_FLOW_ID(
+                "E-60009",
+                "Expired Flow Id.",
+                "Provided Flow Id is expired : %s"),
         CLIENT_LOCKED_ACCOUNT("E-60010", "Locked Account.", "User Account is Locked for the user : %s"),
         CLIENT_DISABLED_ACCOUNT("E-60011", "Disabled Account.", "User Account is Disabled for the user : %s"),
         CLIENT_EXPIRED_USER_PASSWORD("E-60012", "Expired User Password.", "User Password has Expired for the user :" +

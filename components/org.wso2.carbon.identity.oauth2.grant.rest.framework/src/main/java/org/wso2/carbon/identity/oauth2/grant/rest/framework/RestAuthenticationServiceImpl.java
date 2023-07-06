@@ -26,6 +26,7 @@ import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.extension.identity.emailotp.common.EmailOtpService;
 import org.wso2.carbon.identity.application.common.model.ServiceProvider;
 import org.wso2.carbon.identity.application.common.model.User;
+import org.wso2.carbon.identity.core.model.IdentityErrorMsgContext;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.multi.attribute.login.mgt.MultiAttributeLoginService;
@@ -101,7 +102,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
      *
      * @param flowId            UUID to track the flow.
      * @param authenticator     Authenticator Name.
-     * @param password       	Password to be validated.
+     * @param password           Password to be validated.
      * @return UserAuthenticationResponseDTO
      * @throws AuthenticationException if any server or client error occurred.
      */
@@ -177,8 +178,14 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                         validateUserCredentials(authContext.getUser().getUserName(), password,
                                 authContext.getUserTenantId());
                 authContext.setValidPassword(isValidPwd);
-                Object failureReasonDTO = null;
-                userAuthenticationResponse = buildAuthValidationResponse(authContext, flowIdDO, failureReasonDTO);
+
+                AuthenticationFailureReasonDTO authnFailDto = null;
+                if (!isValidPwd) {
+                    authnFailDto = new AuthenticationFailureReasonDTO(
+                            "BasicAuthenticator-60016",
+                            "Incorrect Password for BasicAuthenticator", "User Authentication Failed");
+                }
+                userAuthenticationResponse = buildAuthValidationResponse(authContext, flowIdDO, authnFailDto);
             } else {
                 throw RestAuthUtil.handleClientException(Constants.ErrorMessage.CLIENT_AUTHENTICATOR_NOT_SUPPORTED,
                         authenticator);
@@ -272,7 +279,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
      *
      * @param clientId          clientId.
      * @param authenticator     Authenticator Name.
-     * @param password       	Password to be validated.
+     * @param password           Password to be validated.
      * @return UserAuthenticationResponseDTO
      * @throws AuthenticationException if any server or client error occurred.
      */
@@ -323,6 +330,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                             .isExistingUserWithID(authContext.getUserId())) {
                         getUserStoreManager(authContext.getUserTenantId());
                         updateAuthenticatedSteps(authContext.getAuthenticatedSteps(), 1, authenticator);
+                        authContext.setValidPassword(true);
                     } else {
                         throw RestAuthUtil.handleClientException(
                                 Constants.ErrorMessage.CLIENT_INVALID_USER, userIdentifier);
@@ -375,7 +383,8 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
 
             } else if (ResolvedUserResult.UserResolvedStatus.FAIL.equals(resolvedUserResult.getResolvedStatus())) {
                 if (resolvedUserResult.getErrorMessage() != null) {
-                    throw RestAuthUtil.handleClientException(Constants.ErrorMessage.CLIENT_CUSTOM_AUTHENTICATE_USER_ERROR,
+                    throw RestAuthUtil.handleClientException
+                            (Constants.ErrorMessage.CLIENT_CUSTOM_AUTHENTICATE_USER_ERROR,
                             resolvedUserResult.getErrorMessage());
                 }
             } else {
@@ -486,7 +495,9 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         try {
             authorized = getUserStoreManager(userTenantId).authenticate(tenantAwareUserName, password);
         } catch (UserStoreException e) {
-            String errorCode = IdentityUtil.getIdentityErrorMsg().getErrorCode().toString();
+            IdentityErrorMsgContext identityErrorMsgContext = IdentityUtil.getIdentityErrorMsg();
+            log.error(identityErrorMsgContext.getErrorCode());
+            String errorCode = IdentityUtil.getIdentityErrorMsg().getErrorCode();
             if (errorCode.equals(Constants.ACCOUNT_DISABLE_ERROR_CODE)) {
                 throw RestAuthUtil.handleClientException(Constants.ErrorMessage.CLIENT_DISABLED_ACCOUNT,
                         String.format("Error while checking the account status for the user : %s.", username), e);
@@ -674,6 +685,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         responseDTO.setAuthFlowCompleted(authContext.isAuthFlowCompleted());
         responseDTO.setNextStep(fetchNextAuthStep
                 (authContext.getAuthenticatedSteps(), authContext.getAuthenticationSteps()));
+        responseDTO.setValid(true);
 
         return responseDTO;
     }
@@ -720,7 +732,6 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         }
 
         userAuthenticationResponse.setValid(authContext.isValidPassword())
-                .setUserId(authContext.getUserId())
                 .setFlowId(authContext.getNewFlowdId()).setAuthFlowCompleted(authContext.isAuthFlowCompleted())
                 .setAuthenticatedSteps(getConfiguredAuthenticatedStepsForSP(authContext.getAuthenticatedSteps()))
                 .setAuthenticationSteps(getConfiguredAuthenticationStepsForSP(authContext.getAuthenticationSteps()))
@@ -742,6 +753,12 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                 failureReason = new AuthenticationFailureReasonDTO(failureReasonDO.getCode(),
                         failureReasonDO.getMessage(), failureReasonDO.getDescription());
 
+            } else if (failureReasonDTO instanceof AuthenticationFailureReasonDTO) {
+                failureReason = new AuthenticationFailureReasonDTO(
+                        ((AuthenticationFailureReasonDTO) failureReasonDTO).getCode(),
+                        ((AuthenticationFailureReasonDTO) failureReasonDTO).getMessage(),
+                        ((AuthenticationFailureReasonDTO) failureReasonDTO).getDescription()
+                );
             }
             userAuthenticationResponse.setFailureReason(failureReason);
         }

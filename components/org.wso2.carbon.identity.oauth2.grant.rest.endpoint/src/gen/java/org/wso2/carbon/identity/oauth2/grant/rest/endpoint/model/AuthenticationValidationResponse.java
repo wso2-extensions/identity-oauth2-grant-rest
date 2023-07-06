@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
@@ -35,6 +36,7 @@ import java.util.Objects;
 import javax.validation.Valid;
 import javax.xml.bind.annotation.*;
 
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class AuthenticationValidationResponse  {
   
     private Boolean isStepSuccess;

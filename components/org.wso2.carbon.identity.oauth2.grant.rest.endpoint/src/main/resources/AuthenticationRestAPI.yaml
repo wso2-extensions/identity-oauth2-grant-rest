@@ -437,7 +437,7 @@ components:
     #-----------------------------------------------------
     # AuthenticatedAuthenticator object
     #-----------------------------------------------------
-    AuthnticatedAuthenticator:
+    AuthenticatedAuthenticator:
       type: object
       properties:
         stepNo:
