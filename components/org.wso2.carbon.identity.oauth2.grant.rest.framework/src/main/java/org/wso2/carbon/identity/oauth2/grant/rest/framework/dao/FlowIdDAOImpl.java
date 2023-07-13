@@ -100,6 +100,11 @@ public class FlowIdDAOImpl implements FlowIdDAO {
     public FlowIdDO getFlowIdData(String flowId) throws AuthenticationException {
         try (Connection connection = IdentityDatabaseUtil.getDBConnection(false);
              PreparedStatement prepStmt = connection.prepareStatement(SQLQueries.RETRIEVE_FLOW_ID_DATA)) {
+
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Get Flow ID data from the database.");
+            }
+
             prepStmt.setString(1, flowId);
 
             try (ResultSet resultSet = prepStmt.executeQuery()) {

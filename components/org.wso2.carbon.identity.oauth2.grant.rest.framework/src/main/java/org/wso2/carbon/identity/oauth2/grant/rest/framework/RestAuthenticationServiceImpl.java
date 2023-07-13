@@ -27,7 +27,6 @@ import org.wso2.carbon.extension.identity.emailotp.common.EmailOtpService;
 import org.wso2.carbon.identity.application.common.model.ServiceProvider;
 import org.wso2.carbon.identity.application.common.model.User;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
-import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.multi.attribute.login.mgt.MultiAttributeLoginService;
 import org.wso2.carbon.identity.multi.attribute.login.mgt.ResolvedUserResult;
 import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
@@ -191,6 +190,9 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
 
                 AuthenticationFailureReasonDTO authnFailDto = null;
                 if (!isValidPwd) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("The given password is not valid.");
+                    }
                     authnFailDto = new AuthenticationFailureReasonDTO(
                             "BasicAuthenticator-60016",
                             "Incorrect Password for BasicAuthenticator",
@@ -273,6 +275,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
             } else if (authenticator.equals(Constants.AUTHENTICATOR_NAME_BASIC_AUTH)) {
                 authContext.setNewFlowId(RestAuthUtil.generateUUID());
             } else {
+                log.error("The given authenticator is not configured in current step.");
                 throw RestAuthUtil.handleClientException(Constants.ErrorMessage.CLIENT_AUTHENTICATOR_NOT_SUPPORTED,
                         authenticator);
             }
@@ -313,6 +316,10 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
 
         String fullQualifiedUsername = UserCoreUtil.addTenantDomainToEntry(resolvedUsername, userTenantDomain);
         User user = User.getUserFromUserName(fullQualifiedUsername);
+
+        if (log.isDebugEnabled()) {
+            log.debug("Full qualified username : " + fullQualifiedUsername);
+        }
 
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.BASIC_AUTH_PARAM_USERNAME, fullQualifiedUsername);
@@ -380,6 +387,10 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     private HashMap<String, String> getResolvedUsername(String username, String userTenantDomain)
             throws AuthenticationException {
 
+        if (log.isDebugEnabled()) {
+            log.debug("Revolving user identifier to username");
+        }
+
         HashMap<String, String> params = new HashMap<>();
         if (AuthenticationServiceDataHolder.getInstance().getMultiAttributeLogin().isEnabled(userTenantDomain)) {
             ResolvedUserResult resolvedUserResult =
@@ -388,7 +399,9 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
             if (resolvedUserResult != null && ResolvedUserResult.UserResolvedStatus.SUCCESS.
                     equals(resolvedUserResult.getResolvedStatus())) {
                 username = resolvedUserResult.getUser().getUsername();
-
+                if (log.isDebugEnabled()) {
+                    log.debug("Username resolved successfully : " + username);
+                }
                 params.put(Constants.BASIC_AUTH_PARAM_USERNAME, username);
                 params.put(Constants.LOGGED_USER_CLAIM, resolvedUserResult.getResolvedClaim());
 
@@ -485,6 +498,9 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     private boolean validateUser(FlowIdDO flowIdDO, String userId) throws AuthenticationException {
 
         if (flowIdDO.getUserId().equals(userId)) {
+            if (log.isDebugEnabled()) {
+                log.debug("Provided flow is valid with the authenticated user.");
+            }
             return true;
         } else {
             throw RestAuthUtil.handleClientException(
@@ -508,16 +524,14 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         try {
             authorized = getUserStoreManager(userTenantId).authenticate(tenantAwareUserName, password);
         } catch (UserStoreException e) {
-            String errorCode = IdentityUtil.getIdentityErrorMsg().getErrorCode();
-            if (errorCode.equals(Constants.ACCOUNT_DISABLE_ERROR_CODE)) {
+            log.error("User authentication failed from user store.");
+            String message = e.getCause().getLocalizedMessage();
+            if (message.contains("disabled")) {
                 throw RestAuthUtil.handleClientException(Constants.ErrorMessage.CLIENT_DISABLED_ACCOUNT,
                         String.format("Error while checking the account status for the user : %s.", username), e);
-            } else {
-                if (errorCode.split(":")[0].equals(Constants.ACCOUNT_LOCK_ERROR_CODE)) {
+            } else if (message.contains("locked")) {
                     throw RestAuthUtil.handleClientException(Constants.ErrorMessage.CLIENT_LOCKED_ACCOUNT,
-                            String.format("Error while checking the account status for the user : %s. :s", username,
-                                    errorCode.split(":")[1]), e);
-                }
+                            String.format("Error while checking the account status for the user : %s.", username), e);
             }
         }
         return authorized;
