@@ -29,7 +29,6 @@ import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationV
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationValidationResponse;
 import javax.ws.rs.core.Response;
 
-
 public interface AuthenticateApiService {
 
       public Response authenticatePost(AuthenticationValidationRequest authenticationValidationRequest);

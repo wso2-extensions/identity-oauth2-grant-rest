@@ -123,46 +123,46 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.oauth2.grant.rest</groupId>
-            <artifactId>org.wso2.carbon.identity.oauth2.grant.rest.framework</artifactId>
+            <artifactId>org.wso2.carbon.identity.oauth2.grant.rest.core</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>
         <finalName>org.wso2.carbon.identity.oauth2.grant.rest.endpoint</finalName>
         <plugins>
-<!--            <plugin>-->
-<!--                <groupId>org.openapitools</groupId>-->
-<!--                <artifactId>openapi-generator-maven-plugin</artifactId>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <goals>-->
-<!--                            <goal>generate</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <inputSpec>${project.basedir}/src/main/resources/AuthenticationRestAPI.yaml</inputSpec>-->
-<!--                            <generatorName>org.wso2.carbon.codegen.CxfWso2Generator</generatorName>-->
-<!--                            <configOptions>-->
-<!--                                <sourceFolder>src/gen/java</sourceFolder>-->
-<!--                                <apiPackage>org.wso2.carbon.identity.oauth2.grant.rest.endpoint</apiPackage>-->
-<!--                                <modelPackage>org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model</modelPackage>-->
-<!--                                <packageName>org.wso2.carbon.identity.oauth2.grant.rest.endpoint</packageName>-->
-<!--                                <dateLibrary>java8</dateLibrary>-->
-<!--                                <hideGenerationTimestamp>true</hideGenerationTimestamp>-->
-<!--                                <ignoreFileOverride>${project.basedir}/.openapi-generator-ignore</ignoreFileOverride>-->
-<!--                            </configOptions>-->
-<!--                            <output>.</output>-->
-<!--                            <skipOverwrite>false</skipOverwrite>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--                <dependencies>-->
-<!--                    <dependency>-->
-<!--                        <groupId>org.openapitools</groupId>-->
-<!--                        <artifactId>cxf-wso2-openapi-generator</artifactId>-->
-<!--                        <version>1.0.0</version>-->
-<!--                    </dependency>-->
-<!--                </dependencies>-->
-<!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.openapitools</groupId>-->
+            <!--                <artifactId>openapi-generator-maven-plugin</artifactId>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <goals>-->
+            <!--                            <goal>generate</goal>-->
+            <!--                        </goals>-->
+            <!--                        <configuration>-->
+            <!--                            <inputSpec>${project.basedir}/src/main/resources/AuthenticationRestAPI.yaml</inputSpec>-->
+            <!--                            <generatorName>org.wso2.carbon.codegen.CxfWso2Generator</generatorName>-->
+            <!--                            <configOptions>-->
+            <!--                                <sourceFolder>src/gen/java</sourceFolder>-->
+            <!--                                <apiPackage>org.wso2.carbon.identity.oauth2.grant.rest.endpoint</apiPackage>-->
+            <!--                                <modelPackage>org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model</modelPackage>-->
+            <!--                                <packageName>org.wso2.carbon.identity.oauth2.grant.rest.endpoint</packageName>-->
+            <!--                                <dateLibrary>java8</dateLibrary>-->
+            <!--                                <hideGenerationTimestamp>true</hideGenerationTimestamp>-->
+            <!--                                <ignoreFileOverride>${project.basedir}/.openapi-generator-ignore</ignoreFileOverride>-->
+            <!--                            </configOptions>-->
+            <!--                            <output>.</output>-->
+            <!--                            <skipOverwrite>false</skipOverwrite>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--                <dependencies>-->
+            <!--                    <dependency>-->
+            <!--                        <groupId>org.openapitools</groupId>-->
+            <!--                        <artifactId>cxf-wso2-openapi-generator</artifactId>-->
+            <!--                        <version>1.0.0</version>-->
+            <!--                    </dependency>-->
+            <!--                </dependencies>-->
+            <!--            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>

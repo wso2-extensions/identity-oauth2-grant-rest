@@ -1,17 +1,18 @@
 package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util;
 
+import org.wso2.carbon.identity.oauth2.grant.rest.core.dto.AuthStepConfigsDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.dto.AuthenticatedAuthenticatorDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.dto.AuthenticatorConfigDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticatedAuthenticator;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticatorConfig;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthnStepConfig;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthStepConfigsDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticatedAuthenticatorDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticatorConfigDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  *This class is used to map the authenticators objects with for authentication steps and authenticated steps defined
- * in framework component.
+ * in core component.
  */
 public class RestAuthenticationResponseBuilder {
 

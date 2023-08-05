@@ -21,19 +21,20 @@ package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.dto.AuthenticationFailureReasonDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.dto.UserAuthenticationResponseDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationClientException;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationException;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.AuthenticateApiService;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.builder.ErrorBuilder;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationFailureReason;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationValidationRequest;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationValidationResponse;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.ConfigUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.ErrorUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RequestSanitizerUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RestAuthenticationResponseBuilder;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RestEndpointUtils;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationFailureReasonDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.UserAuthenticationResponseDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 import javax.ws.rs.core.Response;
 
 /**
@@ -46,32 +47,32 @@ public class AuthenticateApiServiceImpl implements AuthenticateApiService {
     @Override
     public Response authenticatePost(AuthenticationValidationRequest authenticationValidationRequest) {
 
-        String userIdentifier = RequestSanitizerUtil.trimString(authenticationValidationRequest.getUserIdentifier());
-        String password = RequestSanitizerUtil.trimString(authenticationValidationRequest.getPassword());
-        String clientId = RequestSanitizerUtil.trimString(authenticationValidationRequest.getClientId());
-        String flowId = RequestSanitizerUtil.trimString(authenticationValidationRequest.getFlowId());
-        String authenticator = RequestSanitizerUtil.trimString(authenticationValidationRequest.getAuthenticator());
+        AuthenticationValidationRequest trimmedRequest = RequestSanitizerUtil.
+                trimAuthenticateRequestPayload(authenticationValidationRequest);
+
+        String userIdentifier = trimmedRequest.getUserIdentifier();
+        String password = trimmedRequest.getPassword();
+        String clientId = trimmedRequest.getClientId();
+        String flowId = trimmedRequest.getFlowId();
+        String authenticator = trimmedRequest.getAuthenticator();
+
         UserAuthenticationResponseDTO responseDTO = null;
 
         try {
-            // if the authentication flow initialize
-            if (RequestSanitizerUtil.isNotEmpty(clientId) && RequestSanitizerUtil.isNotEmpty(userIdentifier) &&
-                    RequestSanitizerUtil.isEmpty(flowId)) {
-                responseDTO = RestEndpointUtils.getAuthService().initializeAuthFlow(clientId, authenticator, password,
-                        userIdentifier, PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain());
-            } else if (RequestSanitizerUtil.isNotEmpty(flowId) && RequestSanitizerUtil.isNotEmpty(password) &&
-                    RequestSanitizerUtil.isEmpty(clientId)) {
+            if (isAuthenticateWithClientId(clientId, userIdentifier, flowId)) {
+                responseDTO = RestEndpointUtils.getAuthService().initializeAuthFlow
+                        (clientId, authenticator, password,
+                                userIdentifier, PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain());
+            } else if (isAuthenticateWithFlowId(flowId, password, clientId)) {
                 responseDTO = RestEndpointUtils.getAuthService().processAuthStepResponse
                         (flowId, authenticator, password);
             }
 
+
             AuthenticationFailureReasonDTO failureReasonDTO = responseDTO.getFailureReason();
             AuthenticationFailureReason failureReason = null;
             if (failureReasonDTO != null) {
-                failureReason = new AuthenticationFailureReason()
-                        .code(failureReasonDTO.getCode())
-                        .message(failureReasonDTO.getMessage())
-                        .description(failureReasonDTO.getDescription());
+                failureReason = failureReasonBuilder(failureReasonDTO);
             }
 
             AuthenticationValidationResponse response = new AuthenticationValidationResponse()
@@ -88,12 +89,15 @@ public class AuthenticateApiServiceImpl implements AuthenticateApiService {
             return Response.ok(response).build();
 
         } catch (AuthenticationClientException e) {
-            ErrorUtil errorUtil = ErrorBuilder.buildError(e.getErrorCode());
-            e = new AuthenticationClientException(
-                    errorUtil.getErrorCode(),
-                    errorUtil.getErrorMessage(),
-                    errorUtil.getErrorDescription()
-            );
+            ConfigUtil configUtil = new ConfigUtil();
+            if (configUtil.isPropertyFileAvailable()) {
+                ErrorUtil errorUtil = ErrorBuilder.buildError(e, configUtil);
+                e = new AuthenticationClientException(
+                        errorUtil.getErrorCode(),
+                        errorUtil.getErrorMessage(),
+                        errorUtil.getErrorDescription()
+                );
+            }
             return RestEndpointUtils.handleBadRequestResponse(authenticator, e, LOG);
         } catch (AuthenticationException e) {
             return RestEndpointUtils.handleServerErrorResponse(authenticator, e, LOG);
@@ -101,4 +105,31 @@ public class AuthenticateApiServiceImpl implements AuthenticateApiService {
             return RestEndpointUtils.handleUnexpectedServerError(authenticator, e, LOG);
         }
     }
+
+    private boolean isAuthenticateWithClientId(String clientId, String userIdentifier, String flowId) {
+
+        boolean isClientIdPresent = RequestSanitizerUtil.isNotEmpty(clientId);
+        boolean isUserIdentifierPresent = RequestSanitizerUtil.isNotEmpty(userIdentifier);
+        boolean isFlowIdPresent = RequestSanitizerUtil.isEmpty(flowId);
+
+        return (isClientIdPresent && isUserIdentifierPresent && isFlowIdPresent)  ? true : false;
+    }
+
+    private boolean isAuthenticateWithFlowId(String flowId, String password, String clientId) {
+
+        boolean isFlowIdPresent = RequestSanitizerUtil.isNotEmpty(flowId);
+        boolean isPasswordPresent = RequestSanitizerUtil.isNotEmpty(password);
+        boolean isClientIdNotPresent = RequestSanitizerUtil.isEmpty(clientId);
+
+        return (isFlowIdPresent && isPasswordPresent && isClientIdNotPresent) ? true : false;
+
+    }
+
+    private AuthenticationFailureReason failureReasonBuilder(AuthenticationFailureReasonDTO failureReasonDTO) {
+        return new AuthenticationFailureReason()
+                .code(failureReasonDTO.getCode())
+                .message(failureReasonDTO.getMessage())
+                .description(failureReasonDTO.getDescription());
+    }
+
 }

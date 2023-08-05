@@ -20,6 +20,7 @@ public class RestAuthEndpointErrorDTO {
     private String clientInvalidUserCredentials;
     private String clientCrossTenantAccessRestriction;
     private String clientUsernameResolveFailed;
+    private String clientEventHandlerFailure;
 
     public String getClientMandatoryParamsEmpty() {
 
@@ -169,5 +170,15 @@ public class RestAuthEndpointErrorDTO {
     public void setClientUsernameResolveFailed(String clientUsernameResolveFailed) {
 
         this.clientUsernameResolveFailed = clientUsernameResolveFailed;
+    }
+
+    public void setClientEventHandlerFailure(String clientEventHandlerFailure) {
+
+        this.clientEventHandlerFailure = clientEventHandlerFailure;
+    }
+
+    public String getClientEventHandlerFailure() {
+
+        return clientEventHandlerFailure;
     }
 }

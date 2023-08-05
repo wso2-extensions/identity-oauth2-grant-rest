@@ -22,16 +22,16 @@ package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util;
 import org.apache.commons.logging.Log;
 import org.slf4j.MDC;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.RestAuthenticationService;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.constant.Constants;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationClientException;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationException;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception.BadRequestException;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception.ConflictRequestException;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception.ForbiddenException;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception.InternalServerErrorException;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.exception.NotFoundException;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationError;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.RestAuthenticationService;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 import java.util.UUID;
 import javax.ws.rs.core.Response;
 import static org.wso2.carbon.identity.oauth2.grant.rest.endpoint.constant.Constants.CORRELATION_ID_MDC;
@@ -129,8 +129,8 @@ public class RestEndpointUtils {
     }
 
     public static NotFoundException buildNotFoundRequestException(String authenticator, String description,
-                                                                  String message, String code,
-                                                                  Log log, Throwable e) {
+            String message, String code,
+            Log log, Throwable e) {
 
         AuthenticationError errorDTO = getError(authenticator, message, description, code);
         logDebug(log, e);
@@ -146,8 +146,8 @@ public class RestEndpointUtils {
     }
 
     public static BadRequestException buildBadRequestException(String authenticator, String description,
-                                                               String message, String code, Log log,
-                                                               Throwable e) {
+            String message, String code, Log log,
+            Throwable e) {
 
         AuthenticationError errorDTO = getError(authenticator, message, description, code);
         logDebug(log, e);
@@ -155,7 +155,7 @@ public class RestEndpointUtils {
     }
 
     public static InternalServerErrorException buildInternalServerErrorException(String authenticator, String code,
-                                                                                 Log log, Throwable e) {
+            Log log, Throwable e) {
 
         AuthenticationError errorDTO = getError(authenticator, Response.Status.INTERNAL_SERVER_ERROR.toString(),
                 Response.Status.INTERNAL_SERVER_ERROR.toString(), code);
@@ -164,8 +164,8 @@ public class RestEndpointUtils {
     }
 
     public static ConflictRequestException buildConflictRequestException(String authenticator, String description,
-                                                                         String message,
-                                                                         String code, Log log, Throwable e) {
+            String message,
+            String code, Log log, Throwable e) {
 
         AuthenticationError errorDTO = getError(authenticator, message, description, code);
         logDebug(log, e);

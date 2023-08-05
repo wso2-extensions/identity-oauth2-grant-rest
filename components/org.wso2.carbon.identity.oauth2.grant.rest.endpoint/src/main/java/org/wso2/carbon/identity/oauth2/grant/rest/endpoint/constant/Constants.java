@@ -48,4 +48,6 @@ public class Constants {
     public static final String CLIENT_INVALID_USER_CREDENTIALS = "RestClient.invalidUserCredentials";
     public static final String CLIENT_CROSS_TENANT_ACCESS_RESTRICTION = "RestClient.crossTenantAccessRestriction";
     public static final String CLIENT_USERNAME_RESOLVE_FAIL = "RestClient.usernameResolveFailed";
+    public static final String CLIENT_EVENT_HANDLER = "RestClient.clientEventHandlerFailed";
+
 }

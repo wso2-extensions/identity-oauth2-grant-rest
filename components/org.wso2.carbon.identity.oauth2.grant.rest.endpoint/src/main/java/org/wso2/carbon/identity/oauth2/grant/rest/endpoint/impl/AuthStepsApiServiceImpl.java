@@ -24,9 +24,9 @@ import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.AuthStepsApiService;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationStepsResponse;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RestAuthenticationResponseBuilder;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RestEndpointUtils;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationStepsResponseDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.dto.AuthenticationStepsResponseDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationClientException;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationException;
 import javax.ws.rs.core.Response;
 
 /**

@@ -104,13 +104,13 @@ curl --location 'https://localhost:9443/api/identity/authn/v1/init-authenticator
 Stop the WSO2 Identity Server if running.
 
 1) Extract the zip file and you may be able to find below artifacts.
-   * `org.wso2.carbon.identity.oauth2.grant.rest.framework-x.x.x.jar`
+   * `org.wso2.carbon.identity.oauth2.grant.rest.core-x.x.x.jar`
    * `api#identity#authn#v1.war`
    * `identity.oauth2.grant.auth.rest.handler-1.0.0.jar`
    * `dbscrips` directory
    * `rest-auth.properties`
 
-2) Copy `org.wso2.carbon.identity.oauth2.grant.rest.framework-x.x.x.jar` file into the 
+2) Copy `org.wso2.carbon.identity.oauth2.grant.rest.core-x.x.x.jar` file into the 
 `<IS-Home>/repository/components/dropins` directory.
 
 3) Copy `api#identity#authn#v1.war`

@@ -18,17 +18,19 @@
 
 package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.impl;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.dto.AuthenticationInitializationResponseDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationClientException;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationException;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.InitAuthenticatorApiService;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.builder.ErrorBuilder;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticatorInitializationRequest;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticatorInitializationResponse;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.ConfigUtil;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.ErrorUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RequestSanitizerUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RestEndpointUtils;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dto.AuthenticationInitializationResponseDTO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationClientException;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
 import javax.ws.rs.core.Response;
 
 /**
@@ -40,8 +42,10 @@ public class InitAuthenticatorApiServiceImpl implements InitAuthenticatorApiServ
     @Override
     public Response initAuthenticatorPost(AuthenticatorInitializationRequest authenticatorInitializationRequest) {
 
-        String authenticator = RequestSanitizerUtil.trimString(authenticatorInitializationRequest.getAuthenticator());
-        String flowId = StringUtils.trim(authenticatorInitializationRequest.getFlowId());
+        AuthenticatorInitializationRequest trimmedRequest = RequestSanitizerUtil.trimInitializationRequestPayload
+                (authenticatorInitializationRequest);
+        String authenticator = trimmedRequest.getAuthenticator();
+        String flowId = trimmedRequest.getFlowId();
 
         try {
 
@@ -53,6 +57,15 @@ public class InitAuthenticatorApiServiceImpl implements InitAuthenticatorApiServ
             return Response.ok(response).build();
 
         } catch (AuthenticationClientException e) {
+            ConfigUtil configUtil = new ConfigUtil();
+            if (configUtil.isPropertyFileAvailable()) {
+                ErrorUtil errorUtil = ErrorBuilder.buildError(e, configUtil);
+                e = new AuthenticationClientException(
+                        errorUtil.getErrorCode(),
+                        errorUtil.getErrorMessage(),
+                        errorUtil.getErrorDescription()
+                );
+            }
             return RestEndpointUtils.handleBadRequestResponse(authenticator, e, LOG);
         } catch (AuthenticationException e) {
             return RestEndpointUtils.handleServerErrorResponse(authenticator, e, LOG);

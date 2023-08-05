@@ -4,14 +4,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.application.authentication.framework.model.AuthenticatedUser;
-import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
+import org.wso2.carbon.identity.event.IdentityEventConstants;
+import org.wso2.carbon.identity.oauth.dao.OAuthAppDO;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.ResponseHeader;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.RestAuthenticationServiceImpl;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.constant.Constants;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.CacheBackedFlowIdDAO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.dao.FlowIdDO;
-import org.wso2.carbon.identity.oauth2.grant.rest.framework.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.RestAuthenticationServiceImpl;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.constant.Constants;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.dao.CacheBackedFlowIdDAO;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.dao.FlowIdDO;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationException;
 import org.wso2.carbon.identity.oauth2.model.RequestParameter;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
 import org.wso2.carbon.identity.oauth2.token.handlers.grant.AbstractAuthorizationGrantHandler;
@@ -40,64 +41,55 @@ public class AuthenticationGrantHandler extends AbstractAuthorizationGrantHandle
 
         HashMap<String, String> params = new HashMap<>();
         params = fetchOauthParameters(oAuthTokenReqMessageContext);
+        FlowIdDO flowIdDO = null;
+        RestAuthenticationServiceImpl authServiceInstance = new RestAuthenticationServiceImpl();
+        AuthenticatedUser user = null;
 
-        String username = params.get(AuthenticationGrantConstants.USERNAME_PARAM_PASSWORD_GRANT);
         String flowId = params.get(AuthenticationGrantConstants.FLOW_ID_PARAM_PASSWORD_GRANT);
 
-        if (StringUtils.isNotBlank(flowId)) {
+        try {
+            flowIdDO = CacheBackedFlowIdDAO.getInstance().getFlowIdData(flowId);
+            user = OAuth2Util.getUserFromUserName(flowIdDO.getFullQualifiedUserName().split
+                            (AuthenticationGrantConstants.TENANT_DOMAIN_SPLITTER)[0]);
 
-            FlowIdDO flowIdDO = null;
-            RestAuthenticationServiceImpl authServiceInstance = new RestAuthenticationServiceImpl();
+            if (StringUtils.isNotBlank(flowId) && authServiceInstance.isValidFlowId(flowIdDO)) {
 
-            try {
-                flowIdDO = CacheBackedFlowIdDAO.getInstance().getFlowIdData(flowId);
-            } catch (AuthenticationException e) {
-                AuthenticationGrantUtils.handleException
-                        (AuthenticationGrantConstants.ErrorMessage.ERROR_FLOW_ID_RETRIEVING, e);
-            }
-
-            AuthenticatedUser user = OAuth2Util.getUserFromUserName(username);
-            boolean isValidUser = false;
-
-            try {
-                isValidUser = flowIdDO.getUserId().equals(authServiceInstance.getUserIDFromUserName(username,
-                        IdentityTenantUtil.getTenantId(user.getTenantDomain())));
-            } catch (AuthenticationException e) {
-                AuthenticationGrantUtils.handleException
-                        (AuthenticationGrantConstants.ErrorMessage.ERROR_VALIDATING_USER, e);
-            }
-
-            oAuthTokenReqMessageContext.setAuthorizedUser(user);
-            oAuthTokenReqMessageContext
-                    .setScope(oAuthTokenReqMessageContext.getOauth2AccessTokenReqDTO().getScope());
-
-            try {
-                if (authServiceInstance.isValidFlowId(flowIdDO) && (isValidUser)) {
-                   if (flowIdDO.isAuthFlowCompleted()) {
-                       try {
-                           CacheBackedFlowIdDAO.getInstance().updateFlowIdState(flowId,
-                                   Constants.FLOW_ID_STATE_INACTIVE);
-                       } catch (AuthenticationException e) {
-                           AuthenticationGrantUtils.handleException
-                                   (AuthenticationGrantConstants.ErrorMessage.ERROR_UPDATING_FLOW_ID_STATE, e);
-                       }
-                       return true;
-                   } else {
-                       AuthenticationGrantUtils.handleException
-                               (AuthenticationGrantConstants.ErrorMessage.ERROR_INCOMPLETED_AUTHENTICATION_STEPS);
-                   }
-                } else {
+                if (!flowIdDO.isAuthFlowCompleted()) {
+                    log.error(AuthenticationGrantConstants.ErrorMessage.ERROR_INCOMPLETED_AUTHENTICATION_STEPS);
+                    AuthenticationGrantUtils.executeEvent
+                            (IdentityEventConstants.EventName.AUTHENTICATION_FAILURE.toString(), flowIdDO, user,
+                                    (OAuthAppDO) oAuthTokenReqMessageContext.getProperty
+                                            (AuthenticationGrantConstants.OAUTH_APP_DO));
                     AuthenticationGrantUtils.handleException
-                            (AuthenticationGrantConstants.ErrorMessage.ERROR_INVALID_FLOW_ID);
+                            (AuthenticationGrantConstants.ErrorMessage.ERROR_INCOMPLETED_AUTHENTICATION_STEPS);
                 }
-            } catch (AuthenticationException e) {
-                AuthenticationGrantUtils.handleException
-                        (AuthenticationGrantConstants.ErrorMessage.ERROR_VALIDATING_FLOW_ID, e);
-            }
 
-        } else {
-            AuthenticationGrantUtils.handleException(AuthenticationGrantConstants.ErrorMessage.ERROR_FLOW_ID_NULL);
+                oAuthTokenReqMessageContext.setAuthorizedUser(user);
+                oAuthTokenReqMessageContext.setScope(oAuthTokenReqMessageContext.getOauth2AccessTokenReqDTO()
+                        .getScope());
+
+                CacheBackedFlowIdDAO.getInstance().updateFlowIdState(flowId, Constants.FLOW_ID_STATE_INACTIVE);
+                AuthenticationGrantUtils.executeEvent
+                        (IdentityEventConstants.EventName.AUTHENTICATION_SUCCESS.toString(), flowIdDO, user,
+                                (OAuthAppDO) oAuthTokenReqMessageContext.getProperty
+                                        (AuthenticationGrantConstants.OAUTH_APP_DO));
+
+                if (log.isDebugEnabled()) {
+                    log.debug("Flow ID updated to Inactive state");
+                }
+                return true;
+            }
+        } catch (AuthenticationException e) {
+            AuthenticationGrantUtils.errorFormator(e);
+            if (flowIdDO.isAuthFlowCompleted()) {
+                AuthenticationGrantUtils.executeEvent
+                        (IdentityEventConstants.EventName.AUTHENTICATION_FAILURE.toString(), flowIdDO, user,
+                                (OAuthAppDO) oAuthTokenReqMessageContext.getProperty
+                                        (AuthenticationGrantConstants.OAUTH_APP_DO));
+            }
+            AuthenticationGrantUtils.handleException(e.getDescription(), e);
         }
+
 
         grantValidationFailedResponseBuilder(oAuthTokenReqMessageContext);
         return false;

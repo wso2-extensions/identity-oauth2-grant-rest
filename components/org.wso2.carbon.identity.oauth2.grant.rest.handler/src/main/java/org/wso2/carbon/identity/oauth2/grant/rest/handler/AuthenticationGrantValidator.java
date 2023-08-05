@@ -14,8 +14,6 @@ public class AuthenticationGrantValidator extends AbstractValidator<HttpServletR
     public AuthenticationGrantValidator() {
 
         requiredParams.add(OAuth.OAUTH_GRANT_TYPE);
-        requiredParams.add(AuthenticationGrantConstants.USERNAME_PARAM_PASSWORD_GRANT);
         requiredParams.add(AuthenticationGrantConstants.FLOW_ID_PARAM_PASSWORD_GRANT);
-
     }
 }
