@@ -510,9 +510,9 @@
         </org.wso2.carbon.extension.identity.smsotp.common.version.range>
         <org.wso2.carbon.extension.identity.emailotp.common.version.range>[4.0.6, 4.1.16)
         </org.wso2.carbon.extension.identity.emailotp.common.version.range>
+        <commons-logging.osgi.version.range>[1.2,2.0)</commons-logging.osgi.version.range>
         <commons-codec.version>1.4.0.wso2v1</commons-codec.version>
         <apache-commons-codec.version>1.11</apache-commons-codec.version>
-        <slf4j.version>1.7.0</slf4j.version>
         <org.slf4j.verison>1.7.6</org.slf4j.verison>
         <equinox.osgi.services.version>3.5.100.v20160504-1419</equinox.osgi.services.version>
         <json.version>3.0.0.wso2v1</json.version>

@@ -61,8 +61,8 @@ public class AuthenticateApiServiceImpl implements AuthenticateApiService {
         try {
             if (isAuthenticateWithClientId(clientId, userIdentifier, flowId)) {
                 responseDTO = RestEndpointUtils.getAuthService().initializeAuthFlow
-                        (clientId, authenticator, password,
-                                userIdentifier, PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain());
+                        (clientId, authenticator, password, userIdentifier,
+                                PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain());
             } else if (isAuthenticateWithFlowId(flowId, password, clientId)) {
                 responseDTO = RestEndpointUtils.getAuthService().processAuthStepResponse
                         (flowId, authenticator, password);
@@ -89,9 +89,9 @@ public class AuthenticateApiServiceImpl implements AuthenticateApiService {
             return Response.ok(response).build();
 
         } catch (AuthenticationClientException e) {
-            ConfigUtil configUtil = new ConfigUtil();
-            if (configUtil.isPropertyFileAvailable()) {
-                ErrorUtil errorUtil = ErrorBuilder.buildError(e, configUtil);
+
+            if (ConfigUtil.isIsPropertyFileAvailable()) {
+                ErrorUtil errorUtil = ErrorBuilder.buildError(e);
                 e = new AuthenticationClientException(
                         errorUtil.getErrorCode(),
                         errorUtil.getErrorMessage(),

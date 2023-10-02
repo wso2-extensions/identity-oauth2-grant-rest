@@ -186,4 +186,3 @@ public class AuthenticationError  {
         return o.toString().replace("\n", "\n");
     }
 }
-

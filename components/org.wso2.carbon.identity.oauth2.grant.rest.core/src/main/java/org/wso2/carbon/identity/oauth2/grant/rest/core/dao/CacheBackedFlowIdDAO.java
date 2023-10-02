@@ -32,7 +32,7 @@ import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationE
  */
 public class CacheBackedFlowIdDAO extends FlowIdDAOImpl {
 
-    private static final Log log = LogFactory.getLog(CacheBackedFlowIdDAO.class);
+    private static final Log LOG = LogFactory.getLog(CacheBackedFlowIdDAO.class);
     private static FlowIdDAO flowIdDAO;
     private static AuthCache restAuthCache = null;
     private static volatile CacheBackedFlowIdDAO instance;
@@ -56,8 +56,8 @@ public class CacheBackedFlowIdDAO extends FlowIdDAOImpl {
 
     private void addToCache(FlowIdDO flowIdDO, String tenantDomain) {
 
-        if (log.isDebugEnabled()) {
-            log.debug("Add cache for the REST authentication flow " + flowIdDO.getFlowId() + "@" + tenantDomain);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Add cache for the REST authentication flow " + flowIdDO.getFlowId() + "@" + tenantDomain);
         }
 
         AuthCacheKey flowIdKey = new AuthCacheKey(flowIdDO.getFlowId());
@@ -121,12 +121,12 @@ public class CacheBackedFlowIdDAO extends FlowIdDAOImpl {
             flowIdDO = entry.getFlowIdDO();
         }
         if (flowIdDO == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("Cache missing for the REST authentication flow with Flow ID: " + flowId);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Cache missing for the REST authentication flow with Flow ID: " + flowId);
             }
         } else {
-            if (log.isDebugEnabled()) {
-                log.debug("Cache present for the REST authentication flow with Flow ID: " + flowId);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Cache present for the REST authentication flow with Flow ID: " + flowId);
             }
         }
         return flowIdDO;
@@ -138,8 +138,8 @@ public class CacheBackedFlowIdDAO extends FlowIdDAOImpl {
 
     public void clearFlowIdCache(String flowId, String tenantDomain) {
 
-        if (log.isDebugEnabled()) {
-            log.debug("Clearing all the Flow ID Caches for " + flowId + "@" +
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Clearing all the Flow ID Caches for " + flowId + "@" +
                     tenantDomain);
         }
 

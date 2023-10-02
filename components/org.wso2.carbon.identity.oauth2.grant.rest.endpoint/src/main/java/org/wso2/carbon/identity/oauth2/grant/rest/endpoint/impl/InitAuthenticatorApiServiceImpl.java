@@ -57,9 +57,9 @@ public class InitAuthenticatorApiServiceImpl implements InitAuthenticatorApiServ
             return Response.ok(response).build();
 
         } catch (AuthenticationClientException e) {
-            ConfigUtil configUtil = new ConfigUtil();
-            if (configUtil.isPropertyFileAvailable()) {
-                ErrorUtil errorUtil = ErrorBuilder.buildError(e, configUtil);
+
+            if (ConfigUtil.isIsPropertyFileAvailable()) {
+                ErrorUtil errorUtil = ErrorBuilder.buildError(e);
                 e = new AuthenticationClientException(
                         errorUtil.getErrorCode(),
                         errorUtil.getErrorMessage(),

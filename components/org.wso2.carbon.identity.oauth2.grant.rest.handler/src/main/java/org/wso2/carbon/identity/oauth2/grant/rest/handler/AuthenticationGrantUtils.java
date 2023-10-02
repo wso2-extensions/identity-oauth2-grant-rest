@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class AuthenticationGrantUtils {
 
-    private static final Log log = LogFactory.getLog(AuthenticationGrantHandler.class);
+    private static final Log LOG = LogFactory.getLog(AuthenticationGrantHandler.class);
 
     /**
      * Method to handle debug logs.
@@ -33,8 +33,8 @@ public class AuthenticationGrantUtils {
      * @param debugMessage Debug Description
      */
     public static void handleDebugLogs (String debugMessage) {
-        if (log.isDebugEnabled()) {
-            log.debug(debugMessage);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(debugMessage);
         }
     }
 
@@ -45,7 +45,7 @@ public class AuthenticationGrantUtils {
      * @throws IdentityOAuth2Exception
      */
     public static void handleException (String errorMessage) throws IdentityOAuth2Exception {
-        log.error(errorMessage);
+        LOG.error(errorMessage);
         throw new IdentityOAuth2Exception (errorMessage);
     }
 
@@ -57,7 +57,7 @@ public class AuthenticationGrantUtils {
      * @throws IdentityOAuth2Exception
      */
     public static void handleException (String errorMessage, Throwable e) throws IdentityOAuth2Exception {
-        log.error(errorMessage, e);
+        LOG.error(errorMessage, e);
         throw new IdentityOAuth2Exception (errorMessage, e);
     }
 
@@ -96,7 +96,7 @@ public class AuthenticationGrantUtils {
             ((IdentityEventService) PrivilegedCarbonContext.getThreadLocalCarbonContext().
                     getOSGiService(IdentityEventService.class, null)).handleEvent(event);
         } catch (IdentityEventException e) {
-            log.error(e.getCause());
+            LOG.error(e.getCause());
         }
 
     }

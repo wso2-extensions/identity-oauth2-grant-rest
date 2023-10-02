@@ -186,4 +186,3 @@ public class AuthenticationValidationRequest  {
         return o.toString().replace("\n", "\n");
     }
 }
-

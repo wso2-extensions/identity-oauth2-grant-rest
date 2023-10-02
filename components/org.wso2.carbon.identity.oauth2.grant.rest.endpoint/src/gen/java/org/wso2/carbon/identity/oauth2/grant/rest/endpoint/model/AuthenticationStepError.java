@@ -162,4 +162,3 @@ public class AuthenticationStepError  {
         return o.toString().replace("\n", "\n");
     }
 }
-

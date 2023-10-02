@@ -106,4 +106,3 @@ public class AuthenticationStepsResponse  {
         return o.toString().replace("\n", "\n");
     }
 }
-

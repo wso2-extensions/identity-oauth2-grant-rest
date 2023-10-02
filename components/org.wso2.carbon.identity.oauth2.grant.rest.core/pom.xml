@@ -94,7 +94,7 @@
                             com.fasterxml.jackson.annotation; version="2.13.2",
                             org.apache.commons.codec.digest; version="1.14.0.wso2v1",
                             org.apache.commons.lang3; version="3.4.0.wso2v1",
-                            org.apache.commons.logging; version="1.2.0",
+                            org.apache.commons.logging; version="${commons-logging.osgi.version.range}",
                             org.osgi.framework; version="${osgi.framework.imp.pkg.version.range}",
                             org.osgi.service.component; version="${osgi.service.component.imp.pkg.version.range}",
                             org.wso2.carbon.context; version="${carbon.kernel.package.import.version.range}",

@@ -24,7 +24,7 @@ import java.util.HashMap;
  */
 public class AuthenticationGrantHandler extends AbstractAuthorizationGrantHandler {
 
-    private static final Log log = LogFactory.getLog(AuthenticationGrantHandler.class);
+    private static final Log LOG = LogFactory.getLog(AuthenticationGrantHandler.class);
 
     /**
      * Validate and Execute the REST OAuth2 Grant.
@@ -50,12 +50,12 @@ public class AuthenticationGrantHandler extends AbstractAuthorizationGrantHandle
         try {
             flowIdDO = CacheBackedFlowIdDAO.getInstance().getFlowIdData(flowId);
             user = OAuth2Util.getUserFromUserName(flowIdDO.getFullQualifiedUserName().split
-                            (AuthenticationGrantConstants.TENANT_DOMAIN_SPLITTER)[0]);
+                    (AuthenticationGrantConstants.TENANT_DOMAIN_SPLITTER)[0]);
 
             if (StringUtils.isNotBlank(flowId) && authServiceInstance.isValidFlowId(flowIdDO)) {
 
                 if (!flowIdDO.isAuthFlowCompleted()) {
-                    log.error(AuthenticationGrantConstants.ErrorMessage.ERROR_INCOMPLETED_AUTHENTICATION_STEPS);
+                    LOG.error(AuthenticationGrantConstants.ErrorMessage.ERROR_INCOMPLETED_AUTHENTICATION_STEPS);
                     AuthenticationGrantUtils.executeEvent
                             (IdentityEventConstants.EventName.AUTHENTICATION_FAILURE.toString(), flowIdDO, user,
                                     (OAuthAppDO) oAuthTokenReqMessageContext.getProperty
@@ -74,14 +74,14 @@ public class AuthenticationGrantHandler extends AbstractAuthorizationGrantHandle
                                 (OAuthAppDO) oAuthTokenReqMessageContext.getProperty
                                         (AuthenticationGrantConstants.OAUTH_APP_DO));
 
-                if (log.isDebugEnabled()) {
-                    log.debug("Flow ID updated to Inactive state");
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Flow ID updated to Inactive state");
                 }
                 return true;
             }
         } catch (AuthenticationException e) {
             AuthenticationGrantUtils.errorFormator(e);
-            if (flowIdDO.isAuthFlowCompleted()) {
+            if (flowIdDO != null && flowIdDO.isAuthFlowCompleted()) {
                 AuthenticationGrantUtils.executeEvent
                         (IdentityEventConstants.EventName.AUTHENTICATION_FAILURE.toString(), flowIdDO, user,
                                 (OAuthAppDO) oAuthTokenReqMessageContext.getProperty
@@ -112,7 +112,7 @@ public class AuthenticationGrantHandler extends AbstractAuthorizationGrantHandle
         for (RequestParameter parameter : parameters) {
             if (parameter.getKey().equals(AuthenticationGrantConstants.GRANT_TYPE_KEY)) {
                 if (!(AuthenticationGrantConstants.REST_AUTH_GRANT_NAME.equals(parameter.getValue()[0]))) {
-                    log.error("Grant type is not supported");
+                    LOG.error("Grant type is not supported");
                     throw  new IdentityOAuth2Exception(AuthenticationGrantConstants.ErrorMessage.ERROR_FLOW_ID_NULL);
                 }
             }

@@ -41,7 +41,7 @@ import java.util.List;
  */
 public class RestAuthenticationContext {
 
-	private static final Log log = LogFactory.getLog(RestAuthenticationContext.class);
+	private static final Log LOG = LogFactory.getLog(RestAuthenticationContext.class);
 	private String currentAuthenticator;
 	private boolean isAuthFlowCompleted;
 	private final String userName;
@@ -236,6 +236,33 @@ public class RestAuthenticationContext {
 		this.authenticatedUser = authenticatedUser;
 	}
 
+
+	public void setUser(User user) {
+
+		this.user = user;
+	}
+	public User getUser() {
+
+		return this.user;
+	}
+
+	public int getNextAuthenticationStepId() {
+		return nextAuthenticationStepId;
+	}
+
+	public void setNextAuthenticationStepId(int nextAuthenticationStepId) {
+		this.nextAuthenticationStepId = nextAuthenticationStepId;
+	}
+
+	public void setMultiAttributeLoginClaim(String multiAttributeLoginClaimURI) {
+
+		this.multiAttributeLoginClaimURI = multiAttributeLoginClaimURI;
+	}
+	public String getMultiAttributeLoginClaim() {
+
+		return this.multiAttributeLoginClaimURI;
+	}
+
 	/**
 	 * This can be used to build AuthContextWrapper Objects.
 	 */
@@ -273,7 +300,8 @@ public class RestAuthenticationContext {
 				} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
 					throw RestAuthUtil.handleServerException
 							(Constants.ErrorMessage.SERVER_REQUEST_PARAM_READING_ERROR,
-									String.format("Error while sanitizing the request parameter : %s.", entry.getKey()), e);
+									String.format("Error while sanitizing the request parameter : %s.",
+											entry.getKey()), e);
 				}
 			}
 		}
@@ -394,6 +422,11 @@ public class RestAuthenticationContext {
 			return new RestAuthenticationContext(this);
 		}
 
+		public void setAuthenticationSteps(LinkedHashMap<Integer, List<String>> authenticationSteps) {
+
+			this.authenticationSteps = authenticationSteps;
+		}
+
 		static int tenantDomain;
 		public RestAuthenticationContext buildForAuthFlowInitialize() throws AuthenticationException {
 
@@ -423,32 +456,6 @@ public class RestAuthenticationContext {
 			return serviceProvider(this.clientId).build();
 		}
 
-	}
-
-	public void setUser(User user) {
-
-		this.user = user;
-	}
-	public User getUser() {
-
-		return this.user;
-	}
-
-	public int getNextAuthenticationStepId() {
-		return nextAuthenticationStepId;
-	}
-
-	public void setNextAuthenticationStepId(int nextAuthenticationStepId) {
-		this.nextAuthenticationStepId = nextAuthenticationStepId;
-	}
-
-	public void setMultiAttributeLoginClaim(String multiAttributeLoginClaimURI) {
-
-		this.multiAttributeLoginClaimURI = multiAttributeLoginClaimURI;
-	}
-	public String getMultiAttributeLoginClaim() {
-
-		return this.multiAttributeLoginClaimURI;
 	}
 
 }

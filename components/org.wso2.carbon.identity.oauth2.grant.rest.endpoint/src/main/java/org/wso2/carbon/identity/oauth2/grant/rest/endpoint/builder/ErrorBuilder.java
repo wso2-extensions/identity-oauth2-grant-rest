@@ -2,6 +2,7 @@ package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.builder;
 
 import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationClientException;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.dto.RestAuthEndpointErrorDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.listener.PropertyFileLoaderListener;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.ConfigUtil;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.ErrorUtil;
 import java.util.Properties;
@@ -11,9 +12,10 @@ import java.util.Properties;
  */
 public class ErrorBuilder {
 
-    public static ErrorUtil buildError(AuthenticationClientException ex, ConfigUtil configUtil) {
+    public static ErrorUtil buildError(AuthenticationClientException ex) {
 
-        Properties properties = configUtil.readConfigurations();
+        Properties properties = PropertyFileLoaderListener.getFiledDefinedProperties();
+        ConfigUtil configUtil = new ConfigUtil();
         RestAuthEndpointErrorDTO configsDTO = configUtil.sanitizeAndPopulateConfigs(properties, ex);
         ErrorUtil errorUtil = new ErrorUtil();
 

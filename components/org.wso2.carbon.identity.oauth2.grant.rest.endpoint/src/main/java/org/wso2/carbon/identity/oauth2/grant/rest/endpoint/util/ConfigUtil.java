@@ -7,10 +7,6 @@ import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationC
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.constant.Constants;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.dto.RestAuthEndpointErrorDTO;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -19,42 +15,13 @@ import java.util.Properties;
 public class ConfigUtil {
 
     private static final Log LOG = LogFactory.getLog(ConfigUtil.class);
+    private static boolean isPropertyFileAvailable  = false;
 
-    public Properties readConfigurations()  {
-
-        InputStream inputStream = null;
-        Properties properties = null;
-        String configFilePath = Constants.CONFIG_FILE_PATH + Constants.CONFIG_FILE_NAME;
-
-        try {
-            properties = new Properties();
-            File configFile = new File(configFilePath);
-
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(String.format(" %s file has NOT been loaded from %s.", Constants.CONFIG_FILE_NAME,
-                        Constants.CONFIG_FILE_PATH + Constants.CONFIG_FILE_NAME));
-            }
-
-            inputStream = new FileInputStream(configFile);
-            properties.load(inputStream);
-        } catch (FileNotFoundException e) {
-            LOG.error("Failed to load service configurations.", e);
-        } catch (IOException e) {
-            LOG.error("Error while loading teh config file");
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    LOG.error("Error while reading teh config file");
-                }
-            }
-        }
-        return properties;
+    public static boolean isIsPropertyFileAvailable() {
+        return isPropertyFileAvailable;
     }
 
-
-    public boolean isPropertyFileAvailable() {
+    public static boolean checkPropertyFileAvailability() {
 
         String configFilePath = Constants.CONFIG_FILE_PATH + Constants.CONFIG_FILE_NAME;
         File configFile = new File(configFilePath);
@@ -63,6 +30,7 @@ public class ConfigUtil {
                 LOG.debug(String.format(" %s file loaded from %s.", Constants.CONFIG_FILE_NAME,
                         Constants.CONFIG_FILE_PATH + Constants.CONFIG_FILE_NAME));
             }
+            isPropertyFileAvailable = true;
             return true;
         } else {
             LOG.info("Default configurations are taken");

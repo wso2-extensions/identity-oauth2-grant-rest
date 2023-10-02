@@ -128,4 +128,3 @@ public class AuthnStepConfig  {
         return o.toString().replace("\n", "\n");
     }
 }
-

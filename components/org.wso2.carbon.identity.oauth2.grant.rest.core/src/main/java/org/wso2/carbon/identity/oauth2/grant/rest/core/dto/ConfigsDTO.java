@@ -19,24 +19,15 @@
 
 package org.wso2.carbon.identity.oauth2.grant.rest.core.dto;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * This class holds the SMS OTP feature configurations.
  */
 public class ConfigsDTO {
 
-	private static final Log LOG = LogFactory.getLog(ConfigsDTO.class);
 	private boolean isEnabled;
 	private boolean showFailureReason;
 	private int flowIdValidityPeriod;
 	private int timestampSkew;
-
-	public boolean isEnabled() {
-
-		return isEnabled;
-	}
 
 	public void setEnabled(boolean enabled) {
 

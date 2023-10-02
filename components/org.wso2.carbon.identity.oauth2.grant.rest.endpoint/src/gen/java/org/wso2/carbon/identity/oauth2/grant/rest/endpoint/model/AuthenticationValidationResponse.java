@@ -250,4 +250,3 @@ public class AuthenticationValidationResponse  {
         return o.toString().replace("\n", "\n");
     }
 }
-

@@ -86,6 +86,7 @@ public class Constants {
     public static final String IS_FEDERATED = "isFederated";
     public static final String PARAMS = "params";
     public static final String EVENT_HANDLER_ERROR_DESCRIPTION = "Event handler error description";
+    public static final String USERNAME_LOCAL_CLAIM_URI = "http://wso2.org/claims/username";
 
     /**
      * Rest Auth Service error codes.

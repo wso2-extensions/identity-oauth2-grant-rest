@@ -139,4 +139,3 @@ public class AuthenticationFailureReason  {
         return o.toString().replace("\n", "\n");
     }
 }
-

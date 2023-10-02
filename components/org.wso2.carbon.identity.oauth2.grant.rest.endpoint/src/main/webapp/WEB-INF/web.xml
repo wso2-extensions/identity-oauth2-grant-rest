@@ -27,6 +27,10 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+    <listener>
+        <listener-class>org.wso2.carbon.identity.oauth2.grant.rest.endpoint.listener.PropertyFileLoaderListener</listener-class>
+    </listener>
+
 
     <servlet>
         <servlet-name>CXFServlet</servlet-name>

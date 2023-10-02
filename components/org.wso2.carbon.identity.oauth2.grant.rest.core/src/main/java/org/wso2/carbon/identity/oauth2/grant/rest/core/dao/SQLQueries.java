@@ -25,8 +25,8 @@ package org.wso2.carbon.identity.oauth2.grant.rest.core.dao;
 public class SQLQueries {
 
     public static final String ADD_FLOW_ID = "INSERT INTO IDN_AUTH_REST_FLOW (FLOW_ID_IDENTIFIER, " +
-            "FLOW_ID, FLOW_ID_STATE, TIME_GENERATED, EXPIRY_TIME, IS_AUTH_FLOW_COMPLETED, SP_APP_ID, SP_TENANT_ID, LOGGED_USER_CLAIM) " +
-            "VALUES (?,?,?,?,?,?,?,?,?);";
+            "FLOW_ID, FLOW_ID_STATE, TIME_GENERATED, EXPIRY_TIME, IS_AUTH_FLOW_COMPLETED, SP_APP_ID, SP_TENANT_ID, "
+            + "LOGGED_USER_CLAIM) VALUES (?,?,?,?,?,?,?,?,?);";
     public static final String ADD_FLOW_ID_USER_DATA = "INSERT INTO IDN_REST_AUTH_USER " +
             "(USER_TENANT_ID, USER_ID, USERNAME, FLOW_ID_IDENTIFIER) VALUES (?,?,?,?);";
     public static final String UPDATE_FLOW_ID_STATE = "UPDATE IDN_AUTH_REST_FLOW SET FLOW_ID_STATE=? " +

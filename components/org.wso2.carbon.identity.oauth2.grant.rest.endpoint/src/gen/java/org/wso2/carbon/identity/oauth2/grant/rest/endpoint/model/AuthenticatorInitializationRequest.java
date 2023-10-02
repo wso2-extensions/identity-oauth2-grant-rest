@@ -122,4 +122,3 @@ public class AuthenticatorInitializationRequest  {
         return o.toString().replace("\n", "\n");
     }
 }
-

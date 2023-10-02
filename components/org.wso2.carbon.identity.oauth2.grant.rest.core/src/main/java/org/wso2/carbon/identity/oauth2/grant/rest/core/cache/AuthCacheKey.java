@@ -28,7 +28,7 @@ import org.wso2.carbon.identity.core.cache.CacheKey;
  */
 public class AuthCacheKey extends CacheKey {
 
-    private static final Log log = LogFactory.getLog(AuthCacheKey.class);
+    private static final Log LOG = LogFactory.getLog(AuthCacheKey.class);
     private static final long serialVersionUID = 8263255365985309443L;
 
     private String flowIdKey;

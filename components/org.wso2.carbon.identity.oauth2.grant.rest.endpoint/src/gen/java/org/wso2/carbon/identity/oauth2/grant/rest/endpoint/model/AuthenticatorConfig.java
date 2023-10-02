@@ -95,4 +95,3 @@ public class AuthenticatorConfig  {
         return o.toString().replace("\n", "\n");
     }
 }
-

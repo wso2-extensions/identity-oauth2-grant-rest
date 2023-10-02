@@ -9,6 +9,8 @@ authentication steps. This would support Identifier First, Basic
 Authenticator, SMS OTP and Email OTP authenticators with any number 
 of authentication steps.
 
+You can refer to the below use cases of this connector.
+
 As per the [API spec](https://github.com/DInuwan97/identity-oauth2-grant-mfa/blob/dev-extenssion-features/components/org.wso2.carbon.identity.oauth2.grant.rest.endpoint/src/main/resources/AuthenticationRestAPI.yaml)  this connector contains 3 endpoints namely 
 `/auth-steps`, `/authenticte` and `/init-authenticator` along with the `/api/identity/authn/v1` request path.
 
@@ -123,8 +125,9 @@ file into the `<IS-Home>/repository/deployment/server` directory.
 `org.wso2.carbon.extension.identity.emailotp.common-x.x.x.jar` and copy in to 
 the `<IS-Home>/repository/components/dropins` directory. 
 (The 02 JARs are required to this connector in order to send the OTP for 
-respective channel if [EmailOTP](https://github.com/wso2-extensions/identity-outbound-auth-sms-otp/tree/master/component/common) 
-or [SMSOTP](https://github.com/wso2-extensions/identity-outbound-auth-email-otp/tree/master/component/common) 
+respective channel if [SMSOTP](https://github.com/wso2-extensions/identity-outbound-auth-sms-otp/tree/master/component
+   /common) 
+or [EmailOTP](https://github.com/wso2-extensions/identity-outbound-auth-email-otp/tree/master/component/common) 
 would enable in an authentication steps)
 
 6) Execute the [db-scripts](https://github.com/DInuwan97/identity-oauth2-grant-mfa/tree/dev-extenssion-features/components/org.wso2.carbon.identity.oauth2.grant.rest.framework/src/main/resources/dbscripts) 

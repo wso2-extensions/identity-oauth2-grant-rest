@@ -116,4 +116,3 @@ public class AuthenticatedAuthenticator  {
         return o.toString().replace("\n", "\n");
     }
 }
-
