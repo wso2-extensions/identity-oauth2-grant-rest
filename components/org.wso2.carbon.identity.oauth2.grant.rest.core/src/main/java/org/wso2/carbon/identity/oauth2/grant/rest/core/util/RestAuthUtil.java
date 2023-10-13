@@ -53,7 +53,6 @@ import java.util.UUID;
  */
 public class RestAuthUtil {
     private static final Log LOG = LogFactory.getLog(RestAuthUtil.class);
-    private LinkedHashMap<Integer , IdentityProvider[]> federatedAuthenticators;
 
     /**
      * This method returns the SHA-256 hash of a given string.
@@ -65,6 +64,10 @@ public class RestAuthUtil {
         return DigestUtils.sha256Hex(text);
     }
 
+    /**
+     * Generate an UUID from flowId and flowId Identifier.
+     * @return uuid
+     */
     public static String generateUUID() {
         String uuid = UUID.randomUUID().toString();
         if (LOG.isDebugEnabled()) {
@@ -75,7 +78,6 @@ public class RestAuthUtil {
 
     /**
      * Read configurations and populate ConfigDTO object.
-     *
      * @throws AuthenticationException Throws upon an issue on while reading configs.
      */
     public static void readConfigurations() throws AuthenticationException {
@@ -118,6 +120,10 @@ public class RestAuthUtil {
         sanitizeAndPopulateConfigs(properties);
     }
 
+    /**
+     * Save properties from rest-auth.propertis
+     * @params properties
+     */
     private static void sanitizeAndPopulateConfigs(Properties properties) {
 
         ConfigsDTO configs = AuthenticationServiceDataHolder.getConfigs();
@@ -145,12 +151,23 @@ public class RestAuthUtil {
 
     }
 
+    /**
+     * Handling client-side exceptions.
+     * @params  error
+     * @return  AuthenticationClientException
+     */
     public static AuthenticationClientException handleClientException(Constants.ErrorMessage error) {
 
         String description = error.getDescription();
         return new AuthenticationClientException(error.getCode(), error.getMessage(), description);
     }
 
+    /**
+     * Handling client-side exceptions with error message and data.
+     * @params  error
+     * @param   data
+     * @return  AuthenticationClientException
+     */
     public static AuthenticationClientException handleClientException(Constants.ErrorMessage error, String data) {
 
         String description;
@@ -162,6 +179,12 @@ public class RestAuthUtil {
         return new AuthenticationClientException(error.getCode(), error.getMessage(), description);
     }
 
+    /**
+     * Handling client-side exceptions with the upstream error messages passed by event handlers.
+     * @params  error
+     * @param   data
+     * @return  AuthenticationClientException
+     */
     public static AuthenticationClientException handleClientException(String rawError, String data) {
 
         String description;
@@ -174,6 +197,13 @@ public class RestAuthUtil {
                 (rawError.split(";")[0], rawError.split(";")[1], description);
     }
 
+    /**
+     * Handling client-side exceptions with error message, data and Throwable.
+     * @params  error
+     * @param   data
+     * @param   e
+     * @return  AuthenticationClientException
+     */
     public static AuthenticationClientException handleClientException(Constants.ErrorMessage error, String data,
             Throwable e) {
 
@@ -186,6 +216,13 @@ public class RestAuthUtil {
         return new AuthenticationClientException(error.getCode(), error.getMessage(), description, e);
     }
 
+    /**
+     * Handling server-side exceptions with error message, data and Throwable.
+     * @params  error
+     * @param   data
+     * @param   e
+     * @return  AuthenticationServerException
+     */
     public static AuthenticationServerException handleServerException(Constants.ErrorMessage error, String data,
             Throwable e) {
 
@@ -198,6 +235,12 @@ public class RestAuthUtil {
         return new AuthenticationServerException(error.getCode(), error.getMessage(), description, e);
     }
 
+    /**
+     * Handling server-side exceptions with error message and data.
+     * @params  error
+     * @param   data
+     * @return  AuthenticationServerException
+     */
     public static AuthenticationServerException handleServerException(Constants.ErrorMessage error, String data) {
 
         String description;
@@ -209,23 +252,39 @@ public class RestAuthUtil {
         return new AuthenticationServerException(error.getCode(), error.getMessage(), description);
     }
 
+    /**
+     * Handling server-side exceptions with error message and Throwable.
+     * @params  error
+     * @param   e
+     * @return  AuthenticationServerException
+     */
     public static AuthenticationServerException handleServerException(Constants.ErrorMessage error, Throwable e) {
 
         String description = error.getDescription();
         return new AuthenticationServerException(error.getCode(), error.getMessage(), description, e);
     }
 
+    /**
+     * Return the tenant domain.
+     * @return  String
+     */
     public static String getTenantDomain() {
+
         return PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
     }
 
+    /**
+     * Return the validity of clientId.
+     * @param   serviceProvider
+     * @return  Boolean
+     */
     private static boolean isValidClientId(ServiceProvider serviceProvider) {
 
         return serviceProvider.getApplicationResourceId() != null;
     }
 
     /**
-     * This method retrieves Service Provider using App Id.
+     * This method retrieves Service Provider using AppId.
      *
      * @param serviceProviderAppId 		AppId of the Service Provider.
      * @return service provider.
@@ -255,9 +314,9 @@ public class RestAuthUtil {
     /**
      * This method retrieves Service Provider using clientId.
      *
-     * @param clientId 		clientId of the Service Provider.
+     * @param clientId
      * @return service provider.
-     * @throws AuthenticationException if any server or client error occurred.
+     * @throws AuthenticationException
      */
     public static ServiceProvider getServiceProviderByClientId(String clientId) throws AuthenticationException {
 
@@ -281,7 +340,12 @@ public class RestAuthUtil {
 
     }
 
-
+    /**
+     * Return the authentication steps.
+     *
+     * @param  serviceProvider
+     * @return authenticationSteps
+     */
     public static LinkedHashMap<Integer, List<String>> getAuthStepsForSP(ServiceProvider serviceProvider) {
 
         AuthenticationStep[] authSteps = null;
@@ -306,7 +370,7 @@ public class RestAuthUtil {
                     }
                 }
                 if (ArrayUtils.isNotEmpty(fedIDPs)) {
-                     federatedAuthenticators.put(stepCount, fedIDPs);
+                    federatedAuthenticators.put(stepCount, fedIDPs);
                     for (IdentityProvider fedIdp: fedIDPs) {
                         String fedIdpName = fedIdp.getIdentityProviderName();
                         authenticators.add(fedIdpName);
@@ -320,7 +384,12 @@ public class RestAuthUtil {
         return authenticationSteps;
     }
 
-
+    /**
+     * Return the federatd authenticators
+     *
+     * @param  serviceProviderAppId
+     * @return federatedAuthenticators
+     */
     public static LinkedHashMap<Integer, IdentityProvider[]> getFederatedIdentityProviders(int serviceProviderAppId)
             throws AuthenticationException {
 
@@ -328,7 +397,7 @@ public class RestAuthUtil {
         AuthenticationStep[] authSteps = null;
         LinkedHashMap<Integer , IdentityProvider[]> federatedAuthenticators = new LinkedHashMap<>();
 
-        if (org.apache.commons.lang.StringUtils.isNotBlank(serviceProvider.getApplicationResourceId())) {
+        if (StringUtils.isNotBlank(serviceProvider.getApplicationResourceId())) {
             authSteps = serviceProvider.getLocalAndOutBoundAuthenticationConfig().getAuthenticationSteps();
         }
 

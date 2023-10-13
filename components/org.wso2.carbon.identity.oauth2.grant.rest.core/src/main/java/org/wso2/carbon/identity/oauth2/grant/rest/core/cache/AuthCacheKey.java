@@ -21,14 +21,14 @@ package org.wso2.carbon.identity.oauth2.grant.rest.core.cache;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.core.cache.CacheKey;
+import org.wso2.carbon.identity.application.common.cache.CacheKey;
 
 /**
  * This method is used to keep a cache identifier.
  */
 public class AuthCacheKey extends CacheKey {
 
-    private static final Log LOG = LogFactory.getLog(AuthCacheKey.class);
+    private static final Log log = LogFactory.getLog(AuthCacheKey.class);
     private static final long serialVersionUID = 8263255365985309443L;
 
     private String flowIdKey;

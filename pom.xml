@@ -32,18 +32,27 @@
     <packaging>pom</packaging>
     <name>Identity OAuth2 Grant Rest</name>
     <url>http://wso2.org</url>
-      <repositories>
+    <scm>
+        <connection>scm:git:https://github.com/wso2-extensions/identity-oauth2-grant-mfa.git
+        </connection>
+        <url>https://github.com/wso2-extensions/identity-oauth2-grant-mfa.git</url>
+        <developerConnection>
+            scm:git:https://github.com/wso2-extensions/identity-oauth2-grant-mfa.git
+        </developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+    <repositories>
         <repository>
-          <id>wso2-nexus</id>
-          <name>WSO2 internal Repository</name>
-          <url>https://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>daily</updatePolicy>
-            <checksumPolicy>ignore</checksumPolicy>
-          </releases>
+            <id>wso2-nexus</id>
+            <name>WSO2 internal Repository</name>
+            <url>https://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
         </repository>
-      </repositories>
+    </repositories>
 
     <profiles>
         <profile>
@@ -123,6 +132,16 @@
                 <groupId>com.fasterxml.jackson.jaxrs</groupId>
                 <artifactId>jackson-jaxrs-json-provider</artifactId>
                 <version>${com.fasterxml.jackson.jaxrs-json-provider-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${maven.findbugs.plugin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle-maven-plugin.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -237,18 +256,13 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
-                <artifactId>org.wso2.carbon.identity.application.authentication.framework</artifactId>
-                <version>${carbon.identity.framework.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.user.api</artifactId>
+                <artifactId>org.wso2.carbon.user.core</artifactId>
                 <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.user.core</artifactId>
+                <artifactId>org.wso2.carbon.user.api</artifactId>
                 <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
@@ -259,11 +273,6 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.framework</groupId>
                 <artifactId>org.wso2.carbon.identity.core</artifactId>
-                <version>${carbon.identity.framework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
-                <artifactId>org.wso2.carbon.identity.application.common</artifactId>
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
@@ -379,6 +388,7 @@
                     <artifactId>maven-bundle-plugin</artifactId>
                     <version>3.2.0</version>
                     <extensions>true</extensions>
+                    <inherited>true</inherited>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -434,9 +444,47 @@
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <version>${org.codehaus.mojo.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>findbugs-maven-plugin</artifactId>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${maven.findbugs.plugin.version}</version>
+                <configuration>
+                    <effort>Max</effort>
+                    <threshold>Medium</threshold>
+                    <xmlOutput>true</xmlOutput>
+                    <findbugsXmlOutputDirectory>${project.build.directory}/findbugs
+                    </findbugsXmlOutputDirectory>
+                    <excludeFilterFile>${maven.findbugsplugin.exclude.file}
+                    </excludeFilterFile>
+                    <plugins>
+                        <plugin>
+                            <groupId>com.h3xstream.findsecbugs</groupId>
+                            <artifactId>findsecbugs-plugin</artifactId>
+                            <version>LATEST</version>
+                        </plugin>
+                    </plugins>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>analyze-compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
@@ -459,6 +507,10 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
     <properties>
@@ -471,48 +523,57 @@
         <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
         <maven.scm.version>1.7.0.wso2v3</maven.scm.version>
         <maven.war.plugin.version>3.2.2</maven.war.plugin.version>
-        <maven.checkstyleplugin.excludes>**/gen/**/*</maven.checkstyleplugin.excludes>
-        <mavan.findbugsplugin.exclude.file>findbugs-exclude-filter.xml</mavan.findbugsplugin.exclude.file>
+        <maven.checkstyle.plugin.excludes>**/gen/**/*</maven.checkstyle.plugin.excludes>
+        <checkstyle-maven-plugin.version>3.1.2</checkstyle-maven-plugin.version>
+        <maven.findbugsplugin.exclude.file>findbugs-exclude-filter.xml</maven.findbugsplugin.exclude.file>
+        <maven.findbugs.plugin.version>3.0.5</maven.findbugs.plugin.version>
+        <commons.beanutils.version>1.9.4</commons.beanutils.version>
+        <cxf-bundle.version>3.2.8</cxf-bundle.version>
         <com.fasterxml.jackson.jaxrs-json-provider-version>2.9.7</com.fasterxml.jackson.jaxrs-json-provider-version>
         <com.fasterxml.jackson.version>2.9.7</com.fasterxml.jackson.version>
         <com.fasterxml.jackson.annotation.version>2.9.8</com.fasterxml.jackson.annotation.version>
+        <jackson-databind.version>2.9.9.3</jackson-databind.version>
+        <jackson-jaxrs-json-provider.version>2.9.9</jackson-jaxrs-json-provider.version>
         <jackson.version>1.9.13</jackson.version>
         <javax.ws.rs-api.version>2.1.1</javax.ws.rs-api.version>
         <swagger-jaxrs.version>1.5.20</swagger-jaxrs.version>
+        <org.apache.felix.annotations.version>1.2.4</org.apache.felix.annotations.version>
         <org.apache.cxf.version>3.3.1</org.apache.cxf.version>
         <springframework.version>4.1.6.RELEASE</springframework.version>
         <openapi.tools.version>4.1.2</openapi.tools.version>
         <org.codehaus.mojo.version>3.2.0</org.codehaus.mojo.version>
         <maven.bundle.plugin.version>3.2.0</maven.bundle.plugin.version>
         <identity.governance.version>1.4.1</identity.governance.version>
-        <carbon.identity.framework.version>5.23.8</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.17.5</carbon.identity.framework.version>
+        <identity.workflow.impl.bps.version>5.2.0</identity.workflow.impl.bps.version>
+        <identity.event.handler.version>1.2.9</identity.event.handler.version>
         <org.wso2.carbon.extension.identity.smsotp.common.version>3.0.15
         </org.wso2.carbon.extension.identity.smsotp.common.version>
         <org.wso2.carbon.extension.identity.emailotp.common.version>4.0.6
         </org.wso2.carbon.extension.identity.emailotp.common.version>
-        <carbon.kernel.version>4.9.0</carbon.kernel.version>
+        <carbon.kernel.version>4.6.0</carbon.kernel.version>
         <oauth2.client.version>1.0.0</oauth2.client.version>
         <identity.inbound.auth.oauth.version>6.4.2</identity.inbound.auth.oauth.version>
         <org.wso2.carbon.database.utils.version>2.0.7</org.wso2.carbon.database.utils.version>
+        <org.wso2.carbon.extension.identity.emailotp.common.version.range>[4.0.6, 4.1.16)
+        </org.wso2.carbon.extension.identity.emailotp.common.version.range>
+        <org.wso2.carbon.extension.identity.smsotp.common.version.range>[3.0.15, 3.3.10)
+        </org.wso2.carbon.extension.identity.smsotp.common.version.range>
+        <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
-        <osgi.framework.imp.pkg.version.range>[1.0.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
-        <osgi.service.import.version.range>[1.0.0,2.0.0)</osgi.service.import.version.range>
         <commons-lang.version.range>[2.6.0,4.0.0)</commons-lang.version.range>
         <import.package.version.commons.logging>[1.2.0,2.0.0)</import.package.version.commons.logging>
         <carbon.kernel.package.import.version.range>[4.5.0, 5.0.0)</carbon.kernel.package.import.version.range>
         <carbon.identity.framework.imp.pkg.version.range>[5.15.28, 6.0.0)
         </carbon.identity.framework.imp.pkg.version.range>
         <carbon.identity.version.range>[5.14.0, 6.0.0)</carbon.identity.version.range>
-        <carbon.identity.package.import.version.range>[5.14.0, 6.0.0)</carbon.identity.package.import.version.range>
         <identity.governance.imp.pkg.version.range>[1.3.9, 2.0.0)</identity.governance.imp.pkg.version.range>
+        <carbon.identity.package.import.version.range>[5.14.0, 6.0.0)</carbon.identity.package.import.version.range>
+        <commons-lang.wso2.osgi.version.range>[2.6.0,3.0.0)</commons-lang.wso2.osgi.version.range>
         <carbon.user.api.imp.pkg.version.range>[1.0.1, 2.0.0)</carbon.user.api.imp.pkg.version.range>
-        <org.wso2.carbon.extension.identity.smsotp.common.version.range>[3.0.15, 3.3.10)
-        </org.wso2.carbon.extension.identity.smsotp.common.version.range>
-        <org.wso2.carbon.extension.identity.emailotp.common.version.range>[4.0.6, 4.1.16)
-        </org.wso2.carbon.extension.identity.emailotp.common.version.range>
-        <commons-logging.osgi.version.range>[1.2,2.0)</commons-logging.osgi.version.range>
         <commons-codec.version>1.4.0.wso2v1</commons-codec.version>
         <apache-commons-codec.version>1.11</apache-commons-codec.version>
+        <slf4j.version>1.7.0</slf4j.version>
         <org.slf4j.verison>1.7.6</org.slf4j.verison>
         <equinox.osgi.services.version>3.5.100.v20160504-1419</equinox.osgi.services.version>
         <json.version>3.0.0.wso2v1</json.version>

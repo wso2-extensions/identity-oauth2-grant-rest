@@ -61,7 +61,7 @@ public class FlowIdDAOImpl implements FlowIdDAO {
             }
 
             try (PreparedStatement prepStmt1 = connection.prepareStatement(SQLQueries.ADD_FLOW_ID);
-                 PreparedStatement prepStmt2 = connection.prepareStatement(SQLQueries.ADD_FLOW_ID_USER_DATA)) {
+                    PreparedStatement prepStmt2 = connection.prepareStatement(SQLQueries.ADD_FLOW_ID_USER_DATA)) {
 
                 prepStmt1.setString(1, flowIdDO.getFlowIdIdentifier());
                 prepStmt1.setString(2, flowIdDO.getFlowId());
@@ -100,7 +100,7 @@ public class FlowIdDAOImpl implements FlowIdDAO {
     @Override
     public FlowIdDO getFlowIdData(String flowId) throws AuthenticationException {
         try (Connection connection = IdentityDatabaseUtil.getDBConnection(false);
-             PreparedStatement prepStmt = connection.prepareStatement(SQLQueries.RETRIEVE_FLOW_ID_DATA)) {
+                PreparedStatement prepStmt = connection.prepareStatement(SQLQueries.RETRIEVE_FLOW_ID_DATA)) {
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Get Flow ID data from the database.");
@@ -212,10 +212,10 @@ public class FlowIdDAOImpl implements FlowIdDAO {
             }
 
             try (PreparedStatement prepStmt1 = connection.prepareStatement(SQLQueries.ADD_FLOW_ID);
-                 PreparedStatement prepStmt2 = connection.prepareStatement
-                         (SQLQueries.REFRESH_FLOW_ID_IDENTIFIER_IDN_AUTH_USER);
-                 PreparedStatement prepStmt3 = connection.prepareStatement
-                         (SQLQueries.REFRESH_FLOW_ID_IDENTIFIER_IDN_AUTH_STEPS)) {
+                    PreparedStatement prepStmt2 = connection.prepareStatement
+                            (SQLQueries.REFRESH_FLOW_ID_IDENTIFIER_IDN_AUTH_USER);
+                    PreparedStatement prepStmt3 = connection.prepareStatement
+                            (SQLQueries.REFRESH_FLOW_ID_IDENTIFIER_IDN_AUTH_STEPS)) {
 
                 prepStmt1.setString(1, flowIdDO.getFlowIdIdentifier());
                 prepStmt1.setString(2, flowIdDO.getFlowId());

@@ -39,10 +39,6 @@
             <artifactId>org.wso2.carbon.user.core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.user.api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.smsotp</groupId>
             <artifactId>org.wso2.carbon.extension.identity.smsotp.common</artifactId>
         </dependency>
@@ -53,6 +49,10 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>
             <artifactId>org.wso2.carbon.identity.application.common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.identity.event</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>
@@ -69,10 +69,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.framework</groupId>
-            <artifactId>org.wso2.carbon.identity.event</artifactId>
         </dependency>
     </dependencies>
     <properties>
@@ -91,10 +87,8 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>org.wso2.carbon.identity.oauth2.grant.rest.core.internal</Private-Package>
                         <Import-Package>
-                            com.fasterxml.jackson.annotation; version="2.13.2",
-                            org.apache.commons.codec.digest; version="1.14.0.wso2v1",
-                            org.apache.commons.lang3; version="3.4.0.wso2v1",
-                            org.apache.commons.logging; version="${commons-logging.osgi.version.range}",
+                            org.apache.commons.lang; version="${commons-lang.wso2.osgi.version.range}",
+                            org.apache.commons.logging; version="${import.package.version.commons.logging}",
                             org.osgi.framework; version="${osgi.framework.imp.pkg.version.range}",
                             org.osgi.service.component; version="${osgi.service.component.imp.pkg.version.range}",
                             org.wso2.carbon.context; version="${carbon.kernel.package.import.version.range}",
@@ -102,21 +96,25 @@
                             org.wso2.carbon.extension.identity.emailotp.common.dto; version="${org.wso2.carbon.extension.identity.emailotp.common.version.range}",
                             org.wso2.carbon.extension.identity.emailotp.common.exception; version="${org.wso2.carbon.extension.identity.emailotp.common.version.range}",
                             org.wso2.carbon.identity.application.common; version="${carbon.identity.framework.imp.pkg.version.range}",
+                            org.wso2.carbon.identity.application.common.cache; version="${carbon.identity.framework.imp.pkg.version.range}",
                             org.wso2.carbon.identity.application.common.model; version="${carbon.identity.framework.imp.pkg.version.range}",
                             org.wso2.carbon.identity.application.common.util; version="${carbon.identity.framework.imp.pkg.version.range}",
                             org.wso2.carbon.identity.application.mgt; version="${carbon.identity.framework.imp.pkg.version.range}",
                             org.wso2.carbon.identity.application.mgt.listener; version="${carbon.identity.framework.imp.pkg.version.range}",
-                            org.wso2.carbon.identity.core.cache; version="${carbon.identity.framework.imp.pkg.version.range}",
                             org.wso2.carbon.identity.core.util; version="${carbon.identity.framework.imp.pkg.version.range}",
                             org.wso2.carbon.identity.event; version="${carbon.identity.framework.imp.pkg.version.range}",
                             org.wso2.carbon.identity.event.bean; version="${carbon.identity.framework.imp.pkg.version.range}",
-                            org.wso2.carbon.identity.multi.attribute.login.mgt; version="${carbon.identity.framework.imp.pkg.version.range}",
+                            org.wso2.carbon.identity.multi.attribute.login.mgt;
+                            version="${carbon.identity.framework.imp.pkg.version.range}",
                             org.wso2.carbon.identity.recovery; version="${identity.governance.imp.pkg.version.range}",
-                            org.wso2.carbon.identity.recovery.util; version="${identity.governance.imp.pkg.version.range}",
-                            org.wso2.carbon.identity.smsotp.common; version="${org.wso2.carbon.extension.identity.smsotp.common.version.range}",
-                            org.wso2.carbon.identity.smsotp.common.constant; version="${org.wso2.carbon.extension.identity.smsotp.common.version.range}",
-                            org.wso2.carbon.identity.smsotp.common.dto; version="${org.wso2.carbon.extension.identity.smsotp.common.version.range}",
-                            org.wso2.carbon.identity.smsotp.common.exception; version="${org.wso2.carbon.extension.identity.smsotp.common.version.range}",
+                            org.wso2.carbon.identity.recovery.util;
+                            version="${identity.governance.imp.pkg.version.range}",
+                            org.wso2.carbon.identity.smsotp.common;
+                            version="${org.wso2.carbon.extension.identity.smsotp.common.version.range}",
+                            org.wso2.carbon.identity.smsotp.common.dto;
+                            version="${org.wso2.carbon.extension.identity.smsotp.common.version.range}",
+                            org.wso2.carbon.identity.smsotp.common.exception;
+                            version="${org.wso2.carbon.extension.identity.smsotp.common.version.range}",
                             org.wso2.carbon.idp.mgt; version="${carbon.identity.framework.imp.pkg.version.range}",
                             org.wso2.carbon.user.api; version="1.0.1",
                             org.wso2.carbon.user.core; version="${carbon.kernel.package.import.version.range}",
@@ -125,12 +123,18 @@
                             org.wso2.carbon.user.core.util; version="${carbon.kernel.package.import.version.range}",
                             org.wso2.carbon.utils; version="${carbon.kernel.package.import.version.range}",
                             org.wso2.carbon.utils.multitenancy; version="${carbon.kernel.package.import.version.range}",
-                            org.wso2.carbon.identity.event.services; version="${carbon.identity.framework.imp.pkg.version.range}",
-                            org.wso2.carbon.identity.event.event; version="${carbon.identity.framework.imp.pkg.version.range}",
-                            org.wso2.carbon.identity.application.authentication.framework.context; version="${carbon.identity.framework.imp.pkg.version.range}",
-                            org.wso2.carbon.identity.application.authentication.framework.model; version="${carbon.identity.framework.imp.pkg.version.range}",
-                            org.wso2.carbon.identity.application.authentication.framework; version="${carbon.identity.framework.imp.pkg.version.range}",
-                            org.wso2.carbon.identity.application.authentication.framework.config.model; version="${carbon.identity.framework.imp.pkg.version.range}"
+                            org.wso2.carbon.identity.event.services;
+                            version="${carbon.identity.framework.imp.pkg.version.range}",
+                            org.wso2.carbon.identity.event.event;
+                            version="${carbon.identity.framework.imp.pkg.version.range}",
+                            org.wso2.carbon.identity.application.authentication.framework.context;
+                            version="${carbon.identity.framework.imp.pkg.version.range}",
+                            org.wso2.carbon.identity.application.authentication.framework.model;
+                            version="${carbon.identity.framework.imp.pkg.version.range}",
+                            org.wso2.carbon.identity.application.authentication.framework;
+                            version="${carbon.identity.framework.imp.pkg.version.range}",
+                            org.wso2.carbon.identity.application.authentication.framework.config.model;
+                            version="${carbon.identity.framework.imp.pkg.version.range}"
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.identity.oauth2.grant.rest.core.internal,

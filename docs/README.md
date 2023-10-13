@@ -1,17 +1,12 @@
-# WSO2 Identity Server - API Authentication Connector
+# OAuth grant type for multi-factor authentication
 
 Supported Versions : 5.10.0, 5.11.0, 6.0.0, 6.1.0
 
-This connector has developed to provide an RESTful API interface for 
-multi-factor authentication with WSO2 Identity Server. The connector itself 
-contains its own grant type to get an access token at the end of multi-factor 
-authentication steps. This would support Identifier First, Basic 
-Authenticator, SMS OTP and Email OTP authenticators with any number 
-of authentication steps.
+This connector provides an OAuth grant type for multi-factor authentication in WSO2 Identity Server.
+It supports Identifier First, Basic Authenticator, SMS OTP and Email OTP authenticators with any number of authentication steps.
+You can refer [here](Use-cases.md) for some use cases of this connector.
 
-You can refer to the below use cases of this connector.
-
-As per the [API spec](https://github.com/DInuwan97/identity-oauth2-grant-mfa/blob/dev-extenssion-features/components/org.wso2.carbon.identity.oauth2.grant.rest.endpoint/src/main/resources/AuthenticationRestAPI.yaml)  this connector contains 3 endpoints namely 
+As per the [API spec](../components/org.wso2.carbon.identity.oauth2.grant.rest.endpoint/src/main/resources/AuthenticationRestAPI.yaml)  this connector contains 3 endpoints namely 
 `/auth-steps`, `/authenticte` and `/init-authenticator` along with the `/api/identity/authn/v1` request path.
 
 ## /auth-steps
@@ -101,37 +96,30 @@ curl --location 'https://localhost:9443/api/identity/authn/v1/init-authenticator
 }'
 ```
 
-## Steps to configure
+## Steps to deploy the connector
 
-Stop the WSO2 Identity Server if running.
+1) Stop the WSO2 Identity Server if running.
 
-1) Extract the zip file and you may be able to find below artifacts.
-   * `org.wso2.carbon.identity.oauth2.grant.rest.core-x.x.x.jar`
+2) Extract the zip file and, you may be able to find below artifacts.
    * `api#identity#authn#v1.war`
-   * `identity.oauth2.grant.auth.rest.handler-1.0.0.jar`
    * `dbscrips` directory
+   * `identity.oauth2.grant.auth.rest.handler-x.x.x.jar`
+   * `org.wso2.carbon.identity.oauth2.grant.rest.core-x.x.x.jar`
+   * `org.wso2.carbon.extension.identity.smsotp.common-x.x.x.jar`
+   * `org.wso2.carbon.extension.identity.emailotp.common-x.x.x.jar`
    * `rest-auth.properties`
 
-2) Copy `org.wso2.carbon.identity.oauth2.grant.rest.core-x.x.x.jar` file into the 
+3) Copy `org.wso2.carbon.identity.oauth2.grant.rest.core-x.x.x.jar`,
+   `org.wso2.carbon.extension.identity.smsotp.common-x.x.x.jar` and
+   `org.wso2.carbon.extension.identity.emailotp.common-x.x.x.jar` files into the 
 `<IS-Home>/repository/components/dropins` directory.
-
-3) Copy `api#identity#authn#v1.war`
-file into the `<IS-Home>/repository/deployment/server` directory.
 
 4) Copy `identity.oauth2.grant.auth.rest.handler-x.x.x.jar` file into the
 `<IS-Home>/repository/components/libs` directory.
 
-5) Get the `org.wso2.carbon.extension.identity.smsotp.common-x.x.x.jar` and 
-`org.wso2.carbon.extension.identity.emailotp.common-x.x.x.jar` and copy in to 
-the `<IS-Home>/repository/components/dropins` directory. 
-(The 02 JARs are required to this connector in order to send the OTP for 
-respective channel if [SMSOTP](https://github.com/wso2-extensions/identity-outbound-auth-sms-otp/tree/master/component
-   /common) 
-or [EmailOTP](https://github.com/wso2-extensions/identity-outbound-auth-email-otp/tree/master/component/common) 
-would enable in an authentication steps)
+5) Copy `api#identity#authn#v1.war` file into the `<IS-Home>/repository/deployment/server` directory.
 
-6) Execute the [db-scripts](https://github.com/DInuwan97/identity-oauth2-grant-mfa/tree/dev-extenssion-features/components/org.wso2.carbon.identity.oauth2.grant.rest.framework/src/main/resources/dbscripts) 
-in the WSO2 Identity DB.
+6) Execute the db-scripts on the WSO2 Identity DB.
 
 7) Copy `rest-auth.properties` file into the 
 `<IS-Home>/repository/conf` directory. 
@@ -139,10 +127,9 @@ in the WSO2 Identity DB.
 Customize error code,error message and description can be attached here. 
 By default the file includes the default error messages.)
 
+8) Add the following configurations into deployment.toml file.
 
-### deployment.toml configurations
-
-#### Endpoint configurations
+- Endpoint configurations
 
 ```toml
 [[resource.access_control]]
@@ -167,33 +154,7 @@ http_method = "GET"
 custom_webapps=["/api/identity/authn/v1/"]
 ```
 
-#### SMSOTP and EmailOTP Configurations
-```toml
-[[event_handler]]
-name= "smsOtp"
-properties.enabled=true
-properties.tokenLength=6
-properties.triggerNotification=true
-properties.alphanumericToken=true
-properties.showValidationFailureReason=true
-properties.tokenValidityPeriod=120
-properties.tokenRenewalInterval=60
-properties.resendThrottleInterval=30
-properties.maxValidationAttemptsAllowed=5
-
-[[event_handler]]
-name = "emailOtp"
-properties.enabled=true
-properties.tokenLength=6
-properties.triggerNotification=true
-properties.alphanumericToken=true
-properties.showValidationFailureReason=true
-properties.tokenValidityPeriod=120
-properties.tokenRenewalInterval=60
-properties.resendThrottleInterval=30
-```
-
-#### Grant Handler configurations
+- Grant Handler configurations
 ```toml
 [[oauth.custom_grant_type]]
 name="rest_auth_grant"
@@ -201,4 +162,9 @@ grant_handler="org.wso2.carbon.identity.oauth2.grant.rest.handler.Authentication
 grant_validator="org.wso2.carbon.identity.oauth2.grant.rest.handler.AuthenticationGrantValidator"
 ```
 
-Finally start the WSO2 IS and test the flow.
+#### SMSOTP and EmailOTP Configurations
+- For SMSOTP, follow the instructions provided [here](https://github.com/wso2-extensions/identity-outbound-auth-sms-otp/blob/master/docs/sms_otp_service.md)
+- For EmailOTP, follow the instructions provided [here](https://github.com/wso2-extensions/identity-outbound-auth-email-otp/blob/master/docs/email_otp_service.md)
+
+
+Finally, start the WSO2 IS and test the flow.

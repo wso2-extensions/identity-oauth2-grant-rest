@@ -1,0 +1,133 @@
+<!--
+  ~ Copyright (c) 2023, WSO2 LLC (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 LLC licenses this file to you under the Apache license,
+  ~ Version 2.0 (the "license"); you may not use this file except
+  ~ in compliance with the license.
+  ~ You may obtain a copy of the license at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<FindBugsFilter>
+    <Match>
+        <Bug pattern="CRLF_INJECTION_LOGS" />
+    </Match>
+    <Match>
+        <Bug pattern="FORMAT_STRING_MANIPULATION" />
+    </Match>
+    <Match>
+        <Bug pattern="JAXRS_ENDPOINT" />
+    </Match>
+    <Match>
+        <Bug pattern="IMPROPER_UNICODE" />
+    </Match>
+    <FindBugsFilter>
+        <Match>
+            <Bug pattern="UNVALIDATED_REDIRECT" />
+        </Match>
+    </FindBugsFilter>
+    <FindBugsFilter>
+        <Match>
+            <Bug pattern="SIC_INNER_SHOULD_BE_STATIC" />
+        </Match>
+    </FindBugsFilter>
+    <FindBugsFilter>
+        <Match>
+            <Bug pattern="MS_PKGPROTECT" />
+        </Match>
+    </FindBugsFilter>
+    <FindBugsFilter>
+        <Match>
+            <Bug pattern="URLCONNECTION_SSRF_FD" />
+        </Match>
+    </FindBugsFilter>
+    <FindBugsFilter>
+        <Match>
+            <Bug pattern="DM_DEFAULT_ENCODING" />
+        </Match>
+    </FindBugsFilter>
+    <FindBugsFilter>
+        <Match>
+            <Bug pattern="OS_OPEN_STREAM" />
+        </Match>
+    </FindBugsFilter>
+    <FindBugsFilter>
+        <Match>
+            <Or>
+                <Class name="org.wso2.carbon.identity.oauth2.grant.rest.core.AuthenticationListenerServiceImpl" />
+                <Class name="org.wso2.carbon.identity.oauth2.grant.rest.core.dao.CacheBackedFlowIdDAO" />
+                <Class name="org.wso2.carbon.identity.oauth2.grant.rest.core.listener.ApplicationCacheListener" />
+                <Class name="org.wso2.carbon.identity.oauth2.grant.rest.endpoint.listener.PropertyFileLoaderListener" />
+            </Or>
+            <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
+        </Match>
+    </FindBugsFilter>
+    <FindBugsFilter>
+        <Match>
+            <Or>
+                <Class name="org.wso2.carbon.identity.oauth2.grant.rest.core.RestAuthenticationServiceImpl" />
+                <Class name="org.wso2.carbon.identity.oauth2.grant.rest.handler.AuthenticationGrantHandler" />
+            </Or>
+            <Bug pattern="DLS_DEAD_LOCAL_STORE" />
+        </Match>
+    </FindBugsFilter>
+    <FindBugsFilter>
+        <Match>
+            <Or>
+                <Class name="org.wso2.carbon.identity.oauth2.grant.rest.core.RestAuthenticationServiceImpl" />
+                <Class name="org.wso2.carbon.identity.oauth2.grant.rest.endpoint.impl.AuthenticateApiServiceImpl" />
+            </Or>
+            <Bug pattern="NP_NULL_ON_SOME_PATH" />
+        </Match>
+    </FindBugsFilter>
+    <FindBugsFilter>
+        <Match>
+            <Class name="org.wso2.carbon.identity.oauth2.grant.rest.core.context.RestAuthenticationContext$Builder" />
+            <Bug pattern="UUF_UNUSED_FIELD" />
+        </Match>
+    </FindBugsFilter>
+    <FindBugsFilter>
+        <Match>
+            <Class name="org.wso2.carbon.identity.oauth2.grant.rest.core.dao.FlowIdDAOImpl" />
+            <Or>
+                <Method name="addAuthenticatedStep" />
+                <Method name="addFlowIdData" />
+                <Method name="addRefreshedFlowIdData" />
+                <Method name="getAuthenticatedSteps" />
+                <Method name="getFlowIdData" />
+                <Method name="updateFlowIdState" />
+            </Or>
+            <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE" />
+        </Match>
+    </FindBugsFilter>
+    <FindBugsFilter>
+        <Match>
+            <Class name="org.wso2.carbon.identity.oauth2.grant.rest.core.internal.AuthenticationServiceComponent" />
+            <Bug pattern="MS_SHOULD_BE_FINAL" />
+        </Match>
+    </FindBugsFilter>
+    <FindBugsFilter>
+        <Match>
+            <Class name="org.wso2.carbon.identity.oauth2.grant.rest.core.internal.AuthenticationServiceDataHolder" />
+            <Bug pattern="URF_UNREAD_FIELD" />
+        </Match>
+    </FindBugsFilter>
+    <FindBugsFilter>
+        <Match>
+            <Or>
+                <Class name="org.wso2.carbon.identity.oauth2.grant.rest.core.util.RestAuthUtil" />
+                <Class name="org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.ConfigUtil" />
+                <Class name="org.wso2.carbon.identity.oauth2.grant.rest.endpoint.listener.PropertyFileLoaderListener" />
+            </Or>
+            <Bug pattern="PATH_TRAVERSAL_IN" />
+        </Match>
+    </FindBugsFilter>
+</FindBugsFilter>

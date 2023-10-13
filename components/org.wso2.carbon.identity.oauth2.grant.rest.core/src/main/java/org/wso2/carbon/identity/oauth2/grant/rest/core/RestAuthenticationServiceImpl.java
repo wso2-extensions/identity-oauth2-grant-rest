@@ -19,7 +19,7 @@
 
 package org.wso2.carbon.identity.oauth2.grant.rest.core;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
@@ -67,7 +67,6 @@ import org.wso2.carbon.user.core.common.AbstractUserStoreManager;
 import org.wso2.carbon.user.core.common.AuthenticationResult;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -84,9 +83,9 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     /**
      * This method returns the Steps for the Authentication flow.
      *
-     * @param clientId UUID to track the flow
+     * @param clientId      UUID to track the flow
      * @throws AuthenticationException if any server or client error occurred.
-     *                                 return AuthenticationStepsResponseDTO
+     * return AuthenticationStepsResponseDTO
      */
     @Override
     public AuthenticationStepsResponseDTO getAuthenticationStepsFromSP(String clientId)
@@ -108,9 +107,9 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     /**
      * This method process the authentication response from the client.
      *
-     * @param flowId        UUID to track the flow.
-     * @param authenticator Authenticator Name.
-     * @param password      Password to be validated.
+     * @param flowId             UUID to track the flow.
+     * @param authenticator      Authenticator Name.
+     * @param password           Password to be validated.
      * @return UserAuthenticationResponseDTO
      * @throws AuthenticationException if any server or client error occurred.
      */
@@ -173,7 +172,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
             String federatedAuthenticatorName = null;
 
             if (!Constants.AUTHENTICATOR_NAME_BASIC_AUTH.equals(authenticator)) {
-                federatedAuthenticatorName = getFidpChannelName(authenticator, authContext);
+                federatedAuthenticatorName = getFederatedIdpChannelName(authenticator, authContext);
             }
 
             if (StringUtils.isNotEmpty(federatedAuthenticatorName) &&
@@ -181,8 +180,8 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                 ValidationResponseDTO authResponseDTO;
                 authResponseDTO =
                         (ValidationResponseDTO) authenticationStepExecutorService.
-                                getAuthenticatorServiceValidationResponse(getAuthenticatorService
-                                        (federatedAuthenticatorName), authContext, password);
+                                getAuthenticatorServiceValidationResponse
+                                        (getAuthenticatorService(federatedAuthenticatorName), authContext, password);
 
                 authContext.setValidPassword(authResponseDTO.isValid());
                 if (authResponseDTO.isValid()) {
@@ -302,7 +301,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
 
             String federatedAuthenticatorName = null;
             if (!Constants.AUTHENTICATOR_NAME_BASIC_AUTH.equals(authenticator)) {
-                federatedAuthenticatorName = getFidpChannelName(authenticator, authContext);
+                federatedAuthenticatorName = getFederatedIdpChannelName(authenticator, authContext);
             }
 
             if (StringUtils.isNotEmpty(federatedAuthenticatorName) &&
@@ -341,15 +340,15 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     /**
      * This method initialize the authentication flow with BasicAuth or Identifier First.
      *
-     * @param clientId      clientId.
-     * @param authenticator Authenticator Name.
-     * @param password      Password to be validated.
+     * @param clientId          clientId.
+     * @param authenticator     Authenticator Name.
+     * @param password           Password to be validated.
      * @return UserAuthenticationResponseDTO
      * @throws AuthenticationException if any server or client error occurred.
      */
     @Override
-    public UserAuthenticationResponseDTO initializeAuthFlow(String clientId, String authenticator, String password,
-                                                            String userIdentifier, String requestTenantDomain)
+    public UserAuthenticationResponseDTO initializeAuthFlow (String clientId, String authenticator, String password,
+            String userIdentifier, String requestTenantDomain)
             throws AuthenticationException {
 
         String userTenantDomain = requestTenantDomain == null ?
@@ -410,36 +409,36 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         executeListeners(authContext, Constants.PRE_AUTHENTICATION);
 
         switch (authenticator) {
-            case Constants.AUTHENTICATOR_NAME_IDENTIFIER_FIRST:
-                try {
-                    if (getUserStoreManager(authContext.getUserTenantId())
-                            .isExistingUserWithID(authContext.getUserId())) {
-                        getUserStoreManager(authContext.getUserTenantId());
-                        updateAuthenticatedSteps(authContext.getAuthenticatedSteps(), 1, authenticator);
-                        authContext.setValidPassword(true);
-                        executeEvent(IdentityEventConstants.EventName.AUTHENTICATION_STEP_SUCCESS.toString(),
-                                authContext);
-                    } else {
-                        executeEvent(IdentityEventConstants.EventName.AUTHENTICATION_STEP_FAILURE.toString(),
-                                authContext);
-                        throw RestAuthUtil.handleClientException(
-                                Constants.ErrorMessage.CLIENT_INVALID_USER, userIdentifier);
-                    }
-                } catch (UserStoreException e) {
-                    throw RestAuthUtil.handleServerException(Constants.ErrorMessage.SERVER_AUTHENTICATE_USER_ERROR,
-                            String.format("Error while authenticating the user : %s.", userIdentifier), e);
-                }
-                break;
-            case Constants.AUTHENTICATOR_NAME_BASIC_AUTH:
-                if (validateUserCredentials(password, authContext)) {
+        case Constants.AUTHENTICATOR_NAME_IDENTIFIER_FIRST:
+            try {
+                if (getUserStoreManager(authContext.getUserTenantId())
+                        .isExistingUserWithID(authContext.getUserId())) {
+                    getUserStoreManager(authContext.getUserTenantId());
                     updateAuthenticatedSteps(authContext.getAuthenticatedSteps(), 1, authenticator);
-                    executeEvent(IdentityEventConstants.EventName.AUTHENTICATION_STEP_SUCCESS.toString(), authContext);
+                    authContext.setValidPassword(true);
+                    executeEvent(IdentityEventConstants.EventName.AUTHENTICATION_STEP_SUCCESS.toString(),
+                            authContext);
                 } else {
-                    executeEvent(IdentityEventConstants.EventName.AUTHENTICATION_STEP_FAILURE.toString(), authContext);
+                    executeEvent(IdentityEventConstants.EventName.AUTHENTICATION_STEP_FAILURE.toString(),
+                            authContext);
                     throw RestAuthUtil.handleClientException(
-                            Constants.ErrorMessage.CLIENT_INCORRECT_USER_CREDENTIALS, userIdentifier);
+                            Constants.ErrorMessage.CLIENT_INVALID_USER, userIdentifier);
                 }
-                break;
+            } catch (UserStoreException e) {
+                throw RestAuthUtil.handleServerException(Constants.ErrorMessage.SERVER_AUTHENTICATE_USER_ERROR,
+                        String.format("Error while authenticating the user : %s.", userIdentifier), e);
+            }
+            break;
+        case Constants.AUTHENTICATOR_NAME_BASIC_AUTH:
+            if (validateUserCredentials(password, authContext)) {
+                updateAuthenticatedSteps(authContext.getAuthenticatedSteps(), 1, authenticator);
+                executeEvent(IdentityEventConstants.EventName.AUTHENTICATION_STEP_SUCCESS.toString(), authContext);
+            } else {
+                executeEvent(IdentityEventConstants.EventName.AUTHENTICATION_STEP_FAILURE.toString(), authContext);
+                throw RestAuthUtil.handleClientException(
+                        Constants.ErrorMessage.CLIENT_INCORRECT_USER_CREDENTIALS, userIdentifier);
+            }
+            break;
         }
         executeListeners(authContext, Constants.POST_AUTHENTICATION);
         if (authContext.getAuthenticationSteps().size() == authContext.getAuthenticatedSteps().size()) {
@@ -453,8 +452,8 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     /**
      * This method returns the resolved username and logged claim uri when multi-attribute login is enabled.
      *
-     * @param username         username passed in the request.
-     * @param userTenantDomain tenant domain of the user.
+     * @param username          username passed in the request.
+     * @param userTenantDomain  tenant domain of the user.
      * @return HashMap          username and logged user claim of the user.
      * @throws AuthenticationException if any server or client error occurred.
      */
@@ -501,9 +500,9 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     /**
      * This method checks whether cross tenant access is enabled.
      *
-     * @param serviceProvider Service Provider
-     * @param userTenantId    user tenant Id.
-     * @param spTenantId      service provider tenant Id.
+     * @param serviceProvider   Service Provider
+     * @param userTenantId      user tenant Id.
+     * @param spTenantId        service provider tenant Id.
      * @throws AuthenticationException if any server or client error occurred.
      */
     private void validateCrossTenantAccess(ServiceProvider serviceProvider, int userTenantId, int spTenantId)
@@ -518,7 +517,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     /**
      * This method executes authentication listeners.
      *
-     * @param authContext User object of the user.
+     * @param authContext              User object of the user.
      * @throws AuthenticationException if any server or client error occurred.
      */
     private void executeListeners(RestAuthenticationContext authContext, String event)
@@ -529,16 +528,16 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         }
 
         switch (event) {
-            case Constants.PRE_AUTHENTICATION:
-                for (AuthenticationListener listener : AuthenticationListenerServiceImpl.getAuthenticationListeners()) {
-                    listener.doPreAuthenticate(authContext);
-                }
-                break;
-            case Constants.POST_AUTHENTICATION:
-                for (AuthenticationListener listener : AuthenticationListenerServiceImpl.getAuthenticationListeners()) {
-                    listener.doPostAuthenticate(authContext);
-                }
-                break;
+        case Constants.PRE_AUTHENTICATION:
+            for (AuthenticationListener listener : AuthenticationListenerServiceImpl.getAuthenticationListeners()) {
+                listener.doPreAuthenticate(authContext);
+            }
+            break;
+        case Constants.POST_AUTHENTICATION:
+            for (AuthenticationListener listener : AuthenticationListenerServiceImpl.getAuthenticationListeners()) {
+                listener.doPostAuthenticate(authContext);
+            }
+            break;
         }
     }
 
@@ -570,8 +569,8 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     /**
      * This method verifies the user to whom the FlowId was issued.
      *
-     * @param flowIdDO Flow Id Data Object.
-     * @param userId   Provided userId.
+     * @param flowIdDO          Flow Id Data Object.
+     * @param userId            Provided userId.
      * @return Boolean          whether the provided user is the user to whom the FlowId was issued.
      * @throws AuthenticationException if any server or client error occurred.
      */
@@ -591,8 +590,8 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     /**
      * This method validates user credentials.
      *
-     * @param password    password of the user.
-     * @param restContext RestAuthenticationContext from connector.
+     * @param password          password of the user.
+     * @param restContext       RestAuthenticationContext from connector.
      * @return Boolean          whether the user is authorized.
      * @throws AuthenticationException if any server or client error occurred.
      */
@@ -641,7 +640,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
      * This method retrieves the user store manager.
      *
      * @return AbstractUserStoreManager user store manager.
-     * @throws AuthenticationException if any server or client error occurred.
+     * @throws AuthenticationException         if any server or client error occurred.
      */
     private AbstractUserStoreManager getUserStoreManager(int userTenantId) throws AuthenticationException {
 
@@ -661,11 +660,11 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     /**
      * This method retrieves userId using Username.
      *
-     * @param username username of the user.
+     * @param username          username of the user.
      * @return String           UUID of the user.
      * @throws AuthenticationException if any server or client error occurred.
      */
-    public String getUserIDFromUserName(String username, int userTenantId, RestAuthenticationContext authContext)
+    private String getUserIDFromUserName(String username, int userTenantId, RestAuthenticationContext authContext)
             throws AuthenticationException {
 
         String userId;
@@ -697,7 +696,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
      * @return Integer            Next authentication step.
      */
     private int fetchNextAuthStep(LinkedHashMap<Integer, String> authenticatedSteps,
-                                  LinkedHashMap<Integer, List<String>> authenticationSteps) {
+            LinkedHashMap<Integer, List<String>> authenticationSteps) {
 
         int nextAuthStep;
         List<Integer> steps = new ArrayList<>(authenticationSteps.keySet());
@@ -713,24 +712,10 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     }
 
     /**
-     * This method retrieves the following authentication step.
-     *
-     * @param authenticationSteps Authentication Steps defined for the Service Provider.
-     * @return next authentication step.
-     */
-    private int fetchNextAuthStep(LinkedHashMap<Integer, List<String>> authenticationSteps) {
-
-        int nextAuthStep;
-        List<Integer> steps = new ArrayList<>(authenticationSteps.keySet());
-        nextAuthStep = steps.get(0);
-        return nextAuthStep;
-    }
-
-    /**
      * This method validates the executed Authentication Step.
      *
-     * @param authContext   Current AuthenticationContext on REST Flow
-     * @param authenticator Name of the Authenticator.
+     * @param authContext Current AuthenticationContext on REST Flow
+     * @param authenticator       Name of the Authenticator.
      * @throws AuthenticationException if any server or client error occurred.
      */
     private void validateAuthStep(RestAuthenticationContext authContext, String authenticator)
@@ -784,7 +769,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     /**
      * This method builds Basic Authentication Response DTO.
      *
-     * @param authContext Authentication context.
+     * @param authContext                      Authentication context.
      * @return UserAuthenticationResponseDTO   Basic Authentication Response Data Transfer Object.
      */
     private UserAuthenticationResponseDTO buildAuthResponseDTO(RestAuthenticationContext authContext) {
@@ -801,10 +786,11 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         return responseDTO;
     }
 
+
     /**
      * This method builds Authentication Initialization Response DTO.
      *
-     * @param authContext Authentication context.
+     * @param authContext                                 Authentication context.
      * @return AuthenticationInitializationResponseDTO   Authentication Initialization Response Data Transfer Object.
      */
     private AuthenticationInitializationResponseDTO
@@ -824,7 +810,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
      * @return UserAuthenticationResponseDTO    Authentication Validation Response.
      */
     private UserAuthenticationResponseDTO buildAuthValidationResponse(RestAuthenticationContext authContext,
-                                                                      FlowIdDO flowIdDO, Object failureReasonDTO)
+            FlowIdDO flowIdDO, Object failureReasonDTO)
             throws AuthenticationClientException {
 
         UserAuthenticationResponseDTO userAuthenticationResponse = new UserAuthenticationResponseDTO();
@@ -885,7 +871,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     /**
      * This method is used to return step vice configured authenticator details.
      *
-     * @param LinkedHashMap                     Authentication steps.
+     * @param  authContext                      Rest AuthenticationContext of the flow.
      * @return AuthenticationStepsResponseDTO   Authentication steps details response
      */
     private AuthenticationStepsResponseDTO buildAuthenticationStepsForSP(RestAuthenticationContext authContext) {
@@ -901,10 +887,10 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     /**
      * This method is used to return step vice configured authenticator details for authentication steps.
      *
-     * @param LinkedHashMap   Authentication steps.
+     * @param authenticationSteps   Authentication steps.
      * @return List           Authentication steps details list.
      */
-    public static List<AuthStepConfigsDTO> getConfiguredAuthenticationStepsForSP(
+    private static List<AuthStepConfigsDTO> getConfiguredAuthenticationStepsForSP(
             LinkedHashMap<Integer, List<String>> authenticationSteps) {
 
         AuthenticatorConfigDTO authenticatorConfigDTO;
@@ -935,16 +921,16 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     /**
      * This method is used to return step vice configured authenticator details for authenticated steps.
      *
-     * @param LinkedHashMap     Authenticated steps.
+     * @param authenticatedSteps     Authenticated steps.
      * @return List             Authenticated steps details list.
      */
-    public List<AuthenticatedAuthenticatorDTO> getConfiguredAuthenticatedStepsForSP(
+    private static List<AuthenticatedAuthenticatorDTO> getConfiguredAuthenticatedStepsForSP(
             LinkedHashMap<Integer, String> authenticatedSteps) {
 
         AuthenticatedAuthenticatorDTO authenticatedAuthenticatorDTO;
         List<AuthenticatedAuthenticatorDTO> authenticatedStepDetails = new ArrayList<>();
 
-        for (Map.Entry<Integer, String> entry : authenticatedSteps.entrySet()) {
+        for (Map.Entry<Integer, String> entry :  authenticatedSteps.entrySet()) {
 
             authenticatedAuthenticatorDTO = new AuthenticatedAuthenticatorDTO();
             authenticatedAuthenticatorDTO.setStepNo(entry.getKey());
@@ -958,8 +944,8 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     /**
      * This method checks whether the provided FlowId is valid.
      *
-     * @param flowIdDO                 Flow Id Data Object.
-     * @return boolean                 Whether the FlowId is ACTIVE or not.
+     * @param flowIdDO          Flow Id Data Object.
+     * @return boolean          whether the FlowId is ACTIVE or not.
      * @throws AuthenticationException if any server or client error occurred.
      */
     public boolean isValidFlowId(FlowIdDO flowIdDO) throws AuthenticationException {
@@ -974,15 +960,15 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         }
 
         switch (flowIdDO.getFlowIdState()) {
-            case Constants.FLOW_ID_STATE_ACTIVE:
-                isValidFlowId = true;
-                break;
-            case Constants.FLOW_ID_STATE_INACTIVE:
-                throw RestAuthUtil.handleClientException(
-                        Constants.ErrorMessage.CLIENT_INACTIVE_FLOW_ID, flowIdDO.getFlowId());
-            case Constants.FLOW_ID_STATE_EXPIRED:
-                throw RestAuthUtil.handleClientException(
-                        Constants.ErrorMessage.CLIENT_EXPIRED_FLOW_ID, flowIdDO.getFlowId());
+        case Constants.FLOW_ID_STATE_ACTIVE:
+            isValidFlowId = true;
+            break;
+        case Constants.FLOW_ID_STATE_INACTIVE:
+            throw RestAuthUtil.handleClientException(
+                    Constants.ErrorMessage.CLIENT_INACTIVE_FLOW_ID, flowIdDO.getFlowId());
+        case Constants.FLOW_ID_STATE_EXPIRED:
+            throw RestAuthUtil.handleClientException(
+                    Constants.ErrorMessage.CLIENT_EXPIRED_FLOW_ID, flowIdDO.getFlowId());
         }
 
         return isValidFlowId;
@@ -996,7 +982,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
      * @param authenticator      Successfully authenticated Authenticator.
      */
     private void updateAuthenticatedSteps(LinkedHashMap<Integer, String> authenticatedSteps, Integer stepNo,
-                                          String authenticator) {
+            String authenticator) {
         authenticatedSteps.put(stepNo, authenticator);
         if (LOG.isDebugEnabled()) {
             LOG.debug(String.format("Authentication step success and updated for authenticator : %s step : %s",
@@ -1066,7 +1052,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
      * @throws AuthenticationException
      * @return String                   Identity provider's federated IdP channel name.
      */
-    public String getFidpChannelName(String authenticatorName, RestAuthenticationContext authContext)
+    private String getFederatedIdpChannelName(String authenticatorName, RestAuthenticationContext authContext)
             throws AuthenticationException {
 
         IdentityProvider[] federatedAuthenticators =
@@ -1080,4 +1066,5 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         }
         return null;
     }
+
 }

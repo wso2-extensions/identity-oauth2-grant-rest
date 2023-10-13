@@ -18,7 +18,7 @@
  */
 
 package org.wso2.carbon.identity.oauth2.grant.rest.core.cache;
-import org.wso2.carbon.identity.core.cache.BaseCache;
+import org.wso2.carbon.identity.application.common.cache.BaseCache;
 
 /**
  * This class is used to get a cache instance when request is being dispatched to same node.

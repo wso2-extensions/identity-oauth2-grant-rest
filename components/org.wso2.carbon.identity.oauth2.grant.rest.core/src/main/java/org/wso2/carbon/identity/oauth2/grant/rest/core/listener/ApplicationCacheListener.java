@@ -49,7 +49,7 @@ public class ApplicationCacheListener extends AbstractApplicationMgtListener {
 	public boolean doPostUpdateApplication(ServiceProvider serviceProvider, String tenantDomain, String userName)
 			throws IdentityApplicationManagementException {
 
-		authCache.clear(tenantDomain);
+		authCache.clear();
 		return true;
 	}
 
@@ -57,7 +57,7 @@ public class ApplicationCacheListener extends AbstractApplicationMgtListener {
 	public boolean doPostDeleteApplication(ServiceProvider serviceProvider, String tenantDomain, String userName)
 			throws IdentityApplicationManagementException {
 
-		authCache.clear(tenantDomain);
+		authCache.clear();
 		return true;
 	}
 

@@ -32,7 +32,7 @@ import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationE
  */
 public class CacheBackedFlowIdDAO extends FlowIdDAOImpl {
 
-    private static final Log LOG = LogFactory.getLog(CacheBackedFlowIdDAO.class);
+    private static final Log log = LogFactory.getLog(CacheBackedFlowIdDAO.class);
     private static FlowIdDAO flowIdDAO;
     private static AuthCache restAuthCache = null;
     private static volatile CacheBackedFlowIdDAO instance;
@@ -56,13 +56,13 @@ public class CacheBackedFlowIdDAO extends FlowIdDAOImpl {
 
     private void addToCache(FlowIdDO flowIdDO, String tenantDomain) {
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Add cache for the REST authentication flow " + flowIdDO.getFlowId() + "@" + tenantDomain);
+        if (log.isDebugEnabled()) {
+            log.debug("Add cache for the REST authentication flow " + flowIdDO.getFlowId() + "@" + tenantDomain);
         }
 
         AuthCacheKey flowIdKey = new AuthCacheKey(flowIdDO.getFlowId());
         AuthCacheEntry flowIdEntry = new AuthCacheEntry(flowIdDO);
-        restAuthCache.addToCache(flowIdKey, flowIdEntry, tenantDomain);
+        restAuthCache.addToCache(flowIdKey, flowIdEntry);
     }
 
     @Override
@@ -115,35 +115,31 @@ public class CacheBackedFlowIdDAO extends FlowIdDAOImpl {
 
         FlowIdDO flowIdDO = null;
         AuthCacheKey cacheKey = new AuthCacheKey(flowId);
-        AuthCacheEntry entry = restAuthCache.getValueFromCache(cacheKey, tenantDomain);
+        AuthCacheEntry entry = restAuthCache.getValueFromCache(cacheKey);
 
         if (entry != null) {
             flowIdDO = entry.getFlowIdDO();
         }
         if (flowIdDO == null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Cache missing for the REST authentication flow with Flow ID: " + flowId);
+            if (log.isDebugEnabled()) {
+                log.debug("Cache missing for the REST authentication flow with Flow ID: " + flowId);
             }
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Cache present for the REST authentication flow with Flow ID: " + flowId);
+            if (log.isDebugEnabled()) {
+                log.debug("Cache present for the REST authentication flow with Flow ID: " + flowId);
             }
         }
         return flowIdDO;
     }
 
-    public void clearFlowIdDataFromCache(String flowId, String tenantDomain) {
-        clearFlowIdCache(flowId, tenantDomain);
-    }
-
     public void clearFlowIdCache(String flowId, String tenantDomain) {
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Clearing all the Flow ID Caches for " + flowId + "@" +
+        if (log.isDebugEnabled()) {
+            log.debug("Clearing all the Flow ID Caches for " + flowId + "@" +
                     tenantDomain);
         }
 
         AuthCacheKey cacheKey = new AuthCacheKey(flowId);
-        restAuthCache.clearCacheEntry(cacheKey, tenantDomain);
+        restAuthCache.clearCacheEntry(cacheKey);
     }
 }

@@ -19,7 +19,7 @@
 
 package org.wso2.carbon.identity.oauth2.grant.rest.core.cache;
 
-import org.wso2.carbon.identity.core.cache.CacheEntry;
+import org.wso2.carbon.identity.application.common.cache.CacheEntry;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.dao.FlowIdDO;
 
 /**

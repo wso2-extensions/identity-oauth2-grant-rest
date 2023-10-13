@@ -156,9 +156,6 @@ public class Constants {
                 "user authentication error.",
                 "%s"),
 
-
-        // todo: set common message to server errors and unexpected errors
-
         // Server error codes.
         SERVER_RETRIEVING_SP_ERROR(
                 "E-65001",
