@@ -125,7 +125,7 @@ public class Constants {
         CLIENT_AUTHENTICATOR_NOT_SUPPORTED(
                 "E-60008",
                 "Unsupported Authenticator",
-                "Provided Authenticator is not supported by E Authentication Service: %s"),
+                "Provided Authenticator is not supported by Authentication Service: %s"),
         CLIENT_EXPIRED_FLOW_ID(
                 "E-60009",
                 "Expired Flow Id.",
