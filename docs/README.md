@@ -113,6 +113,7 @@ curl --location 'https://localhost:9443/oauth2/token' \
 2) Extract the zip file and, you may be able to find below artifacts.
    * `api#identity#authn#v1.war`
    * `dbscrips` directory
+   * `cleanup-scripts` directory.
    * `identity.oauth2.grant.auth.rest.handler-x.x.x.jar`
    * `org.wso2.carbon.identity.oauth2.grant.rest.core-x.x.x.jar`
    * `org.wso2.carbon.extension.identity.smsotp.common-x.x.x.jar`
@@ -129,11 +130,12 @@ curl --location 'https://localhost:9443/oauth2/token' \
 
 5) Copy `api#identity#authn#v1.war` file into the `<IS-Home>/repository/deployment/server` directory.
 
-6) Execute the db-scripts on the WSO2 Identity DB.
+6) Execute the [db-scripts](https://github.com/DInuwan97/identity-oauth2-grant-mfa/tree/dev-extenssion-features/components/org.wso2.carbon.identity.oauth2.grant.rest.core/src/main/resources/dbscripts) on the WSO2 Identity DB.
 
-7) Copy `rest-auth.properties` file into the 
+7) Copy `rest-auth.properties` [file](https://github.com/DInuwan97/identity-oauth2-grant-mfa/blob/dev-extenssion-features/components/org.wso2.carbon.identity.oauth2.grant.rest.core/src/main/resources/rest-auth.properties) into the 
 `<IS-Home>/repository/conf` directory. 
-(You can configure this property file configurations as your requirements. 
+(Please note that copying this file is an optional task. You can configure this property file configurations as your 
+   requirements. 
 Customize error code,error message and description can be attached here. 
 By default the file includes the default error messages.)
 
@@ -178,3 +180,6 @@ grant_validator="org.wso2.carbon.identity.oauth2.grant.rest.handler.Authenticati
 
 
 Finally, start the WSO2 IS and test the flow.
+
+[Cleanup scripts](https://github.com/DInuwan97/identity-oauth2-grant-mfa/tree/dev-extenssion-features/components/org.wso2.carbon.identity.oauth2.grant.rest.core/src/main/resources/cleanup-scripts) and standard [error codes](https://github.com/DInuwan97/identity-oauth2-grant-mfa/blob/dev-extenssion-features/docs/errorCodes.md) for the 
+REST API connector are available in the mentioned references.
