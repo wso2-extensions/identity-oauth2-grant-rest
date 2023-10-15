@@ -96,6 +96,16 @@ curl --location 'https://localhost:9443/api/identity/authn/v1/init-authenticator
 }'
 ```
 
+## /oauth2/token
+
+Once all the authentication steps are completed, the authenticate API will return isAuthFlowCompleted as true and nextStep as -1 with a new flowId. This recent flowId can be used to obtain an access token through the following grant type. Please note that the same flowId cannot be used for more than one attempt to obtain an access token.
+```agsl
+curl --location 'https://localhost:9443/oauth2/token' \
+--header 'Authorization: Basic S0hsR0phNWZmeEJEOVZXaDdSUDJXTTVvYWFBYTpYSTZoWFBLMjNzcUNDTzhUOHg5MGFhOFRRa0lh' \
+--data-urlencode 'scope=openid' \
+--data-urlencode 'flowId=5bbd44b9-180c-419e-a25b-a97d86da9a14' \
+--data-urlencode 'grant_type=urn:ietf:params:oauth:grant-type:rest'
+```
 ## Steps to deploy the connector
 
 1) Stop the WSO2 Identity Server if running.
