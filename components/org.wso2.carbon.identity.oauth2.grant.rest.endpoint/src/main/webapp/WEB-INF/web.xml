@@ -1,12 +1,12 @@
 <!--
-  ~ Copyright (c) 2023, WSO2 LLC (http://www.wso2.org) All Rights Reserved.
+  ~ Copyright (c) 2015-2023, WSO2 LLC. (http://www.wso2.com).
   ~
-  ~ WSO2 LLC licenses this file to you under the Apache license,
-  ~ Version 2.0 (the "license"); you may not use this file except
-  ~ in compliance with the license.
-  ~ You may obtain a copy of the license at
+  ~ WSO2 LLC. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
   ~
-  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ Unless required by applicable law or agreed to in writing,
   ~ software distributed under the License is distributed on an
@@ -15,7 +15,6 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
     <display-name>WSO2 Identity Server REST API</display-name>

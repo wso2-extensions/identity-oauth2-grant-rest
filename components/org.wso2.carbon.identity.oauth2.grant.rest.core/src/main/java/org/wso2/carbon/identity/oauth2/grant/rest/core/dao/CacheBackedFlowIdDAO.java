@@ -1,20 +1,19 @@
 /*
- *  Copyright (c) 2023, WSO2 LLC (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
  *
- *  WSO2 LLC licenses this file to you under the Apache license,
- *  Version 2.0 (the "license"); you may not use this file except
- *  in compliance with the license.
- *  You may obtain a copy of the license at
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
- *  specific language governing permissions and limitations
- *  under the License.
- *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.wso2.carbon.identity.oauth2.grant.rest.core.dao;
@@ -32,7 +31,7 @@ import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationE
  */
 public class CacheBackedFlowIdDAO extends FlowIdDAOImpl {
 
-    private static final Log log = LogFactory.getLog(CacheBackedFlowIdDAO.class);
+    private static final Log LOG = LogFactory.getLog(CacheBackedFlowIdDAO.class);
     private static FlowIdDAO flowIdDAO;
     private static AuthCache restAuthCache = null;
     private static volatile CacheBackedFlowIdDAO instance;
@@ -56,8 +55,8 @@ public class CacheBackedFlowIdDAO extends FlowIdDAOImpl {
 
     private void addToCache(FlowIdDO flowIdDO, String tenantDomain) {
 
-        if (log.isDebugEnabled()) {
-            log.debug("Add cache for the REST authentication flow " + flowIdDO.getFlowId() + "@" + tenantDomain);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Add cache for the REST authentication flow " + flowIdDO.getFlowId() + "@" + tenantDomain);
         }
 
         AuthCacheKey flowIdKey = new AuthCacheKey(flowIdDO.getFlowId());
@@ -121,12 +120,12 @@ public class CacheBackedFlowIdDAO extends FlowIdDAOImpl {
             flowIdDO = entry.getFlowIdDO();
         }
         if (flowIdDO == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("Cache missing for the REST authentication flow with Flow ID: " + flowId);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Cache missing for the REST authentication flow with Flow ID: " + flowId);
             }
         } else {
-            if (log.isDebugEnabled()) {
-                log.debug("Cache present for the REST authentication flow with Flow ID: " + flowId);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Cache present for the REST authentication flow with Flow ID: " + flowId);
             }
         }
         return flowIdDO;
@@ -134,8 +133,8 @@ public class CacheBackedFlowIdDAO extends FlowIdDAOImpl {
 
     public void clearFlowIdCache(String flowId, String tenantDomain) {
 
-        if (log.isDebugEnabled()) {
-            log.debug("Clearing all the Flow ID Caches for " + flowId + "@" +
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Clearing all the Flow ID Caches for " + flowId + "@" +
                     tenantDomain);
         }
 
