@@ -1,0 +1,448 @@
+openapi: 3.0.0
+info:
+  description: |
+    An Authentication RESTful API to perform multi factor authentication 
+    in WSO2 Identity Server.
+  version: v1.0
+  title: WSO2 Identity Server - API Authentication Connector
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: Restful Authentication API
+    description: Restful Authentication API to authenticate users.
+servers:
+  - url: 'https://{server-url}/t/{tenant-domain}/api/identity/authn/v1'
+    variables:
+      server-url:
+        default: 'localhost:9443'
+      tenant-domain:
+        default: 'carbon.super'
+paths:
+  /auth-steps:
+    get:
+      tags:
+        - Restful Authentication API
+      description: |
+        This API context can be used to retrieve the configured authentication steps of a given OAuth2/OpenId Connect Service Provider. The service provider is identified via the clientId.
+        
+        The API endpoints specify a set of error scenarios which can be found at WSO2 official documentation for this connector.
+        ### <b>Permission required:</b> 
+        * none
+        
+        ### <b>Scope required:</b>
+        * none
+      parameters:
+        - in: query
+          name: clientId
+          schema:
+            type: string
+          required: true
+          description: The Client ID of the Oauth2/OpenId configuration.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationStepsResponse'
+              # example: [{"stepNo":1,"authenticatorDetails":[{"authenticatorName":"BasicAuthenticator"}]},{"stepNo":2,"authenticatorDetails":[{"authenticatorName":"BasicAuthenticator"},{"authenticatorName":"SMSOTP"},{"authenticatorName":"EmailOTP"}]},{"stepNo":3,"authenticatorDetails":[{"authenticatorName":"SMSOTP"},{"authenticatorName":"EmailOTP"}]}]
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationStepError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationStepError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationStepError'
+
+  /authenticate:
+    post:
+      tags:
+        - Restful Authentication API
+      description: |
+        This API context can be used to process an authentication request and get an appropriate response.</br>
+        ### This API can be used to fullfill below two tasks,</br>
+        1. Initialize the authentication with client ID via Basic Authentication and Idenfier First.</br> 
+        2. Process the authentication request of the selected authenticator.</br>
+        
+        The API endpoints specify a set of error scenarios which can be found at WSO2 official documentation for this connector.
+        ### <b>Permission required:</b>
+        * none <br>
+        
+        ### <b>Scope required:</b>
+        * none
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticationValidationRequest'
+            # As oneOf is not supported via the openAPI generator used in WSO2 commonly, A common schema will be
+            # introduced merging the two schemas.
+            # oneOf:
+            #   - $ref: '#/components/schemas/AuthenticationInitializationRequest'
+            #   - $ref: '#/components/schemas/AuthenticationValidationRequest'
+            examples:
+              Basic:
+                summary: Authentication initialization request with the Basic Authenticator.
+                value:
+                  clientId: DSJhjfdoufhdfkenjckrER
+                  authenticator: BasicAuthenticator
+                  userIdentifier: john@example.com
+                  password: 12345678abcdefg
+              IdentifierFirst:
+                summary: Authentication initialization request with Identifier First Handler.
+                value:
+                  clientId: DSJhjfdoufhdfkenjckrER
+                  authenticator: BasicAuthenticator
+                  userIdentifier: john@example.com
+              Selected:
+                summary: Authentication Validation request of selected authenticator.
+                value:
+                  authenticator: BasicAuthenticator
+                  password: 123456
+                  flowId: df09d285-f86f-465b-9959-005841e549c5
+
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationValidationResponse'
+              # example: {"isStepSuccess":true,"flowId":"df09d285-f86f-465b-9959-005841e549c5","isAuthFlowCompleted":false,"authenticatedSteps":[{"stepNo":1,"authenticatorConfigs":[{"authenticatorName":"BasicAuthenticator"}]}],"authenticationSteps":[{"stepNo":1,"authenticatorDetails":[{"authenticatorName":"BasicAuthenticator"}]},{"stepNo":2,"authenticatorDetails":[{"authenticatorName":"BasicAuthenticator"},{"authenticatorName":"SMSOTP"},{"authenticatorName":"EmailOTP"}]},{"stepNo":3,"authenticatorDetails":[{"authenticatorName":"SMSOTP"},{"authenticatorName":"EmailOTP"}]}],"nextStep":3,"failureReason":{"code":"SMS-60006","message":"ExpiredPassword.","description":"Expired Password provided for the user."}}
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+  /init-authenticator:
+    post:
+      tags:
+        - Restful Authentication API
+      description: |
+        This API context can be used to start authentication flow via a selected auehenticator.
+        The API endpoints specify a set of error scenarios which can be found at WSO2 official documentation for this connector.
+        ### <b>Permission required:</b> 
+        * none <br>
+        ### <b>Scope required:</b> <br>
+        * none
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticatorInitializationRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticatorInitializationResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationError'
+components:
+  schemas:
+    #-----------------------------------------------------
+    # AuthenticatorInitializationRequest object
+    #-----------------------------------------------------
+    AuthenticatorInitializationRequest:
+      type: object
+      required:
+        - authenticator
+        - flowId
+      properties:
+        authenticator:
+          type: string
+          description: Selected Authenticator from the authenticator list.
+          example: 'SMSOTP'
+        flowId:
+          type: string
+          description: A refreshed identitfier that can be used to uniquely identify the authentication transaction
+          example: '3da97d86-91ca-4ae7-b225-5e75f6228d15'
+
+    #-----------------------------------------------------
+    # AuthenticatorInitializationResponse object
+    #-----------------------------------------------------
+    AuthenticatorInitializationResponse:
+      type: object
+      required:
+        - flowId
+        - authenticator
+      properties:
+        flowId:
+          type: string
+          readOnly: true
+          description: A refreshed token that can be used to uniquely identify the transaction
+          example: '1cb0c52f-c19b-493f-a535-94b2977d1ad5'
+        authenticator:
+          type: string
+          description: Authenticator
+          example: 'SMSOTP'
+
+    #-----------------------------------------------------
+    # AuthenticationValidationRequest object
+    #-----------------------------------------------------
+    AuthenticationValidationRequest:
+      type: object
+      required:
+        - authenticator
+      properties:
+        authenticator:
+          type: string
+          description: Selected Authenticator to proceed with the authentication flow.
+          example: 'EmailOTP'
+        flowId:
+          type: string
+          description: A unique identifier that can be used to uniquely identify the transaction. This is <b>mandatory</b> if this is not the first step of the authentication flow.
+          example: '1cb0c52f-c19b-493f-a535-94b2977d1ad5'
+        clientId:
+          type: string
+          description: The Client Id of the Oauth2/OpenId configuration of the Service Provider. This is <b>mandatory</b> if this is the first step of the authentication flow.
+          example: 'eENJCNjdnbJSS!WJNDI892'
+        userIdentifier:
+          type: string
+          description: A unique identifier that can be used to uniquely identify the user. This is <b>mandatory</b> if this is the first step of the authentication flow.
+          example: "1cb0c52f-c19b-493f-a535-94b2977d1ad5"
+        password:
+          type: string
+          description: This is the secret to be verified against the user. This is <b>mandatory</b> if this is the first step of the authentication flow or if the selected authenticator is BasicAuthenticator.
+          example: "123456789"
+
+    #-----------------------------------------------------
+    # AuthenticationInitializationRequest object
+    #-----------------------------------------------------
+#    AuthenticationInitializationRequest:
+#      type: object
+#      required:
+#        - clientId
+#        - authenticator
+#        - userIdentifier
+#      properties:
+#        clientId:
+#          type: string
+#          description: A refreshed token that can be used to uniquely identify the transaction
+#          example: '1cb0c52f-c19b-493f-a535-94b2977d1ad5'
+#        authenticator:
+#          type: string
+#          description: Authenticator
+#          example: 'EmailOTP'
+#        userIdentifier:
+#          type: string
+#          example: "12345ABCD"
+#        password:
+#          type: string
+#          description: The generated Password
+#          example: "12345"
+    #-----------------------------------------------------
+    # AuthenticationValidationResponse object
+    #-----------------------------------------------------
+    AuthenticationValidationResponse:
+      type: object
+      required:
+        - isValidPassword
+        - flowId
+        - isAuthFlowCompleted
+        - authenticatedSteps
+        - authenticationSteps
+      properties:
+        isStepSuccess:
+          type: boolean
+          description: OTP validated successfully
+        flowId:
+          type: string
+          readOnly: true
+          description: A refreshed token that can be used to uniquely identify the transaction.
+          example: 'df09d285-f86f-465b-9959-005841e549c5'
+        isAuthFlowCompleted:
+          type: boolean
+          description: Multi Factor Authentication Status
+          example: false
+        #Successfully Authenticated Steps
+        authenticatedSteps:
+          type: object
+          $ref: '#/components/schemas/AuthnticatedStepsConfig'
+        #Authentication steps defined for the Service Provider
+        authenticationSteps:
+          type: object
+          $ref: '#/components/schemas/AuthnSequenceDetails'
+        nextStep:
+          type: integer
+          example: 3
+        failureReason:
+          type: object
+          $ref: '#/components/schemas/AuthenticationFailureReason'
+
+    #-----------------------------------------------------
+    # AuthenticationError object
+    #-----------------------------------------------------
+    AuthenticationError:
+      type: object
+      required:
+        - authenticator
+        - code
+        - message
+      properties:
+        authenticator:
+          type: string
+          description: Authenticator
+          example: 'SMSOTP'
+        code:
+          type: string
+          example: 'SMS-60001'
+        message:
+          type: string
+          example: Some error message
+        description:
+          type: string
+          example: Some error description
+        traceId:
+          type: string
+          example: e0fbcfeb-3617-43c4-8dd0-7b7d38e13047
+
+    #-----------------------------------------------------
+    # AuthenticationStepsResponse object
+    #-----------------------------------------------------
+    AuthenticationStepsResponse:
+      type: object
+      required:
+        - authenticationSteps
+      properties:
+        authenticationSteps:
+          type: object
+          $ref: '#/components/schemas/AuthnSequenceDetails'
+
+    #-----------------------------------------------------
+    # AuthenticationStepError object
+    #-----------------------------------------------------
+    AuthenticationStepError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: 'Some error code'
+        message:
+          type: string
+          example: Some error message
+        description:
+          type: string
+          example: Some error description
+        traceId:
+          type: string
+          example: Unique ID for trace the error in the logs
+
+    #-----------------------------------------------------
+    # AuthenticationFailure Reason object
+    #-----------------------------------------------------
+    AuthenticationFailureReason:
+      type: object
+      properties:
+        code:
+          type: string
+          example: 'SMS-60006'
+        message:
+          type: string
+          description: Failure reason.
+          example: 'Expired Password.'
+        description:
+          type: string
+          description: Failure reason description.
+          example: 'Expired Password provided for the user Id: 8b1cc9c4-b671-448a-a334-5afe838a4a3b.'
+
+    #-----------------------------------------------------
+    # AuthenticatorConfig object
+    #-----------------------------------------------------
+    AuthenticatorConfig:
+      type: object
+      properties:
+        authenticatorName:
+          type: string
+          example: 'BasicAuthenticator'
+
+    #-----------------------------------------------------
+    # AuthnStepConfig object
+    #-----------------------------------------------------
+    AuthnStepConfig:
+      type: object
+      properties:
+        stepNo:
+          type: integer
+          example: 2
+        authenticatorConfigs:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthenticatorConfig'
+            
+
+    #-----------------------------------------------------
+    # AuthnSequenceDetails object
+    #-----------------------------------------------------
+    AuthnSequenceDetails:
+      type: array
+      items:
+        $ref: '#/components/schemas/AuthnStepConfig'
+    #-----------------------------------------------------
+    # AuthnticatedStepsConfig object
+    #-----------------------------------------------------
+    AuthnticatedStepsConfig:
+      type: array
+      items:
+        $ref: '#/components/schemas/AuthenticatedAuthenticator'
+    #-----------------------------------------------------
+    # AuthenticatedAuthenticator object
+    #-----------------------------------------------------
+    AuthenticatedAuthenticator:
+      type: object
+      properties:
+        stepNo:
+          type: integer
+          example: 1
+        authenticatorName:
+          type: string
+          example: 'IdentifierExecutor'
