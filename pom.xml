@@ -221,7 +221,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.framework</groupId>
                 <artifactId>org.wso2.carbon.identity.multi.attribute.login.mgt</artifactId>
-                <version>${carbon.identity.framework.version}</version>
+                <version>${org.wso2.carbon.identity.multi.attribute.login.mgt.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.governance</groupId>
@@ -544,6 +544,8 @@
         <maven.bundle.plugin.version>3.2.0</maven.bundle.plugin.version>
         <identity.governance.version>1.4.1</identity.governance.version>
         <carbon.identity.framework.version>5.17.5</carbon.identity.framework.version>
+        <org.wso2.carbon.identity.multi.attribute.login.mgt.version>5.18.253
+        </org.wso2.carbon.identity.multi.attribute.login.mgt.version>
         <identity.workflow.impl.bps.version>5.2.0</identity.workflow.impl.bps.version>
         <identity.event.handler.version>1.2.9</identity.event.handler.version>
         <org.wso2.carbon.extension.identity.smsotp.common.version>3.0.15
