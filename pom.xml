@@ -27,7 +27,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon.identity.oauth2.grant.rest</groupId>
     <artifactId>identity.oauth2.grant.auth.rest</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Identity OAuth2 Grant Rest</name>
     <url>http://wso2.org</url>
@@ -375,7 +375,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.oauth2.grant.rest</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth2.grant.rest.core</artifactId>
-                <version>${org.wso2.carbon.identity.oauth2.grant.rest.version}</version>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -582,6 +582,5 @@
         <org.eclipse.osgi.version>3.14.0</org.eclipse.osgi.version>
         <osgi.cmpn.version>6.0.0</osgi.cmpn.version>
         <maven.compiler.plugin.version>2.3.1</maven.compiler.plugin.version>
-        <org.wso2.carbon.identity.oauth2.grant.rest.version>1.0.0</org.wso2.carbon.identity.oauth2.grant.rest.version>
     </properties>
 </project>
