@@ -32,11 +32,11 @@
     <name>Identity OAuth2 Grant Rest</name>
     <url>http://wso2.org</url>
     <scm>
-        <connection>scm:git:https://github.com/wso2-extensions/identity-oauth2-grant-mfa.git
+        <connection>scm:git:https://github.com/wso2-extensions/identity-oauth2-grant-rest.git
         </connection>
-        <url>https://github.com/wso2-extensions/identity-oauth2-grant-mfa.git</url>
+        <url>https://github.com/wso2-extensions/identity-oauth2-grant-rest.git</url>
         <developerConnection>
-            scm:git:https://github.com/wso2-extensions/identity-oauth2-grant-mfa.git
+            scm:git:https://github.com/wso2-extensions/identity-oauth2-grant-rest.git
         </developerConnection>
         <tag>HEAD</tag>
     </scm>
