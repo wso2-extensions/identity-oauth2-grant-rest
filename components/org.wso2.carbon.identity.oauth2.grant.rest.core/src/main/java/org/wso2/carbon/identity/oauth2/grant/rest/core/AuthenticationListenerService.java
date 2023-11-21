@@ -29,8 +29,8 @@ public interface AuthenticationListenerService {
 	/**
 	 * This method adds a Listener class to the Listener collection.
 	 *
-	 * @param authenticationListenerService        Authentication Listener Service.
-	 * @throws AuthenticationException if any server or client error occurred.
+	 * @param authenticationListenerService      Authentication Listener Service.
+	 * @throws AuthenticationException 			 If any server or client error occurred.
 	 */
 	void addAuthenticationListener(AuthenticationListener authenticationListenerService)
 			throws AuthenticationException;
@@ -38,8 +38,8 @@ public interface AuthenticationListenerService {
 	/**
 	 * This method removes a Listener class from the Listener collection.
 	 *
-	 * @param authenticationListenerService        Authentication Listener Service.
-	 * @throws AuthenticationException Thrown if any server or client error occurred.
+	 * @param authenticationListenerService     Authentication Listener Service.
+	 * @throws AuthenticationException 			Thrown if any server or client error occurred.
 	 */
 	void removeAuthenticationListener(AuthenticationListener authenticationListenerService)
 			throws AuthenticationException;

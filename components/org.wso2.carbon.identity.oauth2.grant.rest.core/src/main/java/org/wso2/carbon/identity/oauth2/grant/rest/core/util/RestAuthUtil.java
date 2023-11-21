@@ -55,7 +55,6 @@ public class RestAuthUtil {
 
     /**
      * This method returns the SHA-256 hash of a given string.
-     *
      * @param text plain text.
      * @return SHA-256 hash value of the given plain text.
      */
@@ -64,8 +63,8 @@ public class RestAuthUtil {
     }
 
     /**
-     * Generate an UUID from flowId and flowId Identifier.
-     * @return uuid
+     * Generate a UUID from flowId and flowId Identifier.
+     * @return uuid     Returns a unique Id.
      */
     public static String generateUUID() {
         String uuid = UUID.randomUUID().toString();
@@ -120,8 +119,8 @@ public class RestAuthUtil {
     }
 
     /**
-     * Save properties from rest-auth.propertis
-     * @params properties
+     * Save properties from rest-auth.properties.
+     * @params properties   File configured properties.
      */
     private static void sanitizeAndPopulateConfigs(Properties properties) {
 
@@ -152,8 +151,8 @@ public class RestAuthUtil {
 
     /**
      * Handling client-side exceptions.
-     * @params  error
-     * @return  AuthenticationClientException
+     * @params error                            The error message.
+     * @return AuthenticationClientException    Return a client exception to the webapp.
      */
     public static AuthenticationClientException handleClientException(Constants.ErrorMessage error) {
 
@@ -163,9 +162,9 @@ public class RestAuthUtil {
 
     /**
      * Handling client-side exceptions with error message and data.
-     * @params  error
-     * @param   data
-     * @return  AuthenticationClientException
+     * @params  error                           The error message.
+     * @param   data                            Returning error message from external event handler.
+     * @return  AuthenticationClientException   Return a client exception to the webapp.
      */
     public static AuthenticationClientException handleClientException(Constants.ErrorMessage error, String data) {
 
@@ -180,9 +179,9 @@ public class RestAuthUtil {
 
     /**
      * Handling client-side exceptions with the upstream error messages passed by event handlers.
-     * @params  error
-     * @param   data
-     * @return  AuthenticationClientException
+     * @params  error                           The error message.
+     * @param   data                            Returning error message from the file configs.
+     * @return  AuthenticationClientException   Return a client exception to the webapp.
      */
     public static AuthenticationClientException handleClientException(String rawError, String data) {
 
@@ -198,10 +197,10 @@ public class RestAuthUtil {
 
     /**
      * Handling client-side exceptions with error message, data and Throwable.
-     * @params  error
-     * @param   data
-     * @param   e
-     * @return  AuthenticationClientException
+     * @params  error                           The error message.
+     * @param   data                            Returning error message from external event handler.
+     * @param   e                               A throwable object from external event handler.
+     * @return  AuthenticationClientException   Return a client exception to the webapp.
      */
     public static AuthenticationClientException handleClientException(Constants.ErrorMessage error, String data,
             Throwable e) {
@@ -217,10 +216,10 @@ public class RestAuthUtil {
 
     /**
      * Handling server-side exceptions with error message, data and Throwable.
-     * @params  error
-     * @param   data
-     * @param   e
-     * @return  AuthenticationServerException
+     * @params  error                           The error message.
+     * @param   data                            Returning error message from external event handler.
+     * @param   e                               A throwable object from external event handler.
+     * @return  AuthenticationClientException   Return a client exception to the webapp.
      */
     public static AuthenticationServerException handleServerException(Constants.ErrorMessage error, String data,
             Throwable e) {
@@ -236,9 +235,9 @@ public class RestAuthUtil {
 
     /**
      * Handling server-side exceptions with error message and data.
-     * @params  error
-     * @param   data
-     * @return  AuthenticationServerException
+     * @params  error                           The error message.
+     * @param   data                            Returning error message.
+     * @return  AuthenticationServerException   Return a server exception to the webapp.
      */
     public static AuthenticationServerException handleServerException(Constants.ErrorMessage error, String data) {
 
@@ -253,9 +252,9 @@ public class RestAuthUtil {
 
     /**
      * Handling server-side exceptions with error message and Throwable.
-     * @params  error
-     * @param   e
-     * @return  AuthenticationServerException
+     * @params  error                           The error message.
+     * @param   e                               Returning a Throwable object.
+     * @return  AuthenticationServerException   Return a server exception to the webapp.
      */
     public static AuthenticationServerException handleServerException(Constants.ErrorMessage error, Throwable e) {
 
@@ -265,7 +264,7 @@ public class RestAuthUtil {
 
     /**
      * Return the tenant domain.
-     * @return  String
+     * @return  String   Returning the tenant domain.
      */
     public static String getTenantDomain() {
 
@@ -274,8 +273,8 @@ public class RestAuthUtil {
 
     /**
      * Return the validity of clientId.
-     * @param   serviceProvider
-     * @return  Boolean
+     * @param   serviceProvider     ServiceProvider object.
+     * @return  Boolean             Returns the boolean value from application id.
      */
     private static boolean isValidClientId(ServiceProvider serviceProvider) {
 
@@ -286,8 +285,8 @@ public class RestAuthUtil {
      * This method retrieves Service Provider using AppId.
      *
      * @param serviceProviderAppId 		AppId of the Service Provider.
-     * @return service provider.
-     * @throws AuthenticationException if any server or client error occurred.
+     * @return serviceProviderAppId     Service Provider's ID.
+     * @throws AuthenticationException  If any server or client error occurred.
      */
     public static ServiceProvider getServiceProviderByAppId (Integer serviceProviderAppId)
             throws AuthenticationException {
@@ -313,9 +312,9 @@ public class RestAuthUtil {
     /**
      * This method retrieves Service Provider using clientId.
      *
-     * @param clientId
-     * @return service provider.
-     * @throws AuthenticationException
+     * @param clientId                  Client id of Service Provider.
+     * @return service provider.        ServiceProvider object.
+     * @throws AuthenticationException  Return an AuthenticationException.
      */
     public static ServiceProvider getServiceProviderByClientId(String clientId) throws AuthenticationException {
 
@@ -342,8 +341,8 @@ public class RestAuthUtil {
     /**
      * Return the authentication steps.
      *
-     * @param  serviceProvider
-     * @return authenticationSteps
+     * @param  serviceProvider      ServiceProvider object.
+     * @return authenticationSteps  Returns the configured authentication steps in SP.
      */
     public static LinkedHashMap<Integer, List<String>> getAuthStepsForSP(ServiceProvider serviceProvider) {
 
@@ -384,10 +383,10 @@ public class RestAuthUtil {
     }
 
     /**
-     * Return the federatd authenticators
+     * Return the federated authenticators
      *
-     * @param  serviceProviderAppId
-     * @return federatedAuthenticators
+     * @param  serviceProviderAppId        Service Provider's ID.
+     * @return federatedAuthenticators     Returns the configured federated identity providers in SP.
      */
     public static LinkedHashMap<Integer, IdentityProvider[]> getFederatedIdentityProviders(int serviceProviderAppId)
             throws AuthenticationException {

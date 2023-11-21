@@ -33,7 +33,7 @@ public class AuthCacheKey extends CacheKey {
     private String flowIdKey;
 
     /**
-     * @param flowId
+     * @param flowId  The flowId of the authentication flow.
      */
     public AuthCacheKey(String flowId) {
 
@@ -41,7 +41,7 @@ public class AuthCacheKey extends CacheKey {
     }
 
     /**
-     * @return
+     * @return String   Key for the flowId
      */
     public String getFlowIdKey() {
 

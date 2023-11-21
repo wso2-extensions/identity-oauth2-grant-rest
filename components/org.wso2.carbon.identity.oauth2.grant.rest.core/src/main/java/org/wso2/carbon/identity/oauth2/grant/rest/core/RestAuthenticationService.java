@@ -30,20 +30,22 @@ public interface RestAuthenticationService {
     /**
      * This method returns the Steps for the Authentication flow.
      *
-     * @param clientId      UUID to track the flow
-     * @throws AuthenticationException if any server or client error occurred.
-     * return AuthenticationStepsResponseDTO
+     * @param clientId                          UUID to track the flow.
+     * @throws AuthenticationException          If any server or client error occurred.
+     * @return AuthenticationStepsResponseDTO   Returns an AuthenticationStepsResponseDTO object.
      */
     AuthenticationStepsResponseDTO getAuthenticationStepsFromSP(String clientId) throws AuthenticationException;
 
     /**
      * This method initialize the authentication flow with BasicAuth or Identifier First.
      *
-     * @param clientId      clientId.
-     * @param authenticator Authenticator Name.
-     * @param password       	Password to be validated.
-     * @return UserAuthenticationResponseDTO
-     * @throws AuthenticationException if any server or client error occurred.
+     * @param clientId                          Client id of the service provider.
+     * @param authenticator                     Authenticator Name.
+     * @param password                          Password to be validated.
+     * @param userIdentifier                    User Identifier attribute.
+     * @param requestTenantDomain               Initiated tenant domain.
+     * @return UserAuthenticationResponseDTO    Returns a UserAuthenticationResponseDTO object.
+     * @throws AuthenticationException          If any server or client error occurred.
      */
     UserAuthenticationResponseDTO initializeAuthFlow
     (String clientId, String authenticator, String password, String userIdentifier, String requestTenantDomain)
@@ -52,10 +54,10 @@ public interface RestAuthenticationService {
     /**
      * This method initialize the authentication flow for the current step.
      *
-     * @param flowId        UUID to track the flow.
-     * @param authenticator Authenticator Name.
-     * @return AuthenticationInitializationResponseDTO
-     * @throws AuthenticationException if any server or client error occurred.
+     * @param flowId                                    UUID to track the flow.
+     * @param authenticator                             Authenticator Name.
+     * @return AuthenticationInitializationResponseDTO  Returns an AuthenticationInitializationResponseDTO object.
+     * @throws AuthenticationException                  If any server or client error occurred.
      */
     AuthenticationInitializationResponseDTO executeAuthStep(String flowId,
             String authenticator) throws AuthenticationException;
@@ -63,11 +65,11 @@ public interface RestAuthenticationService {
     /**
      * This method process the authentication response from the client.
      *
-     * @param flowId            UUID to track the flow.
-     * @param authenticator     Authenticator Name.
-     * @param password       	Password to be validated.
-     * @return UserAuthenticationResponseDTO
-     * @throws AuthenticationException if any server or client error occurred.
+     * @param flowId                            UUID to track the flow.
+     * @param authenticator                     Authenticator Name.
+     * @param password       	                Password to be validated.
+     * @return UserAuthenticationResponseDTO    Returns a UserAuthenticationResponseDTO object.
+     * @throws AuthenticationException          If any server or client error occurred.
      */
     UserAuthenticationResponseDTO processAuthStepResponse(String flowId, String authenticator, String password)
             throws AuthenticationException;
