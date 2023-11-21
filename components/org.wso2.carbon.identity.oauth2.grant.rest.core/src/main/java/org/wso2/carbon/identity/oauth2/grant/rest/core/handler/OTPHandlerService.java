@@ -28,10 +28,11 @@ public interface OTPHandlerService {
     /**
      * This method returns OTP Generation Response.
      *
-     * @param authenticatorService Authenticator Service instance.
-     * @param userId        SCIM Id.
-     * @return OTP generation response.
-     * @throws AuthenticationException if any server or client error occurred.
+     * @param authenticatorService      Authenticator Service instance.
+     * @param userId                    SCIM Id.
+     * @param userTenantDomain          User's tenant domain.
+     * @return Object                   OTP generation response.
+     * @throws AuthenticationException  If any server or client error occurred.
      */
     Object getAuthenticatorServiceGenerationResponse
     (String authenticatorService, String userId, String userTenantDomain)
@@ -40,10 +41,11 @@ public interface OTPHandlerService {
     /**
      * This method returns OTP Validation Response.
      *
-     * @param authenticatorService Authenticator Service instance.
-     * @param otp           OTP to be validated.
-     * @return OTP validation result.
-     * @throws AuthenticationException if any server or client error occurred.
+     * @param authenticatorService          Authenticator Service instance.
+     * @param restAuthenticationContext     An object of RestAuthenticationContext.
+     * @param otp                           OTP to be validated.
+     * @return OTP validation result       OTP validation response.
+     * @throws AuthenticationException      If any server or client error occurred.
      */
     Object getAuthenticatorServiceValidationResponse
     (String authenticatorService, RestAuthenticationContext restAuthenticationContext, String otp)

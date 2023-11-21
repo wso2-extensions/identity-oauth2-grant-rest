@@ -85,7 +85,7 @@ public class AuthenticationServiceComponent {
 	}
 
 	/**
-	 * Realm Service.
+	 * @param realmService 	A RealmService object.
 	 */
 	@Reference
 			(name = "realm.service",
@@ -101,6 +101,9 @@ public class AuthenticationServiceComponent {
 		AuthenticationServiceDataHolder.getInstance().setRealmService(realmService);
 	}
 
+	/**
+	 * @param realmService 	A RealmService object.
+	 */
 	protected void unsetRealmService(RealmService realmService) {
 
 		if (LOG.isDebugEnabled()) {
@@ -110,7 +113,7 @@ public class AuthenticationServiceComponent {
 	}
 
 	/**
-	 * SMS OTP Service.
+	 * @param smsOtpService 	A SMSOTPService object.
 	 */
 	@Reference
 			(name = "smsotp.service",
@@ -127,6 +130,9 @@ public class AuthenticationServiceComponent {
 
 	}
 
+	/**
+	 * @param smsOtpService 	A SMSOTPService object.
+	 */
 	protected void unsetSMSOtpService(SMSOTPService smsOtpService) {
 
 		if (LOG.isDebugEnabled()) {
@@ -137,7 +143,7 @@ public class AuthenticationServiceComponent {
 	}
 
 	/**
-	 * Email OTP Service.
+	 * @param emailOtpService 	An EmailOTPService object.
 	 */
 	@Reference
 			(name = "emailotp.service",
@@ -154,6 +160,9 @@ public class AuthenticationServiceComponent {
 
 	}
 
+	/**
+	 * @param emailOtpService 	An EmailOTPService object.
+	 */
 	protected void unsetEmailOtpService(EmailOtpService emailOtpService) {
 
 		if (LOG.isDebugEnabled()) {
@@ -164,7 +173,7 @@ public class AuthenticationServiceComponent {
 	}
 
 	/**
-	 * Rest Authentication Listener Service.
+	 * @param authListenerService 	An AuthenticationListenerService object.
 	 */
 	@Reference
 			(name = "rest.auth.listener.service",
@@ -182,6 +191,9 @@ public class AuthenticationServiceComponent {
 		AuthenticationServiceDataHolder.getInstance().setAuthListenerService(authListenerService);
 	}
 
+	/**
+	 * @param authListenerService 	An AuthenticationListenerService object.
+	 */
 	protected void unsetAuthListenerService(AuthenticationListenerService authListenerService) {
 
 		if (LOG.isDebugEnabled()) {
@@ -191,7 +203,7 @@ public class AuthenticationServiceComponent {
 	}
 
 	/**
-	 * Multi Attribute Login Service.
+	 * @param multiAttributeLogin 	A MultiAttributeLoginService object.
 	 */
 	@Reference(
 			name = "MultiAttributeLoginService",
@@ -204,12 +216,17 @@ public class AuthenticationServiceComponent {
 		AuthenticationServiceDataHolder.getInstance().setMultiAttributeLogin(multiAttributeLogin);
 	}
 
+	/**
+	 * @param multiAttributeLogin 	A MultiAttributeLoginService object.
+	 */
 	protected void unsetMultiAttributeLoginService(MultiAttributeLoginService multiAttributeLogin) {
 
 		AuthenticationServiceDataHolder.getInstance().setMultiAttributeLogin(null);
 	}
 
-
+	/**
+	 * @param eventService 	An IdentityEventService object.
+	 */
 	@Reference(
 			name = "EventMgtService",
 			service = org.wso2.carbon.identity.event.services.IdentityEventService.class,
@@ -221,6 +238,9 @@ public class AuthenticationServiceComponent {
 		AuthenticationServiceDataHolder.getInstance().setIdentityEventService(eventService);
 	}
 
+	/**
+	 * @param eventService 	An IdentityEventService object.
+	 */
 	protected void unsetIdentityEventService(IdentityEventService eventService) {
 
 		AuthenticationServiceDataHolder.getInstance().setIdentityEventService(null);

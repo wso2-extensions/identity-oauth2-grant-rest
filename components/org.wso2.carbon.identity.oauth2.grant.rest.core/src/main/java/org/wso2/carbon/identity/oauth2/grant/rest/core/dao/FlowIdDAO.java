@@ -34,16 +34,18 @@ public interface FlowIdDAO {
     /**
      * This method is to retrieve FlowId Data.
      *
-     * @param flowId		    UUID to track the flow.
+     * @param flowId		           UUID to track the flow.
      * @throws AuthenticationException If failed to retrieve FlowId data.
+     * @return FlowIdDO                Returns a flowId object.
      */
     FlowIdDO getFlowIdData(String flowId) throws AuthenticationException;
 
     /**
      * This method is to renew the FlowId.
      *
-     * @param prevFlowId 		Previous FlowId.
-     * @param flowIdDO 		    FlowId data object with a new FlowId and a new FlowId Identifier.
+     * @param previousFlowIdIdentifier Previous FlowId Identifier.
+     * @param prevFlowId 		       Previous FlowId.
+     * @param flowIdDO 		           FlowId data object with a new FlowId and a new FlowId Identifier.
      * @throws AuthenticationException if failed to renew the FlowId.
      */
     void refreshFlowId(String previousFlowIdIdentifier, String prevFlowId, FlowIdDO flowIdDO)
@@ -52,8 +54,8 @@ public interface FlowIdDAO {
     /**
      * This method is to update FlowId State.
      *
-     * @param flowIdIdentifier 	UUID to uniquely identify the FlowId and related data.
-     * @param flowIdState 	    FlowId state
+     * @param flowIdIdentifier 	       UUID to uniquely identify the FlowId and related data.
+     * @param flowIdState 	           FlowId state
      * @throws AuthenticationException if failed to update FlowId State.
      */
     void updateFlowIdState(String flowIdIdentifier, String flowIdState) throws AuthenticationException;
@@ -61,10 +63,10 @@ public interface FlowIdDAO {
     /**
      * This method is to add a successfully authenticated step to the DB.
      *
-     * @param stepNo 	        Authentication step number.
-     * @param authenticator 	Authenticator name
-     * @param flowIdIdentifier 	UUID to uniquely identify the FlowId and related data
-     * @throws AuthenticationException if failed to add authenticated step.
+     * @param stepNo 	                Authentication step number.
+     * @param authenticator 	        Authenticator name
+     * @param flowIdIdentifier 	        UUID to uniquely identify the FlowId and related data
+     * @throws AuthenticationException  if failed to add authenticated step.
      */
     void addAuthenticatedStep (int stepNo, String authenticator, String flowIdIdentifier)
             throws AuthenticationException;
