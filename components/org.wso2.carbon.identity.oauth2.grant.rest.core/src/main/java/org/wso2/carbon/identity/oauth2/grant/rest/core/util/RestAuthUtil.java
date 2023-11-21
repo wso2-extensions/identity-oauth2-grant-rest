@@ -179,7 +179,7 @@ public class RestAuthUtil {
 
     /**
      * Handling client-side exceptions with the upstream error messages passed by event handlers.
-     * @param   error                           The error message.
+     * @param   rawError                        The error message.
      * @param   data                            Returning error message from the file configs.
      * @return  AuthenticationClientException   Return a client exception to the webapp.
      */
@@ -387,6 +387,7 @@ public class RestAuthUtil {
      *
      * @param  serviceProviderAppId        Service Provider's ID.
      * @return federatedAuthenticators     Returns the configured federated identity providers in SP.
+     * @throws AuthenticationException     Throws an AuthenticationException.
      */
     public static LinkedHashMap<Integer, IdentityProvider[]> getFederatedIdentityProviders(int serviceProviderAppId)
             throws AuthenticationException {
