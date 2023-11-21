@@ -173,7 +173,8 @@ public class AuthenticationServiceComponent {
 	}
 
 	/**
-	 * @param authListenerService 	An AuthenticationListenerService object.
+	 * @param authListenerService 		An AuthenticationListenerService object.
+	 * @throws AuthenticationException	Throws an AuthenticationException.
 	 */
 	@Reference
 			(name = "rest.auth.listener.service",

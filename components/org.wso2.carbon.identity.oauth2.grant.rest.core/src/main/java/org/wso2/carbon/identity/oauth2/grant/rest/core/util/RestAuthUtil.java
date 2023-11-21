@@ -119,8 +119,8 @@ public class RestAuthUtil {
     }
 
     /**
-     * Save properties from rest-auth.properties.
-     * @params properties   File configured properties.
+     * Save   properties from rest-auth.properties.
+     * @param properties   File configured properties.
      */
     private static void sanitizeAndPopulateConfigs(Properties properties) {
 
@@ -151,8 +151,8 @@ public class RestAuthUtil {
 
     /**
      * Handling client-side exceptions.
-     * @params error                            The error message.
-     * @return AuthenticationClientException    Return a client exception to the webapp.
+     * @param   error                            The error message.
+     * @return  AuthenticationClientException    Return a client exception to the webapp.
      */
     public static AuthenticationClientException handleClientException(Constants.ErrorMessage error) {
 
@@ -162,7 +162,7 @@ public class RestAuthUtil {
 
     /**
      * Handling client-side exceptions with error message and data.
-     * @params  error                           The error message.
+     * @param   error                           The error message.
      * @param   data                            Returning error message from external event handler.
      * @return  AuthenticationClientException   Return a client exception to the webapp.
      */
@@ -179,7 +179,7 @@ public class RestAuthUtil {
 
     /**
      * Handling client-side exceptions with the upstream error messages passed by event handlers.
-     * @params  error                           The error message.
+     * @param   error                           The error message.
      * @param   data                            Returning error message from the file configs.
      * @return  AuthenticationClientException   Return a client exception to the webapp.
      */
@@ -197,7 +197,7 @@ public class RestAuthUtil {
 
     /**
      * Handling client-side exceptions with error message, data and Throwable.
-     * @params  error                           The error message.
+     * @param  error                           The error message.
      * @param   data                            Returning error message from external event handler.
      * @param   e                               A throwable object from external event handler.
      * @return  AuthenticationClientException   Return a client exception to the webapp.
@@ -216,10 +216,10 @@ public class RestAuthUtil {
 
     /**
      * Handling server-side exceptions with error message, data and Throwable.
-     * @params  error                           The error message.
-     * @param   data                            Returning error message from external event handler.
-     * @param   e                               A throwable object from external event handler.
-     * @return  AuthenticationClientException   Return a client exception to the webapp.
+     * @param  error                           The error message.
+     * @param  data                            Returning error message from external event handler.
+     * @param  e                               A throwable object from external event handler.
+     * @return AuthenticationClientException   Return a client exception to the webapp.
      */
     public static AuthenticationServerException handleServerException(Constants.ErrorMessage error, String data,
             Throwable e) {
@@ -235,7 +235,7 @@ public class RestAuthUtil {
 
     /**
      * Handling server-side exceptions with error message and data.
-     * @params  error                           The error message.
+     * @param   error                           The error message.
      * @param   data                            Returning error message.
      * @return  AuthenticationServerException   Return a server exception to the webapp.
      */
@@ -252,9 +252,9 @@ public class RestAuthUtil {
 
     /**
      * Handling server-side exceptions with error message and Throwable.
-     * @params  error                           The error message.
-     * @param   e                               Returning a Throwable object.
-     * @return  AuthenticationServerException   Return a server exception to the webapp.
+     * @param  error                           The error message.
+     * @param  e                               Returning a Throwable object.
+     * @return AuthenticationServerException   Return a server exception to the webapp.
      */
     public static AuthenticationServerException handleServerException(Constants.ErrorMessage error, Throwable e) {
 
