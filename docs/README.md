@@ -169,7 +169,7 @@ custom_webapps=["/api/identity/authn/v1/"]
 - Grant Handler configurations
 ```toml
 [[oauth.custom_grant_type]]
-name="rest_auth_grant"
+name="urn:ietf:params:oauth:grant-type:rest"
 grant_handler="org.wso2.carbon.identity.oauth2.grant.rest.handler.AuthenticationGrantHandler"
 grant_validator="org.wso2.carbon.identity.oauth2.grant.rest.handler.AuthenticationGrantValidator"
 ```
