@@ -6,4 +6,4 @@
 
 3. 1st step is IdentifierFist while 2nd step is configured BasicAuthenticator.![3.png](images%2F3.png)
 
-4. 1st step is IdentifierFirst while 2nd one is either SMSOTP or EmailOTP. ![4.png](images%2F3.png)
+4. 1st step is IdentifierFirst while 2nd one is either SMSOTP or EmailOTP. ![4.png](images%2F4.png)
