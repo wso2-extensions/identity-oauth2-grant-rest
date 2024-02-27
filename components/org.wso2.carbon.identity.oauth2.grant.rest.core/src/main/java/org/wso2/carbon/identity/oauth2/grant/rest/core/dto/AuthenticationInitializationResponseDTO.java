@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -27,6 +27,8 @@ public class AuthenticationInitializationResponseDTO {
 
 	private String authenticator;
 
+	private String userChannelIdentifierClaim;
+
 	public String getFlowId() {
 
 		return flowId;
@@ -47,4 +49,13 @@ public class AuthenticationInitializationResponseDTO {
 		this.authenticator = authenticator;
 	}
 
+	public String getUserChannelIdentifierClaim() {
+
+		return userChannelIdentifierClaim;
+	}
+
+	public void setUserChannelIdentifierClaim(String userChannelIdentifierClaim) {
+
+		this.userChannelIdentifierClaim = userChannelIdentifierClaim;
+	}
 }
