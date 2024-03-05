@@ -212,7 +212,6 @@ components:
       required:
         - flowId
         - authenticator
-        - userChannelIdentifierClaim
       properties:
         flowId:
           type: string
@@ -223,10 +222,7 @@ components:
           type: string
           description: Authenticator
           example: 'SMSOTP'
-        userChannelIdentifierClaim:
-          type: string
-          description: Email address or mobile number of the user
-          example: '94765672341'
+
     #-----------------------------------------------------
     # AuthenticationValidationRequest object
     #-----------------------------------------------------
@@ -259,28 +255,28 @@ components:
     #-----------------------------------------------------
     # AuthenticationInitializationRequest object
     #-----------------------------------------------------
-    #    AuthenticationInitializationRequest:
-    #      type: object
-    #      required:
-    #        - clientId
-    #        - authenticator
-    #        - userIdentifier
-    #      properties:
-    #        clientId:
-    #          type: string
-    #          description: A refreshed token that can be used to uniquely identify the transaction
-    #          example: '1cb0c52f-c19b-493f-a535-94b2977d1ad5'
-    #        authenticator:
-    #          type: string
-    #          description: Authenticator
-    #          example: 'EmailOTP'
-    #        userIdentifier:
-    #          type: string
-    #          example: "12345ABCD"
-    #        password:
-    #          type: string
-    #          description: The generated Password
-    #          example: "12345"
+#    AuthenticationInitializationRequest:
+#      type: object
+#      required:
+#        - clientId
+#        - authenticator
+#        - userIdentifier
+#      properties:
+#        clientId:
+#          type: string
+#          description: A refreshed token that can be used to uniquely identify the transaction
+#          example: '1cb0c52f-c19b-493f-a535-94b2977d1ad5'
+#        authenticator:
+#          type: string
+#          description: Authenticator
+#          example: 'EmailOTP'
+#        userIdentifier:
+#          type: string
+#          example: "12345ABCD"
+#        password:
+#          type: string
+#          description: The generated Password
+#          example: "12345"
     #-----------------------------------------------------
     # AuthenticationValidationResponse object
     #-----------------------------------------------------
@@ -422,7 +418,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AuthenticatorConfig'
-
+            
 
     #-----------------------------------------------------
     # AuthnSequenceDetails object
