@@ -27,6 +27,8 @@ public class AuthenticationInitializationResponseDTO {
 
 	private String authenticator;
 
+	private String userChannelIdentifierClaim;
+
 	public String getFlowId() {
 
 		return flowId;
@@ -47,4 +49,13 @@ public class AuthenticationInitializationResponseDTO {
 		this.authenticator = authenticator;
 	}
 
+	public String getUserChannelIdentifierClaim() {
+
+		return userChannelIdentifierClaim;
+	}
+
+	public void setUserChannelIdentifierClaim(String userChannelIdentifierClaim) {
+
+		this.userChannelIdentifierClaim = userChannelIdentifierClaim;
+	}
 }

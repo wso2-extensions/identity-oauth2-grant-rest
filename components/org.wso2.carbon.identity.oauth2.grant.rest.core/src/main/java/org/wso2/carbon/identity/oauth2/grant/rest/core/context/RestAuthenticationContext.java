@@ -63,6 +63,7 @@ public class RestAuthenticationContext {
 	private String multiAttributeLoginClaimURI;
 	private AuthenticatedUser authenticatedUser;
 	private  int nextAuthenticationStepId;
+	private String userChannelIdentifierClaim;
 
 	private RestAuthenticationContext(Builder builder) {
 
@@ -235,6 +236,15 @@ public class RestAuthenticationContext {
 		this.authenticatedUser = authenticatedUser;
 	}
 
+	public String getUserChannelIdentifierClaim() {
+
+		return userChannelIdentifierClaim;
+	}
+
+	public void setUserChannelIdentifierClaim(String userChannelIdentifierClaim) {
+
+		this.userChannelIdentifierClaim = userChannelIdentifierClaim;
+	}
 	/**
 	 * This can be used to build AuthContextWrapper Objects.
 	 */
@@ -453,5 +463,4 @@ public class RestAuthenticationContext {
 
 		this.authenticationSteps = authenticationSteps;
 	}
-
 }

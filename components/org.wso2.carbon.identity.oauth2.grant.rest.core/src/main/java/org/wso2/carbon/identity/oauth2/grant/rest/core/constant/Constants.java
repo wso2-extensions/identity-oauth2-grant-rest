@@ -86,6 +86,8 @@ public class Constants {
     public static final String PARAMS = "params";
     public static final String EVENT_HANDLER_ERROR_DESCRIPTION = "Event handler error description";
     public static final String USERNAME_LOCAL_CLAIM_URI = "http://wso2.org/claims/username";
+    public static final String EMAIL_LOCAL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
+    public static final String MOBILE_LOCAL_CLAIM_URI = "http://wso2.org/claims/mobile";
 
     /**
      * Rest Auth Service error codes.

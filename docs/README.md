@@ -22,8 +22,7 @@ found at WSO2 official documentation for this connector.
 curl --location 'https://<IS-HOST>/t/<tenant-domain>/api/identity/authn/v1/auth-steps?
 clientId=_6_OAiUkvaAIsBwCdN8c4nVUfTga' \
 --header 'accept: application/json' \
---header 'Content-Type: application/json' \
---data ''
+--header 'Content-Type: application/json'
 ```
 ## /authenticate
 

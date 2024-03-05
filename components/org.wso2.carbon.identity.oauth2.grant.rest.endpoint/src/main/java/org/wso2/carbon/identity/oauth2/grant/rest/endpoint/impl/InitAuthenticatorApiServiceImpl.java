@@ -53,7 +53,8 @@ public class InitAuthenticatorApiServiceImpl implements InitAuthenticatorApiServ
                     .executeAuthStep(flowId, authenticator);
             AuthenticatorInitializationResponse response = new AuthenticatorInitializationResponse()
                     .flowId(responseDTO.getFlowId())
-                    .authenticator(responseDTO.getAuthenticator());
+                    .authenticator(responseDTO.getAuthenticator())
+                    .userChannelIdentifierClaim(responseDTO.getUserChannelIdentifierClaim());
             return Response.ok(response).build();
 
         } catch (AuthenticationClientException e) {
