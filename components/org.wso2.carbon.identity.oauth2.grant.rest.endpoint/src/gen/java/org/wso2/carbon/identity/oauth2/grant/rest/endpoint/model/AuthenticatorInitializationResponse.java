@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -34,6 +34,7 @@ public class AuthenticatorInitializationResponse  {
   
     private String flowId;
     private String authenticator;
+    private String userChannelIdentifierClaim;
 
     /**
     * A refreshed token that can be used to uniquely identify the transaction
@@ -77,6 +78,27 @@ public class AuthenticatorInitializationResponse  {
         this.authenticator = authenticator;
     }
 
+    /**
+    * Email address or mobile number of the user
+    **/
+    public AuthenticatorInitializationResponse userChannelIdentifierClaim(String userChannelIdentifierClaim) {
+
+        this.userChannelIdentifierClaim = userChannelIdentifierClaim;
+        return this;
+    }
+    
+    @ApiModelProperty(example = "94765672341", required = true, value = "Email address or mobile number of the user")
+    @JsonProperty("userChannelIdentifierClaim")
+    @Valid
+    @NotNull(message = "Property userChannelIdentifierClaim cannot be null.")
+
+    public String getUserChannelIdentifierClaim() {
+        return userChannelIdentifierClaim;
+    }
+    public void setUserChannelIdentifierClaim(String userChannelIdentifierClaim) {
+        this.userChannelIdentifierClaim = userChannelIdentifierClaim;
+    }
+
 
 
     @Override
@@ -90,12 +112,13 @@ public class AuthenticatorInitializationResponse  {
         }
         AuthenticatorInitializationResponse authenticatorInitializationResponse = (AuthenticatorInitializationResponse) o;
         return Objects.equals(this.flowId, authenticatorInitializationResponse.flowId) &&
-            Objects.equals(this.authenticator, authenticatorInitializationResponse.authenticator);
+            Objects.equals(this.authenticator, authenticatorInitializationResponse.authenticator) &&
+            Objects.equals(this.userChannelIdentifierClaim, authenticatorInitializationResponse.userChannelIdentifierClaim);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(flowId, authenticator);
+        return Objects.hash(flowId, authenticator, userChannelIdentifierClaim);
     }
 
     @Override
@@ -106,6 +129,7 @@ public class AuthenticatorInitializationResponse  {
         
         sb.append("    flowId: ").append(toIndentedString(flowId)).append("\n");
         sb.append("    authenticator: ").append(toIndentedString(authenticator)).append("\n");
+        sb.append("    userChannelIdentifierClaim: ").append(toIndentedString(userChannelIdentifierClaim)).append("\n");
         sb.append("}");
         return sb.toString();
     }
@@ -122,3 +146,4 @@ public class AuthenticatorInitializationResponse  {
         return o.toString().replace("\n", "\n");
     }
 }
+
