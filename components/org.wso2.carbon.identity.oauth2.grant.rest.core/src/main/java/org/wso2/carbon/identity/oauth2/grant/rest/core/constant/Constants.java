@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -86,8 +86,6 @@ public class Constants {
     public static final String PARAMS = "params";
     public static final String EVENT_HANDLER_ERROR_DESCRIPTION = "Event handler error description";
     public static final String USERNAME_LOCAL_CLAIM_URI = "http://wso2.org/claims/username";
-    public static final String EMAIL_LOCAL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
-    public static final String MOBILE_LOCAL_CLAIM_URI = "http://wso2.org/claims/mobile";
 
     /**
      * Rest Auth Service error codes.
