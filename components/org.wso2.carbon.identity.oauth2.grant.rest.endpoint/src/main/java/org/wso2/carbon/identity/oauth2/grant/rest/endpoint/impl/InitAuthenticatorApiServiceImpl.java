@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2024, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -54,7 +54,7 @@ public class InitAuthenticatorApiServiceImpl implements InitAuthenticatorApiServ
             AuthenticatorInitializationResponse response = new AuthenticatorInitializationResponse()
                     .flowId(responseDTO.getFlowId())
                     .authenticator(responseDTO.getAuthenticator())
-                    .userChannelIdentifierClaim(responseDTO.getUserChannelIdentifierClaim());
+                    .notificationTarget(responseDTO.getNotificationTarget());
             return Response.ok(response).build();
 
         } catch (AuthenticationClientException e) {

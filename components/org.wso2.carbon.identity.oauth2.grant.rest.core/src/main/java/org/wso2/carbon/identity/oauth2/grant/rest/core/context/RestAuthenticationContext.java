@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2024, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -63,7 +63,7 @@ public class RestAuthenticationContext {
 	private String multiAttributeLoginClaimURI;
 	private AuthenticatedUser authenticatedUser;
 	private  int nextAuthenticationStepId;
-	private String userChannelIdentifierClaim;
+	private String notificationTarget;
 
 	private RestAuthenticationContext(Builder builder) {
 
@@ -236,15 +236,16 @@ public class RestAuthenticationContext {
 		this.authenticatedUser = authenticatedUser;
 	}
 
-	public String getUserChannelIdentifierClaim() {
+	public String getNotificationTarget() {
 
-		return userChannelIdentifierClaim;
+		return notificationTarget;
 	}
 
-	public void setUserChannelIdentifierClaim(String userChannelIdentifierClaim) {
+	public void setNotificationTarget(String notificationTarget) {
 
-		this.userChannelIdentifierClaim = userChannelIdentifierClaim;
+		this.notificationTarget = notificationTarget;
 	}
+
 	/**
 	 * This can be used to build AuthContextWrapper Objects.
 	 */

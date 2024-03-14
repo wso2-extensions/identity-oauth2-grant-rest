@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2024, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.oauth2.grant.rest.core.dto;
 
 /**
- * This class holds the SMS OTP feature configurations.
+ * DTO class for configurations.
  */
 public class ConfigsDTO {
 
@@ -27,6 +27,9 @@ public class ConfigsDTO {
 	private boolean showFailureReason;
 	private int flowIdValidityPeriod;
 	private int timestampSkew;
+	private boolean sendNotificationTargetInInitResponse;
+	private String emailAddressRegex;
+	private String mobileNumberRegex;
 
 	public void setEnabled(boolean enabled) {
 
@@ -63,6 +66,36 @@ public class ConfigsDTO {
 		this.timestampSkew = timestampSkew;
 	}
 
+	public boolean isSendNotificationTargetInInitResponse() {
+
+		return sendNotificationTargetInInitResponse;
+	}
+
+	public void setSendNotificationTargetInInitResponse(boolean sendNotificationTargetInInitResponse) {
+
+		this.sendNotificationTargetInInitResponse = sendNotificationTargetInInitResponse;
+	}
+
+	public String getEmailAddressRegex() {
+
+		return emailAddressRegex;
+	}
+
+	public void setEmailAddressRegex(String emailAddressRegex) {
+
+		this.emailAddressRegex = emailAddressRegex;
+	}
+
+	public String getMobileNumberRegex() {
+
+		return mobileNumberRegex;
+	}
+
+	public void setMobileNumberRegex(String mobileNumberRegex) {
+
+		this.mobileNumberRegex = mobileNumberRegex;
+	}
+
 	@Override
 	public String toString() {
 		return "ConfigsDTO{" +
@@ -70,7 +103,9 @@ public class ConfigsDTO {
 				", showFailureReason=" + showFailureReason +
 				", flowIdValidityPeriod=" + flowIdValidityPeriod +
 				", timestampSkew=" + timestampSkew +
+				", sendNotificationTargetInInitResponse=" + sendNotificationTargetInInitResponse +
+				", emailAddressRegex='" + emailAddressRegex +
+				", mobileNumberRegex='" + mobileNumberRegex +
 				'}';
 	}
-	
 }

@@ -212,7 +212,7 @@ components:
       required:
         - flowId
         - authenticator
-        - userChannelIdentifierClaim
+        - notificationTarget
       properties:
         flowId:
           type: string
@@ -223,7 +223,7 @@ components:
           type: string
           description: Authenticator
           example: 'SMSOTP'
-        userChannelIdentifierClaim:
+        notificationTarget:
           type: string
           description: Email address or mobile number of the user
           example: '94765672341'

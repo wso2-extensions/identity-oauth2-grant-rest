@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2024, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.oauth2.grant.rest.core;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -312,7 +313,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                                 authContext.getUserId(), IdentityTenantUtil.getTenantDomain
                                         (authContext.getUserTenantId()));
                 authContext.setNewFlowId(authResponseDTO.getTransactionId()).setPassword(authResponseDTO.getSmsOTP());
-                authContext.setUserChannelIdentifierClaim(getUserVerificationChannel
+                authContext.setNotificationTarget(getUserVerificationChannel
                         (authContext.getUserId(), authContext.getUserTenantId(), Constants.MOBILE_LOCAL_CLAIM_URI));
             } else if (StringUtils.isNotEmpty(federatedAuthenticatorName) &&
                     Constants.AUTHENTICATOR_NAME_EMAILOTP.equals(federatedAuthenticatorName)) {
@@ -324,7 +325,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                                         (getAuthenticatorService(federatedAuthenticatorName), authContext.getUserId(),
                                                 IdentityTenantUtil.getTenantDomain(authContext.getUserTenantId()));
                 authContext.setNewFlowId(authResponseDTO.getTransactionId()).setPassword(authResponseDTO.getEmailOTP());
-                authContext.setUserChannelIdentifierClaim(getUserVerificationChannel
+                authContext.setNotificationTarget(getUserVerificationChannel
                         (authContext.getUserId(), authContext.getUserTenantId(), Constants.EMAIL_LOCAL_CLAIM_URI));
             } else if (Constants.AUTHENTICATOR_NAME_BASIC_AUTH.equals(authenticator)) {
                 authContext.setNewFlowId(RestAuthUtil.generateUUID());
@@ -811,7 +812,13 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         AuthenticationInitializationResponseDTO responseDTO = new AuthenticationInitializationResponseDTO();
         responseDTO.setFlowId(authContext.getNewFlowdId());
         responseDTO.setAuthenticator(authContext.getCurrentAuthenticator());
-        responseDTO.setUserChannelIdentifierClaim(authContext.getUserChannelIdentifierClaim());
+        if (shouldSendNotificationTargetInInitializationResponse()) {
+            String notificationTarget = authContext.getNotificationTarget();
+            if (isMaskingEnabled(authContext)) {
+                notificationTarget = getMaskedNotificationTarget(notificationTarget, authContext);
+            }
+            responseDTO.setNotificationTarget(notificationTarget);
+        }
         return responseDTO;
     }
 
@@ -1109,5 +1116,66 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                     "Error while resolving the user's channel identifier from user store.", e);
         }
         return userAttributes.get(requestedClaimURI);
+    }
+
+    /**
+     * This method checks whether the user identifier should be sent in the initialization response.
+     *
+     * @return boolean      Whether the user identifier should be sent in the initialization response.
+     */
+    private boolean shouldSendNotificationTargetInInitializationResponse() {
+
+        return AuthenticationServiceDataHolder.getConfigs().isSendNotificationTargetInInitResponse();
+    }
+
+    /**
+     * This method checks whether masking is enabled for the authenticator.
+     *
+     * @param authContext       Current authentication context of the rest flow.
+     * @return boolean          Whether the masking is enabled or not.
+     */
+    private boolean isMaskingEnabled(RestAuthenticationContext authContext) {
+
+        String federatedAuthenticatorName;
+        String authenticatorName = authContext.getCurrentAuthenticator();
+        try {
+            federatedAuthenticatorName = getFederatedIdpChannelName(authenticatorName, authContext);
+            if (Constants.AUTHENTICATOR_NAME_EMAILOTP.equals(federatedAuthenticatorName)) {
+                return StringUtils.isNotEmpty(AuthenticationServiceDataHolder.getConfigs().getEmailAddressRegex());
+            } else if (Constants.AUTHENTICATOR_NAME_SMSOTP.equals(federatedAuthenticatorName)) {
+                return StringUtils.isNotEmpty(AuthenticationServiceDataHolder.getConfigs().getMobileNumberRegex());
+            }
+            return false;
+        } catch (AuthenticationException e) {
+            return false;
+        }
+    }
+
+    /**
+     * This method masks the user identifier claim.
+     *
+     * @param notificationTarget        User's user identifier claim.
+     * @param authContext               Current authentication context of the rest flow.
+     * @return String                   Masked user identifier claim.
+     */
+    private String getMaskedNotificationTarget(String notificationTarget, RestAuthenticationContext authContext) {
+
+        String federatedAuthenticatorName;
+        String authenticatorName = authContext.getCurrentAuthenticator();
+        try {
+            federatedAuthenticatorName = getFederatedIdpChannelName(authenticatorName, authContext);
+            if (Constants.AUTHENTICATOR_NAME_EMAILOTP.equals(federatedAuthenticatorName)) {
+                String emailAddressRegex = AuthenticationServiceDataHolder.getConfigs().getEmailAddressRegex();
+                emailAddressRegex = StringEscapeUtils.unescapeHtml(emailAddressRegex);
+                return notificationTarget.replaceAll(emailAddressRegex, Constants.MASKING_CHARACTER);
+            } else if (Constants.AUTHENTICATOR_NAME_SMSOTP.equals(federatedAuthenticatorName)) {
+                String mobileNumberRegex = AuthenticationServiceDataHolder.getConfigs().getMobileNumberRegex();
+                mobileNumberRegex = StringEscapeUtils.unescapeHtml(mobileNumberRegex);
+                return notificationTarget.replaceAll(mobileNumberRegex, Constants.MASKING_CHARACTER);
+            }
+            return StringUtils.EMPTY;
+        } catch (AuthenticationException e) {
+            return StringUtils.EMPTY;
+        }
     }
 }
