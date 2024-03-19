@@ -26,7 +26,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon.identity.oauth2.grant.rest</groupId>
     <artifactId>identity.oauth2.grant.auth.rest</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Identity OAuth2 Grant Rest</name>
     <url>http://wso2.org</url>
@@ -37,7 +37,7 @@
         <developerConnection>
             scm:git:https://github.com/wso2-extensions/identity-oauth2-grant-rest.git
         </developerConnection>
-        <tag>v1.0.1</tag>
+        <tag>HEAD</tag>
     </scm>
     <repositories>
         <repository>
