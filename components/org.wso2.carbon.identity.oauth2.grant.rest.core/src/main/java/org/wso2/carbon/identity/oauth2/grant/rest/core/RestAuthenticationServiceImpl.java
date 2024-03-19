@@ -313,7 +313,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                                 authContext.getUserId(), IdentityTenantUtil.getTenantDomain
                                         (authContext.getUserTenantId()));
                 authContext.setNewFlowId(authResponseDTO.getTransactionId()).setPassword(authResponseDTO.getSmsOTP());
-                authContext.setNotificationTarget(getUserVerificationChannel
+                authContext.setNotificationTarget(getUserNotificationTargetValue
                         (authContext.getUserId(), authContext.getUserTenantId(), Constants.MOBILE_LOCAL_CLAIM_URI));
             } else if (StringUtils.isNotEmpty(federatedAuthenticatorName) &&
                     Constants.AUTHENTICATOR_NAME_EMAILOTP.equals(federatedAuthenticatorName)) {
@@ -325,7 +325,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                                         (getAuthenticatorService(federatedAuthenticatorName), authContext.getUserId(),
                                                 IdentityTenantUtil.getTenantDomain(authContext.getUserTenantId()));
                 authContext.setNewFlowId(authResponseDTO.getTransactionId()).setPassword(authResponseDTO.getEmailOTP());
-                authContext.setNotificationTarget(getUserVerificationChannel
+                authContext.setNotificationTarget(getUserNotificationTargetValue
                         (authContext.getUserId(), authContext.getUserTenantId(), Constants.EMAIL_LOCAL_CLAIM_URI));
             } else if (Constants.AUTHENTICATOR_NAME_BASIC_AUTH.equals(authenticator)) {
                 authContext.setNewFlowId(RestAuthUtil.generateUUID());
@@ -1088,15 +1088,15 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
     }
 
     /**
-     * This method is used to get user's channel identifier attribute.
+     * This method is used to get the notification target attribute.
      *
      * @param userId                          User's user id.
      * @param userTenantId                    User's tenant id.
-     * @param requestedClaimURI               Required channel Identifier's claim URI.
+     * @param requestedClaimURI               Required notification target claim URI.
      * @throws AuthenticationServerException  Returns an AuthenticationException.
-     * @return String                         User's chanel Identifier's value.
+     * @return String                         Notification Target.
      */
-    private String getUserVerificationChannel(String userId, int userTenantId, String requestedClaimURI)
+    private String getUserNotificationTargetValue(String userId, int userTenantId, String requestedClaimURI)
             throws AuthenticationServerException {
 
         AbstractUserStoreManager userStoreManager;
@@ -1108,7 +1108,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                     UserCoreConstants.DEFAULT_PROFILE).getAttributes();
 
             if(LOG.isDebugEnabled()) {
-                LOG.debug("Verifier claim value resolved for the user id : " + userId);
+                LOG.debug("User claim " + requestedClaimURI + " of user Id : " + userId + "resolved successfully.");
             }
 
         } catch (UserStoreException e) {
@@ -1147,6 +1147,9 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
             }
             return false;
         } catch (AuthenticationException e) {
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("Error while checking the masking status for the authenticator: " + authenticatorName);
+            }
             return false;
         }
     }
@@ -1175,6 +1178,9 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
             }
             return StringUtils.EMPTY;
         } catch (AuthenticationException e) {
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("Error while masking the notification target for the authenticator: " + authenticatorName);
+            }
             return StringUtils.EMPTY;
         }
     }
