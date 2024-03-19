@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2024, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -19,21 +19,18 @@
 package org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.*;
 
 
-import io.swagger.annotations.*;
 import java.util.Objects;
 import javax.validation.Valid;
-import javax.xml.bind.annotation.*;
 
 public class AuthenticatorInitializationResponse  {
   
     private String flowId;
     private String authenticator;
+    private String notificationTarget;
 
     /**
     * A refreshed token that can be used to uniquely identify the transaction
@@ -77,6 +74,27 @@ public class AuthenticatorInitializationResponse  {
         this.authenticator = authenticator;
     }
 
+    /**
+    * Email address or mobile number of the user
+    **/
+    public AuthenticatorInitializationResponse notificationTarget(String notificationTarget) {
+
+        this.notificationTarget = notificationTarget;
+        return this;
+    }
+    
+    @ApiModelProperty(example = "94765672341", required = true, value = "Email address or mobile number of the user")
+    @JsonProperty("notificationTarget")
+    @Valid
+    @NotNull(message = "Property notificationTarget cannot be null.")
+
+    public String getNotificationTarget() {
+        return notificationTarget;
+    }
+    public void setNotificationTarget(String notificationTarget) {
+        this.notificationTarget = notificationTarget;
+    }
+
 
 
     @Override
@@ -90,12 +108,13 @@ public class AuthenticatorInitializationResponse  {
         }
         AuthenticatorInitializationResponse authenticatorInitializationResponse = (AuthenticatorInitializationResponse) o;
         return Objects.equals(this.flowId, authenticatorInitializationResponse.flowId) &&
-            Objects.equals(this.authenticator, authenticatorInitializationResponse.authenticator);
+            Objects.equals(this.authenticator, authenticatorInitializationResponse.authenticator) &&
+            Objects.equals(this.notificationTarget, authenticatorInitializationResponse.notificationTarget);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(flowId, authenticator);
+        return Objects.hash(flowId, authenticator, notificationTarget);
     }
 
     @Override
@@ -106,6 +125,7 @@ public class AuthenticatorInitializationResponse  {
         
         sb.append("    flowId: ").append(toIndentedString(flowId)).append("\n");
         sb.append("    authenticator: ").append(toIndentedString(authenticator)).append("\n");
+        sb.append("    notificationTarget: ").append(toIndentedString(notificationTarget)).append("\n");
         sb.append("}");
         return sb.toString();
     }
@@ -122,3 +142,4 @@ public class AuthenticatorInitializationResponse  {
         return o.toString().replace("\n", "\n");
     }
 }
+

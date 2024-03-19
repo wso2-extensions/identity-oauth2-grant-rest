@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2024, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.oauth2.grant.rest.core;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,6 +52,7 @@ import org.wso2.carbon.identity.oauth2.grant.rest.core.dto.AuthenticatorConfigDT
 import org.wso2.carbon.identity.oauth2.grant.rest.core.dto.UserAuthenticationResponseDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationClientException;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationServerException;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.handler.OTPHandlerService;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.handler.OTPHandlerServiceImpl;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.internal.AuthenticationServiceDataHolder;
@@ -61,6 +63,7 @@ import org.wso2.carbon.identity.smsotp.common.dto.FailureReasonDTO;
 import org.wso2.carbon.identity.smsotp.common.dto.GenerationResponseDTO;
 import org.wso2.carbon.identity.smsotp.common.dto.ValidationResponseDTO;
 import org.wso2.carbon.user.api.UserStoreException;
+import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.common.AbstractUserStoreManager;
 import org.wso2.carbon.user.core.common.AuthenticationResult;
@@ -310,6 +313,8 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                                 authContext.getUserId(), IdentityTenantUtil.getTenantDomain
                                         (authContext.getUserTenantId()));
                 authContext.setNewFlowId(authResponseDTO.getTransactionId()).setPassword(authResponseDTO.getSmsOTP());
+                authContext.setNotificationTarget(getUserNotificationTargetValue
+                        (authContext.getUserId(), authContext.getUserTenantId(), Constants.MOBILE_LOCAL_CLAIM_URI));
             } else if (StringUtils.isNotEmpty(federatedAuthenticatorName) &&
                     Constants.AUTHENTICATOR_NAME_EMAILOTP.equals(federatedAuthenticatorName)) {
                 //below the package name is used since there's a class level object conflict.
@@ -320,6 +325,8 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                                         (getAuthenticatorService(federatedAuthenticatorName), authContext.getUserId(),
                                                 IdentityTenantUtil.getTenantDomain(authContext.getUserTenantId()));
                 authContext.setNewFlowId(authResponseDTO.getTransactionId()).setPassword(authResponseDTO.getEmailOTP());
+                authContext.setNotificationTarget(getUserNotificationTargetValue
+                        (authContext.getUserId(), authContext.getUserTenantId(), Constants.EMAIL_LOCAL_CLAIM_URI));
             } else if (Constants.AUTHENTICATOR_NAME_BASIC_AUTH.equals(authenticator)) {
                 authContext.setNewFlowId(RestAuthUtil.generateUUID());
             } else {
@@ -349,7 +356,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
      */
     @Override
     public UserAuthenticationResponseDTO initializeAuthFlow (String clientId, String authenticator, String password,
-            String userIdentifier, String requestTenantDomain)
+                                                             String userIdentifier, String requestTenantDomain)
             throws AuthenticationException {
 
         String userTenantDomain = requestTenantDomain == null ?
@@ -410,36 +417,36 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         executeListeners(authContext, Constants.PRE_AUTHENTICATION);
 
         switch (authenticator) {
-        case Constants.AUTHENTICATOR_NAME_IDENTIFIER_FIRST:
-            try {
-                if (getUserStoreManager(authContext.getUserTenantId())
-                        .isExistingUserWithID(authContext.getUserId())) {
-                    getUserStoreManager(authContext.getUserTenantId());
-                    updateAuthenticatedSteps(authContext.getAuthenticatedSteps(), 1, authenticator);
-                    authContext.setValidPassword(true);
-                    executeEvent(IdentityEventConstants.EventName.AUTHENTICATION_STEP_SUCCESS.toString(),
-                            authContext);
-                } else {
-                    executeEvent(IdentityEventConstants.EventName.AUTHENTICATION_STEP_FAILURE.toString(),
-                            authContext);
-                    throw RestAuthUtil.handleClientException(
-                            Constants.ErrorMessage.CLIENT_INVALID_USER, userIdentifier);
+            case Constants.AUTHENTICATOR_NAME_IDENTIFIER_FIRST:
+                try {
+                    if (getUserStoreManager(authContext.getUserTenantId())
+                            .isExistingUserWithID(authContext.getUserId())) {
+                        getUserStoreManager(authContext.getUserTenantId());
+                        updateAuthenticatedSteps(authContext.getAuthenticatedSteps(), 1, authenticator);
+                        authContext.setValidPassword(true);
+                        executeEvent(IdentityEventConstants.EventName.AUTHENTICATION_STEP_SUCCESS.toString(),
+                                authContext);
+                    } else {
+                        executeEvent(IdentityEventConstants.EventName.AUTHENTICATION_STEP_FAILURE.toString(),
+                                authContext);
+                        throw RestAuthUtil.handleClientException(
+                                Constants.ErrorMessage.CLIENT_INVALID_USER, userIdentifier);
+                    }
+                } catch (UserStoreException e) {
+                    throw RestAuthUtil.handleServerException(Constants.ErrorMessage.SERVER_AUTHENTICATE_USER_ERROR,
+                            String.format("Error while authenticating the user : %s.", userIdentifier), e);
                 }
-            } catch (UserStoreException e) {
-                throw RestAuthUtil.handleServerException(Constants.ErrorMessage.SERVER_AUTHENTICATE_USER_ERROR,
-                        String.format("Error while authenticating the user : %s.", userIdentifier), e);
-            }
-            break;
-        case Constants.AUTHENTICATOR_NAME_BASIC_AUTH:
-            if (validateUserCredentials(password, authContext)) {
-                updateAuthenticatedSteps(authContext.getAuthenticatedSteps(), 1, authenticator);
-                executeEvent(IdentityEventConstants.EventName.AUTHENTICATION_STEP_SUCCESS.toString(), authContext);
-            } else {
-                executeEvent(IdentityEventConstants.EventName.AUTHENTICATION_STEP_FAILURE.toString(), authContext);
-                throw RestAuthUtil.handleClientException(
-                        Constants.ErrorMessage.CLIENT_INCORRECT_USER_CREDENTIALS, userIdentifier);
-            }
-            break;
+                break;
+            case Constants.AUTHENTICATOR_NAME_BASIC_AUTH:
+                if (validateUserCredentials(password, authContext)) {
+                    updateAuthenticatedSteps(authContext.getAuthenticatedSteps(), 1, authenticator);
+                    executeEvent(IdentityEventConstants.EventName.AUTHENTICATION_STEP_SUCCESS.toString(), authContext);
+                } else {
+                    executeEvent(IdentityEventConstants.EventName.AUTHENTICATION_STEP_FAILURE.toString(), authContext);
+                    throw RestAuthUtil.handleClientException(
+                            Constants.ErrorMessage.CLIENT_INCORRECT_USER_CREDENTIALS, userIdentifier);
+                }
+                break;
         }
         executeListeners(authContext, Constants.POST_AUTHENTICATION);
         if (authContext.getAuthenticationSteps().size() == authContext.getAuthenticatedSteps().size()) {
@@ -530,16 +537,16 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         }
 
         switch (event) {
-        case Constants.PRE_AUTHENTICATION:
-            for (AuthenticationListener listener : AuthenticationListenerServiceImpl.getAuthenticationListeners()) {
-                listener.doPreAuthenticate(authContext);
-            }
-            break;
-        case Constants.POST_AUTHENTICATION:
-            for (AuthenticationListener listener : AuthenticationListenerServiceImpl.getAuthenticationListeners()) {
-                listener.doPostAuthenticate(authContext);
-            }
-            break;
+            case Constants.PRE_AUTHENTICATION:
+                for (AuthenticationListener listener : AuthenticationListenerServiceImpl.getAuthenticationListeners()) {
+                    listener.doPreAuthenticate(authContext);
+                }
+                break;
+            case Constants.POST_AUTHENTICATION:
+                for (AuthenticationListener listener : AuthenticationListenerServiceImpl.getAuthenticationListeners()) {
+                    listener.doPostAuthenticate(authContext);
+                }
+                break;
         }
     }
 
@@ -702,7 +709,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
      * @return Integer              Next authentication step.
      */
     private int fetchNextAuthStep(LinkedHashMap<Integer, String> authenticatedSteps,
-            LinkedHashMap<Integer, List<String>> authenticationSteps) {
+                                  LinkedHashMap<Integer, List<String>> authenticationSteps) {
 
         int nextAuthStep;
         List<Integer> steps = new ArrayList<>(authenticationSteps.keySet());
@@ -805,6 +812,13 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         AuthenticationInitializationResponseDTO responseDTO = new AuthenticationInitializationResponseDTO();
         responseDTO.setFlowId(authContext.getNewFlowdId());
         responseDTO.setAuthenticator(authContext.getCurrentAuthenticator());
+        if (shouldSendNotificationTargetInInitializationResponse()) {
+            String notificationTarget = authContext.getNotificationTarget();
+            if (isMaskingEnabled(authContext)) {
+                notificationTarget = getMaskedNotificationTarget(notificationTarget, authContext);
+            }
+            responseDTO.setNotificationTarget(notificationTarget);
+        }
         return responseDTO;
     }
 
@@ -816,7 +830,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
      * @return UserAuthenticationResponseDTO    Authentication Validation Response.
      */
     private UserAuthenticationResponseDTO buildAuthValidationResponse(RestAuthenticationContext authContext,
-            FlowIdDO flowIdDO, Object failureReasonDTO)
+                                                                      FlowIdDO flowIdDO, Object failureReasonDTO)
             throws AuthenticationClientException {
 
         UserAuthenticationResponseDTO userAuthenticationResponse = new UserAuthenticationResponseDTO();
@@ -966,15 +980,15 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         }
 
         switch (flowIdDO.getFlowIdState()) {
-        case Constants.FLOW_ID_STATE_ACTIVE:
-            isValidFlowId = true;
-            break;
-        case Constants.FLOW_ID_STATE_INACTIVE:
-            throw RestAuthUtil.handleClientException(
-                    Constants.ErrorMessage.CLIENT_INACTIVE_FLOW_ID, flowIdDO.getFlowId());
-        case Constants.FLOW_ID_STATE_EXPIRED:
-            throw RestAuthUtil.handleClientException(
-                    Constants.ErrorMessage.CLIENT_EXPIRED_FLOW_ID, flowIdDO.getFlowId());
+            case Constants.FLOW_ID_STATE_ACTIVE:
+                isValidFlowId = true;
+                break;
+            case Constants.FLOW_ID_STATE_INACTIVE:
+                throw RestAuthUtil.handleClientException(
+                        Constants.ErrorMessage.CLIENT_INACTIVE_FLOW_ID, flowIdDO.getFlowId());
+            case Constants.FLOW_ID_STATE_EXPIRED:
+                throw RestAuthUtil.handleClientException(
+                        Constants.ErrorMessage.CLIENT_EXPIRED_FLOW_ID, flowIdDO.getFlowId());
         }
 
         return isValidFlowId;
@@ -988,7 +1002,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
      * @param authenticator      Successfully authenticated Authenticator.
      */
     private void updateAuthenticatedSteps(LinkedHashMap<Integer, String> authenticatedSteps, Integer stepNo,
-            String authenticator) {
+                                          String authenticator) {
         authenticatedSteps.put(stepNo, authenticator);
         if (LOG.isDebugEnabled()) {
             LOG.debug(String.format("Authentication step success and updated for authenticator : %s step : %s",
@@ -1073,4 +1087,101 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
         return null;
     }
 
+    /**
+     * This method is used to get the notification target attribute.
+     *
+     * @param userId                          User's user id.
+     * @param userTenantId                    User's tenant id.
+     * @param requestedClaimURI               Required notification target claim URI.
+     * @throws AuthenticationServerException  Returns an AuthenticationException.
+     * @return String                         Notification Target.
+     */
+    private String getUserNotificationTargetValue(String userId, int userTenantId, String requestedClaimURI)
+            throws AuthenticationServerException {
+
+        AbstractUserStoreManager userStoreManager;
+        Map<String, String> userAttributes;
+        try {
+            userStoreManager = (AbstractUserStoreManager) AuthenticationServiceDataHolder.getInstance()
+                    .getRealmService().getTenantUserRealm(userTenantId).getUserStoreManager();
+            userAttributes = userStoreManager.getUserWithID(userId, new String[]{requestedClaimURI},
+                    UserCoreConstants.DEFAULT_PROFILE).getAttributes();
+
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("User claim " + requestedClaimURI + " of user Id : " + userId + "resolved successfully.");
+            }
+
+        } catch (UserStoreException e) {
+            throw RestAuthUtil.handleServerException(Constants.ErrorMessage.SERVER_USER_STORE_MANAGER_ERROR,
+                    "Error while resolving the user's channel identifier from user store.", e);
+        }
+        return userAttributes.get(requestedClaimURI);
+    }
+
+    /**
+     * This method checks whether the user identifier should be sent in the initialization response.
+     *
+     * @return boolean      Whether the user identifier should be sent in the initialization response.
+     */
+    private boolean shouldSendNotificationTargetInInitializationResponse() {
+
+        return AuthenticationServiceDataHolder.getConfigs().isSendNotificationTargetInInitResponse();
+    }
+
+    /**
+     * This method checks whether masking is enabled for the authenticator.
+     *
+     * @param authContext       Current authentication context of the rest flow.
+     * @return boolean          Whether the masking is enabled or not.
+     */
+    private boolean isMaskingEnabled(RestAuthenticationContext authContext) {
+
+        String federatedAuthenticatorName;
+        String authenticatorName = authContext.getCurrentAuthenticator();
+        try {
+            federatedAuthenticatorName = getFederatedIdpChannelName(authenticatorName, authContext);
+            if (Constants.AUTHENTICATOR_NAME_EMAILOTP.equals(federatedAuthenticatorName)) {
+                return StringUtils.isNotEmpty(AuthenticationServiceDataHolder.getConfigs().getEmailAddressRegex());
+            } else if (Constants.AUTHENTICATOR_NAME_SMSOTP.equals(federatedAuthenticatorName)) {
+                return StringUtils.isNotEmpty(AuthenticationServiceDataHolder.getConfigs().getMobileNumberRegex());
+            }
+            return false;
+        } catch (AuthenticationException e) {
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("Error while checking the masking status for the authenticator: " + authenticatorName);
+            }
+            return false;
+        }
+    }
+
+    /**
+     * This method masks the user identifier claim.
+     *
+     * @param notificationTarget        User's user identifier claim.
+     * @param authContext               Current authentication context of the rest flow.
+     * @return String                   Masked user identifier claim.
+     */
+    private String getMaskedNotificationTarget(String notificationTarget, RestAuthenticationContext authContext) {
+
+        String federatedAuthenticatorName;
+        String authenticatorName = authContext.getCurrentAuthenticator();
+        try {
+            federatedAuthenticatorName = getFederatedIdpChannelName(authenticatorName, authContext);
+            if (Constants.AUTHENTICATOR_NAME_EMAILOTP.equals(federatedAuthenticatorName)) {
+                String emailAddressRegex = AuthenticationServiceDataHolder.getConfigs().getEmailAddressRegex();
+                emailAddressRegex = StringEscapeUtils.unescapeHtml(emailAddressRegex);
+                return notificationTarget.replaceAll(emailAddressRegex, Constants.MASKING_CHARACTER);
+            } else if (Constants.AUTHENTICATOR_NAME_SMSOTP.equals(federatedAuthenticatorName)) {
+                String mobileNumberRegex = AuthenticationServiceDataHolder.getConfigs().getMobileNumberRegex();
+                mobileNumberRegex = StringEscapeUtils.unescapeHtml(mobileNumberRegex);
+                return notificationTarget.replaceAll(mobileNumberRegex, Constants.MASKING_CHARACTER);
+            }
+            return StringUtils.EMPTY;
+        } catch (AuthenticationException e) {
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("Error while masking the notification target for the authenticator: " + authenticatorName);
+            }
+            return StringUtils.EMPTY;
+        }
+    }
 }

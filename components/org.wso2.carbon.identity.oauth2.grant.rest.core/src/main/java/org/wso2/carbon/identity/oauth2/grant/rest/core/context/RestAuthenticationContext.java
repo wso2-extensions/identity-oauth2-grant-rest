@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2024, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -63,6 +63,7 @@ public class RestAuthenticationContext {
 	private String multiAttributeLoginClaimURI;
 	private AuthenticatedUser authenticatedUser;
 	private  int nextAuthenticationStepId;
+	private String notificationTarget;
 
 	private RestAuthenticationContext(Builder builder) {
 
@@ -233,6 +234,16 @@ public class RestAuthenticationContext {
 	public void setAuthenticatedUser(AuthenticatedUser authenticatedUser) {
 
 		this.authenticatedUser = authenticatedUser;
+	}
+
+	public String getNotificationTarget() {
+
+		return notificationTarget;
+	}
+
+	public void setNotificationTarget(String notificationTarget) {
+
+		this.notificationTarget = notificationTarget;
 	}
 
 	/**
@@ -453,5 +464,4 @@ public class RestAuthenticationContext {
 
 		this.authenticationSteps = authenticationSteps;
 	}
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2024, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -147,6 +147,20 @@ public class RestAuthUtil {
                 Integer.parseInt(timestampSkewValue) * 1000 : Constants.DEFAULT_FLOW_ID_TIMESTAMP_SKEW;
         configs.setTimestampSkew(timestampSkew);
 
+        String sendNotificationTargetInInitResponseValue = StringUtils.trim(properties.getProperty(
+                Constants.SEND_NOTIFICATION_TARGET_IN_INIT_RESPONSE));
+        boolean sendNotificationTargetInInitResponse = StringUtils.isNotEmpty(sendNotificationTargetInInitResponseValue) ?
+                Boolean.parseBoolean(sendNotificationTargetInInitResponseValue) :
+                Constants.DEFAULT_SEND_USER_IDENTIFIER_IN_INIT_RESPONSE;
+        configs.setSendNotificationTargetInInitResponse(sendNotificationTargetInInitResponse);
+
+        String emailAddressRegexValue = StringUtils.trim(properties.getProperty(Constants.EMAIL_ADDRESS_REGEX));
+        String emailAddressRegex = StringUtils.isNotEmpty(emailAddressRegexValue) ? emailAddressRegexValue : null;
+        configs.setEmailAddressRegex(emailAddressRegex);
+
+        String mobileNumberRegexValue = StringUtils.trim(properties.getProperty(Constants.MOBILE_NUMBER_REGEX));
+        String mobileNumberRegex = StringUtils.isNotEmpty(mobileNumberRegexValue) ? mobileNumberRegexValue : null;
+        configs.setMobileNumberRegex(mobileNumberRegex);
     }
 
     /**

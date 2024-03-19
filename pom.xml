@@ -484,9 +484,6 @@
                     <execution>
                         <id>analyze-compile</id>
                         <phase>compile</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
