@@ -1,0 +1,13 @@
+{
+    "name": "REST Authentication Connector",
+    "owner": "WSO2 Inc.",
+    "category": "REST API Authentication",
+    "documentationUrl": "https://github.com/wso2-extensions/identity-oauth2-grant-rest/tree/main/docs",
+    "description": "This connector provides an OAuth grant type for multi-factor authentication in WSO2 Identity Server. It supports Identifier First, Basic Authenticator, SMS OTP and Email OTP authenticators with any number of authentication steps.",
+    "status": "Active",
+    "labels": [
+        "REST-API",
+        "REST-API-Authentication"
+    ],
+    "releases": []
+}
