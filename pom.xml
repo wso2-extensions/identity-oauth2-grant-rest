@@ -559,7 +559,7 @@
         <oauth2.client.version>1.0.0</oauth2.client.version>
         <identity.inbound.auth.oauth.version>6.4.2</identity.inbound.auth.oauth.version>
         <org.wso2.carbon.database.utils.version>2.0.7</org.wso2.carbon.database.utils.version>
-        <org.wso2.carbon.extension.identity.emailotp.common.version.range>[4.0.6, 4.1.16)
+        <org.wso2.carbon.extension.identity.emailotp.common.version.range>[4.0.6, 5.0.0)
         </org.wso2.carbon.extension.identity.emailotp.common.version.range>
         <org.wso2.carbon.extension.identity.smsotp.common.version.range>[3.0.15, 3.3.10)
         </org.wso2.carbon.extension.identity.smsotp.common.version.range>
