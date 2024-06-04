@@ -561,7 +561,7 @@
         <org.wso2.carbon.database.utils.version>2.0.7</org.wso2.carbon.database.utils.version>
         <org.wso2.carbon.extension.identity.emailotp.common.version.range>[4.0.6, 5.0.0)
         </org.wso2.carbon.extension.identity.emailotp.common.version.range>
-        <org.wso2.carbon.extension.identity.smsotp.common.version.range>[3.0.15, 3.3.10)
+        <org.wso2.carbon.extension.identity.smsotp.common.version.range>[3.0.15, 4.0.0)
         </org.wso2.carbon.extension.identity.smsotp.common.version.range>
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
