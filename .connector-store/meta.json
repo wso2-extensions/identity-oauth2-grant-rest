@@ -9,5 +9,27 @@
         "REST-API",
         "REST-API-Authentication"
     ],
-    "releases": []
+    "releases": [
+        {
+            "tagName": "1.0.2",
+            "products": [
+                "IS 5.11.0",
+                "IS 5.10.0"
+            ]
+        },
+        {
+            "tagName": "1.0.1",
+            "products": [
+                "IS 5.11.0",
+                "IS 5.10.0"
+            ]
+        },
+        {
+            "tagName": "1.0.0",
+            "products": [
+                "IS 5.11.0",
+                "IS 5.10.0"
+            ]
+        }
+    ]
 }
