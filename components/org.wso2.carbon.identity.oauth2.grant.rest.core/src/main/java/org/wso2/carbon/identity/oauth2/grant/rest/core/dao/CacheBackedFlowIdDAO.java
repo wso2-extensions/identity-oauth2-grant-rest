@@ -18,13 +18,16 @@
 
 package org.wso2.carbon.identity.oauth2.grant.rest.core.dao;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.cache.AuthCache;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.cache.AuthCacheEntry;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.cache.AuthCacheKey;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.constant.Constants;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationServerException;
 
 /**
  * This class is used to function the caching in API  based REST authentication flow.
@@ -79,9 +82,29 @@ public class CacheBackedFlowIdDAO extends FlowIdDAOImpl {
 
         String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
         clearFlowIdCache(prevFlowId, tenantDomain);
-        flowIdDAO.refreshFlowId(previousFlowIdIdentifier, prevFlowId, flowIdDO);
+        // Handling cases where the authenticator returns the same transaction id for subsequent requests.
+        String existingFlowIdForCurrentStep = getFlowIdIdentifier(flowIdDO.getFlowId());
+        if (StringUtils.isNotEmpty(existingFlowIdForCurrentStep)) {
+            // Update the flow id from sent in the request to inactive.
+            flowIdDAO.updateFlowIdState(prevFlowId, Constants.FLOW_ID_STATE_INACTIVE);
+            // Update the existing flow id which correspond to the flow id returned from the authenticator
+            flowIdDAO.updateExistingFlowId(previousFlowIdIdentifier, existingFlowIdForCurrentStep, flowIdDO);
+        } else {
+            flowIdDAO.refreshFlowId(previousFlowIdIdentifier, prevFlowId, flowIdDO);
+        }
         addToCache(flowIdDO, tenantDomain);
 
+    }
+
+    @Override
+    public String getFlowIdIdentifier(String flowId) throws AuthenticationServerException {
+
+        String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+        FlowIdDO flowIdDO = getFlowIdDataFromCache(flowId, tenantDomain);
+        if (flowIdDO != null) {
+            return flowIdDO.getFlowIdIdentifier();
+        }
+        return flowIdDAO.getFlowIdIdentifier(flowId);
     }
 
     @Override

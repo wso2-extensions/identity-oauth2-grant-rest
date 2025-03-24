@@ -37,6 +37,8 @@ import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RestAuthenticati
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.util.RestEndpointUtils;
 import javax.ws.rs.core.Response;
 
+import static org.wso2.carbon.identity.oauth2.grant.rest.core.constant.Constants.ErrorMessage.CLIENT_MANDATORY_VALIDATION_PARAMETERS_EMPTY;
+
 /**
  * This class is used to authenticate the user either with flowId or clientId.
  */
@@ -68,6 +70,11 @@ public class AuthenticateApiServiceImpl implements AuthenticateApiService {
                         (flowId, authenticator, password);
             }
 
+            if (responseDTO == null) {
+                throw new AuthenticationClientException(CLIENT_MANDATORY_VALIDATION_PARAMETERS_EMPTY.getCode(),
+                        CLIENT_MANDATORY_VALIDATION_PARAMETERS_EMPTY.getMessage(),
+                        CLIENT_MANDATORY_VALIDATION_PARAMETERS_EMPTY.getDescription());
+            }
 
             AuthenticationFailureReasonDTO failureReasonDTO = responseDTO.getFailureReason();
             AuthenticationFailureReason failureReason = null;
@@ -110,9 +117,9 @@ public class AuthenticateApiServiceImpl implements AuthenticateApiService {
 
         boolean isClientIdPresent = RequestSanitizerUtil.isNotEmpty(clientId);
         boolean isUserIdentifierPresent = RequestSanitizerUtil.isNotEmpty(userIdentifier);
-        boolean isFlowIdPresent = RequestSanitizerUtil.isEmpty(flowId);
+        boolean isFlowIdNotPresent = RequestSanitizerUtil.isEmpty(flowId);
 
-        return (isClientIdPresent && isUserIdentifierPresent && isFlowIdPresent)  ? true : false;
+        return (isClientIdPresent && isUserIdentifierPresent && isFlowIdNotPresent)  ? true : false;
     }
 
     private boolean isAuthenticateWithFlowId(String flowId, String password, String clientId) {

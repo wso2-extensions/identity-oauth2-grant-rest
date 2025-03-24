@@ -75,8 +75,7 @@ public class OTPHandlerServiceImpl implements
                         String.format("Authenticator Service Object is null."));
             }
         } catch (EmailOtpException | SMSOTPException e) {
-            LOG.error("OTP generation failed in : " + channelName);
-            LOG.error(e);
+            LOG.error("OTP generation failed in : " + channelName, e);
             throw new AuthenticationClientException(e.getErrorCode(), e.getMessage(), e.getCause());
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
@@ -118,7 +117,7 @@ public class OTPHandlerServiceImpl implements
                         String.format("Authenticator Service Object is null."));
             }
         } catch (EmailOtpException | SMSOTPException e) {
-            LOG.error("OTP validation failed in : " + channelName);
+            LOG.error("OTP validation failed in : " + channelName, e);
             throw new AuthenticationClientException(e.getErrorCode(), e.getMessage(), e.getCause());
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
