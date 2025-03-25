@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.oauth2.grant.rest.core.dao;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationException;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationServerException;
 
 /**
  * CacheBackedFlowIDDAO and FlowIdDAOImpl class is implemented via this interface.
@@ -70,5 +71,30 @@ public interface FlowIdDAO {
      */
     void addAuthenticatedStep (int stepNo, String authenticator, String flowIdIdentifier)
             throws AuthenticationException;
+
+    /**
+     * This method will return the FlowId Identifier for the given FlowId if it exists.
+     *
+     * @param flowId                         FlowId to get the FlowId Identifier.
+     * @return                               FlowId Identifier.
+     * @throws AuthenticationServerException If failed to get the FlowId Identifier.
+     */
+    default String getFlowIdIdentifier(String flowId) throws AuthenticationServerException {
+
+        return null;
+    }
+
+    /**
+     * This method will update the data of an existing flow id and set it as the current active flow id for the user.
+     *
+     * @param prevFlowIdIdentifier 	        FlowId currently set as active for the user.
+     * @param existingFlowIdentifier 	    Existing FlowId to be updated.
+     * @param flowIdDO 		                FlowId data object with the updated data.
+     * @throws AuthenticationException      if failed to update the existing FlowId.
+     */
+    default void updateExistingFlowId(String prevFlowIdIdentifier, String existingFlowIdentifier, FlowIdDO flowIdDO)
+            throws AuthenticationException {
+
+    }
 
 }

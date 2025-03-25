@@ -624,7 +624,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                 return false;
             }
         } catch (UserStoreException e) {
-            LOG.error("User authentication failed from user store.");
+            LOG.error("User authentication failed from user store.", e);
             String message = e.getCause().getLocalizedMessage();
             if (message.contains("disabled")) {
                 if (LOG.isDebugEnabled()) {

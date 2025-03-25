@@ -25,6 +25,7 @@ import org.wso2.carbon.identity.oauth2.grant.rest.core.constant.Constants;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationException;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationServerException;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.util.RestAuthUtil;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,7 +39,9 @@ public class FlowIdDAOImpl implements FlowIdDAO {
 
     private static final Log LOG = LogFactory.getLog(FlowIdDAOImpl.class);
     private static volatile FlowIdDAOImpl instance;
+
     public static FlowIdDAOImpl getInstance() {
+
         if (instance == null) {
             synchronized (FlowIdDAOImpl.class) {
                 if (instance == null) {
@@ -54,6 +57,7 @@ public class FlowIdDAOImpl implements FlowIdDAO {
      */
     @Override
     public void addFlowIdData(FlowIdDO flowIdDO) throws AuthenticationException {
+
         try (Connection connection = IdentityDatabaseUtil.getDBConnection(true)) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Adding Flow ID data to the database.");
@@ -98,6 +102,7 @@ public class FlowIdDAOImpl implements FlowIdDAO {
      */
     @Override
     public FlowIdDO getFlowIdData(String flowId) throws AuthenticationException {
+
         try (Connection connection = IdentityDatabaseUtil.getDBConnection(false);
                 PreparedStatement prepStmt = connection.prepareStatement(SQLQueries.RETRIEVE_FLOW_ID_DATA)) {
 
@@ -150,6 +155,7 @@ public class FlowIdDAOImpl implements FlowIdDAO {
 
     @Override
     public void updateFlowIdState(String flowIdIdentifier, String flowIdState) throws AuthenticationException {
+
         try (Connection connection = IdentityDatabaseUtil.getDBConnection(true)) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Changing the Flow ID state as INACTIVE for used Flow IDs.");
@@ -178,6 +184,7 @@ public class FlowIdDAOImpl implements FlowIdDAO {
     @Override
     public void addAuthenticatedStep(int stepNo, String authenticator, String flowIdIdentifier)
             throws AuthenticationException {
+
         try (Connection connection = IdentityDatabaseUtil.getDBConnection(true)) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Adding Flow ID data to the Authentication Steps table.");
@@ -267,6 +274,59 @@ public class FlowIdDAOImpl implements FlowIdDAO {
             }
         } catch (SQLException e) {
             throw new AuthenticationServerException("Error while retrieving authenticated steps.", e);
+        }
+    }
+
+    @Override
+    public String getFlowIdIdentifier(String flowId) throws AuthenticationServerException {
+
+        try (Connection connection = IdentityDatabaseUtil.getDBConnection(false);
+             PreparedStatement prepStmt = connection.prepareStatement(SQLQueries.RETRIEVE_FLOW_ID_IDENTIFIER)) {
+
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Checking existence of Flow ID" + flowId + " in the database.");
+            }
+
+            prepStmt.setString(1, flowId);
+            try (ResultSet resultSet = prepStmt.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getString(Constants.DB_FIELD_FLOW_ID_IDENTIFIER);
+                }
+            }
+        } catch (SQLException e) {
+            throw new AuthenticationServerException("Error while retrieving flowId data.", e);
+        }
+        return null;
+    }
+
+    @Override
+    public void updateExistingFlowId(String previousStepFlowIdentifier, String existingFlowIdentifier,
+                                     FlowIdDO flowIdDO) throws AuthenticationException {
+
+        try (Connection connection = IdentityDatabaseUtil.getDBConnection(true)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Updating the current Flow ID Identifier from [" + previousStepFlowIdentifier + "] to [" +
+                        flowIdDO.getFlowIdIdentifier() + "] in the database.");
+            }
+
+            try (PreparedStatement prepStmt1 = connection.prepareStatement(SQLQueries.UPDATE_FLOW_ID_DATA)) {
+                prepStmt1.setString(1, flowIdDO.getFlowIdState());
+                prepStmt1.setLong(2, flowIdDO.getGeneratedTime());
+                prepStmt1.setLong(3, flowIdDO.getExpiryTime());
+                prepStmt1.setString(4, String.valueOf(flowIdDO.isAuthFlowCompleted()));
+                prepStmt1.setInt(5, flowIdDO.getServiceProviderAppId());
+                prepStmt1.setInt(6, flowIdDO.getSpTenantId());
+                prepStmt1.setString(7, flowIdDO.getLoggedUserClaim());
+                prepStmt1.setString(8, existingFlowIdentifier);
+
+                prepStmt1.execute();
+            } catch (SQLException e) {
+                throw new AuthenticationServerException("Error while updating the flow id data to the database.",
+                        e);
+            }
+        } catch (SQLException e) {
+            throw new AuthenticationServerException
+                    ("Error while closing connection after updating the flow id data to the database.", e);
         }
     }
 }
