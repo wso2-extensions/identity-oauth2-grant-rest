@@ -118,7 +118,7 @@ public class AuthenticationServiceComponent {
 	@Reference
 			(name = "smsotp.service",
 			 service = SMSOTPService.class,
-			 cardinality = ReferenceCardinality.MANDATORY,
+			 cardinality = ReferenceCardinality.OPTIONAL,
 			 policy = ReferencePolicy.DYNAMIC,
 			 unbind = "unsetSMSOtpService")
 	protected void setSMSOtpService(SMSOTPService smsOtpService) {
@@ -148,7 +148,7 @@ public class AuthenticationServiceComponent {
 	@Reference
 			(name = "emailotp.service",
 			 service = EmailOtpService.class,
-			 cardinality = ReferenceCardinality.MANDATORY,
+			 cardinality = ReferenceCardinality.OPTIONAL,
 			 policy = ReferencePolicy.DYNAMIC,
 			 unbind = "unsetEmailOtpService")
 	protected void setEmailOtpService(EmailOtpService emailOtpService) {
