@@ -93,6 +93,7 @@ public class Constants {
     public static final String EMAIL_ADDRESS_REGEX = "RestAuth.emailAddressRegex";
     public static final String MOBILE_NUMBER_REGEX = "RestAuth.mobileNumberRegex";
     public static final String MASKING_CHARACTER = "*";
+    public static final String SQL_ERROR_CODE_DUPLICATE_ENTRY = "23505";
 
     /**
      * Rest Auth Service error codes.
