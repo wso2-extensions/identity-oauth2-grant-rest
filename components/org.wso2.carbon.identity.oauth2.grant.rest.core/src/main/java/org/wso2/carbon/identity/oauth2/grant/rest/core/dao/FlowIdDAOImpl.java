@@ -247,10 +247,15 @@ public class FlowIdDAOImpl implements FlowIdDAO {
 
             } catch (SQLException e) {
                 IdentityDatabaseUtil.rollbackTransaction(connection);
-                throw new AuthenticationServerException("Error while adding refreshed Flow Id data to the database.",
-                        e);
+                // Constraint violation will occur if concurrent requests with the same flow id are made.
+                if (Constants.SQL_ERROR_CODE_DUPLICATE_ENTRY.equals(e.getSQLState())) {
+                    throw RestAuthUtil.handleClientException(
+                            Constants.ErrorMessage.CLIENT_INACTIVE_FLOW_ID, prevFlowIdIdentifier);
+                } else {
+                    throw new AuthenticationServerException("Error while adding refreshed Flow Id data to the database.",
+                            e);
+                }
             }
-
         } catch (SQLException e) {
             throw new AuthenticationServerException
                     ("Error while closing connection after adding refreshed Flow Id data to the database.", e);
