@@ -49,6 +49,7 @@ import org.wso2.carbon.identity.oauth2.grant.rest.core.dto.AuthenticationFailure
 import org.wso2.carbon.identity.oauth2.grant.rest.core.dto.AuthenticationInitializationResponseDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.dto.AuthenticationStepsResponseDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.dto.AuthenticatorConfigDTO;
+import org.wso2.carbon.identity.oauth2.grant.rest.core.dto.ConfigsDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.dto.UserAuthenticationResponseDTO;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationClientException;
 import org.wso2.carbon.identity.oauth2.grant.rest.core.exception.AuthenticationException;
@@ -744,10 +745,28 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                     Constants.ErrorMessage.CLIENT_AUTHSTEP_OUT_OF_BOUNDS, authenticator);
         }
         List<String> authenticators = authContext.getAuthenticationSteps().get(nextAuthStep);
-        if (!authenticators.contains(authenticator)) {
+        boolean isAuthenticatorAvailable = authenticators.contains(authenticator);
+
+        if (!isAuthenticatorAvailable) {
+            /* After Identity Server 7.0.0, new local authenticators are introduced for SMS and Email OTP.
+             * The following code is to check against a set authenticator name alias in order for API
+             * based clients to work without client side changes while the redirect based clients will
+             * work with the new local authenticators.
+             */
+            ConfigsDTO configs = AuthenticationServiceDataHolder.getConfigs();
+            if (authenticators.contains(Constants.LOCAL_EMAIL_OPT_AUTHENTICATOR_NAME)
+                    && StringUtils.equals(configs.getEmailOtpAuthenticatorAlias(), authenticator)) {
+                return;
+            } else if (authenticators.contains(Constants.LOCAL_SMS_OPT_AUTHENTICATOR_NAME)
+                    && StringUtils.equals(configs.getSmsOtpAuthenticatorAlias(), authenticator)) {
+                return;
+            }
+
             LOG.error("Invalid authenticator : " + authenticator);
-            throw RestAuthUtil.handleClientException
-                    (Constants.ErrorMessage.CLIENT_INVALID_AUTHENTICATOR, authenticator);
+            throw RestAuthUtil.handleClientException(
+                    Constants.ErrorMessage.CLIENT_INVALID_AUTHENTICATOR,
+                    authenticator
+            );
         }
     }
 
@@ -910,7 +929,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
      * @param authenticationSteps   Authentication steps.
      * @return List                 Authentication steps details list.
      */
-    private static List<AuthStepConfigsDTO> getConfiguredAuthenticationStepsForSP(
+    private List<AuthStepConfigsDTO> getConfiguredAuthenticationStepsForSP(
             LinkedHashMap<Integer, List<String>> authenticationSteps) {
 
         AuthenticatorConfigDTO authenticatorConfigDTO;
@@ -926,7 +945,7 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
 
             for (String name : authenticatorName) {
                 authenticatorConfigDTO = new AuthenticatorConfigDTO();
-                authenticatorConfigDTO.setAuthenticatorName(name);
+                authenticatorConfigDTO.setAuthenticatorName(getAuthenticatorAlias(name));
                 authenticatorDetailsDTOList.add(authenticatorConfigDTO);
             }
 
@@ -936,6 +955,19 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
             authenticationStepDetails.add(authStepConfigsDTO);
         }
         return authenticationStepDetails;
+    }
+
+    private String getAuthenticatorAlias(String authenticator) {
+
+        ConfigsDTO configs = AuthenticationServiceDataHolder.getConfigs();
+        if (StringUtils.equals(authenticator, Constants.LOCAL_EMAIL_OPT_AUTHENTICATOR_NAME)
+                && StringUtils.isNotBlank(configs.getEmailOtpAuthenticatorAlias())) {
+            return configs.getEmailOtpAuthenticatorAlias();
+        } else if (StringUtils.equals(authenticator, Constants.LOCAL_SMS_OPT_AUTHENTICATOR_NAME)
+                && StringUtils.isNotBlank(configs.getSmsOtpAuthenticatorAlias())) {
+            return configs.getSmsOtpAuthenticatorAlias();
+        }
+        return authenticator;
     }
 
     /**
@@ -1079,11 +1111,30 @@ public class RestAuthenticationServiceImpl implements RestAuthenticationService 
                 RestAuthUtil.getFederatedIdentityProviders(authContext.getServiceProvider().getApplicationID())
                         .get(authContext.getNextAuthenticationStepId());
 
-        for (IdentityProvider idp : federatedAuthenticators) {
-            if (authenticatorName.equals(idp.getIdentityProviderName())) {
-                return idp.getDefaultAuthenticatorConfig().getName();
+        if (federatedAuthenticators != null) {
+            for (IdentityProvider idp : federatedAuthenticators) {
+                if (authenticatorName.equals(idp.getIdentityProviderName())) {
+                    return idp.getDefaultAuthenticatorConfig().getName();
+                }
             }
         }
+
+        /* After Identity Server 7.0.0, new local authenticators are introduced for SMS and Email OTP.
+         * The following code is to retrieve the authenticator name from the SP configurations. And to
+         * check it against a set authenticator name alias in order for API based clients to work without
+         * client side changes while the redirect based clients will work with the new local authenticators.
+         */
+        ConfigsDTO configs = AuthenticationServiceDataHolder.getConfigs();
+        List<String> authenticators = authContext.getAuthenticationSteps()
+                .get(authContext.getNextAuthenticationStepId());
+        if (StringUtils.equals(configs.getEmailOtpAuthenticatorAlias(), authenticatorName)
+                && authenticators.contains(Constants.LOCAL_EMAIL_OPT_AUTHENTICATOR_NAME)) {
+            return Constants.AUTHENTICATOR_NAME_EMAILOTP;
+        } else if (StringUtils.equals(configs.getSmsOtpAuthenticatorAlias(), authenticatorName)
+                && authenticators.contains(Constants.LOCAL_SMS_OPT_AUTHENTICATOR_NAME)) {
+            return Constants.AUTHENTICATOR_NAME_SMSOTP;
+        }
+
         return null;
     }
 

@@ -161,6 +161,18 @@ public class RestAuthUtil {
         String mobileNumberRegexValue = StringUtils.trim(properties.getProperty(Constants.MOBILE_NUMBER_REGEX));
         String mobileNumberRegex = StringUtils.isNotEmpty(mobileNumberRegexValue) ? mobileNumberRegexValue : null;
         configs.setMobileNumberRegex(mobileNumberRegex);
+
+        String emailOtpAuthenticatorAliasValue = StringUtils.trim(
+                properties.getProperty(Constants.EMAIL_OTP_AUTHENTICATOR_ALIAS_CONF));
+        String emailOtpAuthenticatorAlias = StringUtils.isNotEmpty(emailOtpAuthenticatorAliasValue) ?
+                emailOtpAuthenticatorAliasValue : null;
+        configs.setEmailOtpAuthenticatorAlias(emailOtpAuthenticatorAlias);
+
+        String smsOtpAuthenticatorAliasValue = StringUtils.trim(
+                properties.getProperty(Constants.SMS_OTP_AUTHENTICATOR_ALIAS_CONF));
+        String smsOtpAuthenticatorAlias = StringUtils.isNotEmpty(smsOtpAuthenticatorAliasValue) ?
+                smsOtpAuthenticatorAliasValue : null;
+        configs.setSmsOtpAuthenticatorAlias(smsOtpAuthenticatorAlias);
     }
 
     /**
