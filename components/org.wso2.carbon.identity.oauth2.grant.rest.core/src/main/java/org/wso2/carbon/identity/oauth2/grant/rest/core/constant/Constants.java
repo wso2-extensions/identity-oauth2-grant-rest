@@ -42,6 +42,10 @@ public class Constants {
     public static final String FLOW_ID_VALIDITY_PERIOD = "RestAuth.FlowIdValidityPeriod";
     public static final String AUTH_SHOW_FAILURE_REASON = "RestAuth.showValidationFailureReason";
     public static final String FLOW_ID_TIMESTAMP_SKEW = "RestAuth.timestampSkew";
+    public static final String SMS_OTP_AUTHENTICATOR_ALIAS_CONF = "RestAuth.smsOtpAuthenticatorAlias";
+    public static final String EMAIL_OTP_AUTHENTICATOR_ALIAS_CONF = "RestAuth.emailOtpAuthenticatorAlias";
+    public static final String LOCAL_EMAIL_OPT_AUTHENTICATOR_NAME = "email-otp-authenticator";
+    public static final String LOCAL_SMS_OPT_AUTHENTICATOR_NAME = "sms-otp-authenticator";
     public static final String AUTHENTICATOR_NAME_BASIC_AUTH = "BasicAuthenticator";
     public static final String AUTHENTICATOR_NAME_IDENTIFIER_FIRST = "IdentifierExecutor";
     public static final String AUTHENTICATOR_NAME_SMSOTP = "SMSOTP";

@@ -30,6 +30,8 @@ public class ConfigsDTO {
 	private boolean sendNotificationTargetInInitResponse;
 	private String emailAddressRegex;
 	private String mobileNumberRegex;
+	private String emailOtpAuthenticatorAlias;
+	private String smsOtpAuthenticatorAlias;
 
 	public void setEnabled(boolean enabled) {
 
@@ -96,6 +98,26 @@ public class ConfigsDTO {
 		this.mobileNumberRegex = mobileNumberRegex;
 	}
 
+	public String getEmailOtpAuthenticatorAlias() {
+
+		return emailOtpAuthenticatorAlias;
+	}
+
+	public void setEmailOtpAuthenticatorAlias(String emailOtpAuthenticatorAlias) {
+
+		this.emailOtpAuthenticatorAlias = emailOtpAuthenticatorAlias;
+	}
+
+	public String getSmsOtpAuthenticatorAlias() {
+
+		return smsOtpAuthenticatorAlias;
+	}
+
+	public void setSmsOtpAuthenticatorAlias(String smsOtpAuthenticatorAlias) {
+
+		this.smsOtpAuthenticatorAlias = smsOtpAuthenticatorAlias;
+	}
+
 	@Override
 	public String toString() {
 		return "ConfigsDTO{" +
@@ -106,6 +128,8 @@ public class ConfigsDTO {
 				", sendNotificationTargetInInitResponse=" + sendNotificationTargetInInitResponse +
 				", emailAddressRegex='" + emailAddressRegex +
 				", mobileNumberRegex='" + mobileNumberRegex +
+				", emailOtpAuthenticatorAlias='" + emailOtpAuthenticatorAlias +
+				", smsOtpAuthenticatorAlias='" + smsOtpAuthenticatorAlias +
 				'}';
 	}
 }
