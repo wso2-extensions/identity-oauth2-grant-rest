@@ -18,12 +18,12 @@
 
 package org.wso2.carbon.identity.oauth2.grant.rest.endpoint;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import java.io.InputStream;
 import java.util.List;
 
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.factories.AuthStepsApiServiceFactory;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationStepError;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationStepsResponse;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.AuthStepsApiService;
@@ -40,8 +40,7 @@ import javax.validation.constraints.*;
 
 public class AuthStepsApi  {
 
-    @Autowired
-    private AuthStepsApiService delegate;
+    private final AuthStepsApiService delegate = AuthStepsApiServiceFactory.getAuthStepsApi();
 
     @Valid
     @GET

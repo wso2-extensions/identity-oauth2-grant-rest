@@ -157,26 +157,6 @@
                 <version>${com.fasterxml.jackson.annotation.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-web</artifactId>
-                <version>${springframework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-core</artifactId>
-                <version>${springframework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-                <version>${springframework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-beans</artifactId>
-                <version>${springframework.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>javax.ws.rs</groupId>
                 <artifactId>javax.ws.rs-api</artifactId>
                 <version>${javax.ws.rs-api.version}</version>
@@ -541,7 +521,6 @@
         <swagger-jaxrs.version>1.5.20</swagger-jaxrs.version>
         <org.apache.felix.annotations.version>1.2.4</org.apache.felix.annotations.version>
         <org.apache.cxf.version>3.3.1</org.apache.cxf.version>
-        <springframework.version>4.1.6.RELEASE</springframework.version>
         <openapi.tools.version>4.1.2</openapi.tools.version>
         <org.codehaus.mojo.version>3.2.0</org.codehaus.mojo.version>
         <maven.bundle.plugin.version>3.2.0</maven.bundle.plugin.version>
