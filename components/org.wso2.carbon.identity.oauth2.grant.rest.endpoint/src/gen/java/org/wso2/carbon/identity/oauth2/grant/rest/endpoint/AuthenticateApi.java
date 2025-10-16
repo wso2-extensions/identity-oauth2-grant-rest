@@ -18,12 +18,12 @@
 
 package org.wso2.carbon.identity.oauth2.grant.rest.endpoint;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import java.io.InputStream;
 import java.util.List;
 
+import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.factories.AuthenticateApiServiceFactory;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationError;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationValidationRequest;
 import org.wso2.carbon.identity.oauth2.grant.rest.endpoint.model.AuthenticationValidationResponse;
@@ -41,8 +41,7 @@ import javax.validation.constraints.*;
 
 public class AuthenticateApi  {
 
-    @Autowired
-    private AuthenticateApiService delegate;
+    private final AuthenticateApiService delegate = AuthenticateApiServiceFactory.getAuthenticateApi();
 
     @Valid
     @POST
